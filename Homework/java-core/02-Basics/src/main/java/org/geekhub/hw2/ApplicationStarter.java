@@ -5,12 +5,12 @@ import java.util.Scanner;
 public class ApplicationStarter {
 
     public static void main(String[] args) {
-        int numOfStudents = Integer.parseInt(args[0]);
-
-        if (numOfStudents <= 0) {
-            System.out.println("Please, check input arguments of the application");
+        if (args.length == 0 || Integer.parseInt(args[0]) < 0) {
+            System.out.println("Please check the program's input arguments");
             System.exit(1);
         } else {
+            int numOfStudents = Integer.parseInt(args[0]);
+
             String[] names = new String[numOfStudents];
             int numOfSubjects = 3;
             int[][] marks = new int[numOfStudents][numOfSubjects];
