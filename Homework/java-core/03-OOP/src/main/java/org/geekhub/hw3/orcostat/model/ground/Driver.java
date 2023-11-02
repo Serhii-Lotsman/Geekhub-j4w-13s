@@ -1,6 +1,7 @@
 package org.geekhub.hw3.orcostat.model.ground;
 
 import org.geekhub.hw3.orcostat.model.Collection;
+import org.geekhub.hw3.orcostat.model.DriverLicenseCategory;
 import org.geekhub.hw3.orcostat.model.Orc;
 import org.geekhub.hw3.orcostat.model.SimpleCollection;
 
@@ -9,7 +10,7 @@ public class Driver extends Orc {
     private final Collection licenseCategories;
 
     public Driver() {
-        this(new SimpleCollection());
+        this(new SimpleCollection(DriverLicenseCategory.values()));
     }
 
     public Driver(Collection licenseCategories) {

@@ -3,12 +3,15 @@ package org.geekhub.hw3.orcostat.model.air;
 import org.geekhub.hw3.orcostat.model.Orc;
 
 public class Pilot extends Orc {
+
+    private int flewHours;
+
     public Pilot() {
-        super();
     }
 
-    public Pilot(int price) {
-        super(price);
+    public Pilot(int flewHours) {
+        super(20_000);
+        this.flewHours = flewHours;
     }
 
     @Override

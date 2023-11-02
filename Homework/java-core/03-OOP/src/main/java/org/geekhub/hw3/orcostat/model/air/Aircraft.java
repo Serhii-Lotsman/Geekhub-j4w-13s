@@ -25,4 +25,9 @@ public class Aircraft implements Technique {
     public String shoot() {
         return "Pew-pew-pew!";
     }
+
+    @Override
+    public String destroy() {
+        return "Destroyed!Hell!";
+    }
 }
