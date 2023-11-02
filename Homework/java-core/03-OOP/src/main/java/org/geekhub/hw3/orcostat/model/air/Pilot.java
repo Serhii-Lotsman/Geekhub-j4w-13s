@@ -19,16 +19,6 @@ public class Pilot extends Orc {
         return "Ohh noo-oo-o";
     }
 
-    @Override
-    public void setPrice(int price) {
-        super.setPrice(price);
-    }
-
-    @Override
-    public int getPrice() {
-        return super.getPrice();
-    }
-
     public int getFlewHours() {
         return flewHours;
     }

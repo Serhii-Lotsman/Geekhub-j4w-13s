@@ -11,7 +11,7 @@ public class Orc {
     }
 
     public String scream() {
-        return "Aaaaaaa";
+        return "Aaaaaa!";
     }
 
     public void setPrice(int price) {
