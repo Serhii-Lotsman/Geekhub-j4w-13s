@@ -7,13 +7,11 @@ import org.geekhub.hw3.orcostat.model.Technique;
 
 public class Tank implements Technique {
     private final Collection equipage;
-    private int seats = 6;
+    private final int seats;
 
     public Tank(int seats) {
-        if (seats > this.seats || seats < 0) {
-            seats = this.seats;
-        } else this.seats = seats;
-        this.equipage = new SimpleCollection(seats);
+        this.equipage = new SimpleCollection();
+        this.seats = seats;
     }
 
     @Override
@@ -33,11 +31,21 @@ public class Tank implements Technique {
 
     @Override
     public String destroy() {
-        return "Destroyed!";
+        StringBuilder agony = new StringBuilder("Destroyed!");
+        if (equipage.size() > 0) {
+            for (Object orc : equipage.getElements()) {
+                if (orc instanceof Driver driver) {
+                    agony.append(driver.scream());
+                } else if (orc instanceof Orc meat) {
+                    agony.append(meat.scream());
+                }
+            }
+        }
+        return agony.toString();
     }
 
     public boolean putOrc(Orc orc) {
-        if (equipage.size() < 6) {
+        if (equipage.size() < seats) {
             equipage.add(orc);
             return true;
         }

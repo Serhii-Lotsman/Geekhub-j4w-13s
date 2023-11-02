@@ -1,6 +1,7 @@
 package org.geekhub.hw3.orcostat.model.ground;
 
 import org.geekhub.hw3.orcostat.model.Collection;
+import org.geekhub.hw3.orcostat.model.DriverLicenseCategory;
 import org.geekhub.hw3.orcostat.model.Orc;
 import org.geekhub.hw3.orcostat.model.SimpleCollection;
 import org.junit.jupiter.api.Test;

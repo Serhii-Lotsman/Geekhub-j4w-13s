@@ -25,7 +25,7 @@ public class SimpleCollection implements Collection {
 
     @Override
     public void add(Object element) {
-        if (element != null) {
+        if (element != null && !contains(element)) {
             if (size == elements.length) {
                 int newCapacity = elements.length * 2;
                 elements = Arrays.copyOf(elements, newCapacity);
@@ -43,5 +43,14 @@ public class SimpleCollection implements Collection {
     @Override
     public int size() {
         return size;
+    }
+
+    private boolean contains(Object element) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i].equals(element)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
