@@ -7,6 +7,7 @@ public class Pilot extends Orc {
     private int flewHours;
 
     public Pilot() {
+        super(20_000);
     }
 
     public Pilot(int flewHours) {

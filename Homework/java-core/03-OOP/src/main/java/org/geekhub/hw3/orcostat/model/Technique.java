@@ -2,10 +2,13 @@ package org.geekhub.hw3.orcostat.model;
 
 import org.geekhub.hw3.orcostat.model.air.Pilot;
 import org.geekhub.hw3.orcostat.model.ground.Driver;
+import org.geekhub.hw3.orcostat.model.water.Commander;
 
 public interface Technique {
     int getPrice();
+
     Collection getEquipage();
+
     String shoot();
 
     default String destroy() {
@@ -16,6 +19,8 @@ public interface Technique {
                     agony.append(driver.scream());
                 } else if (orc instanceof Pilot pilot) {
                     agony.append(pilot.scream());
+                } else if (orc instanceof Commander commander) {
+                    agony.append(commander.scream());
                 } else if (orc instanceof Orc meat) {
                     agony.append(meat.scream());
                 }
