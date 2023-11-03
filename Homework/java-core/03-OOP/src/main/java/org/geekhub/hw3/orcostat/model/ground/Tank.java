@@ -29,21 +29,6 @@ public class Tank implements Technique {
         return "Bam!";
     }
 
-    @Override
-    public String destroy() {
-        StringBuilder agony = new StringBuilder("Destroyed!");
-        if (equipage.size() > 0) {
-            for (Object orc : equipage.getElements()) {
-                if (orc instanceof Driver driver) {
-                    agony.append(driver.scream());
-                } else if (orc instanceof Orc meat) {
-                    agony.append(meat.scream());
-                }
-            }
-        }
-        return agony.toString();
-    }
-
     public boolean putOrc(Orc orc) {
         if (equipage.size() < seats) {
             equipage.add(orc);

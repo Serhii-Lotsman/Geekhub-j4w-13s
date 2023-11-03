@@ -16,7 +16,7 @@ public class Pilot extends Orc {
 
     @Override
     public String scream() {
-        return "Ohh noo-oo-o";
+        return "Hell!";
     }
 
     public int getFlewHours() {
