@@ -7,7 +7,7 @@ public class OrcoStat {
     public void smashOrc(Orc orc) {
         orc.scream();
         orcCounter++;
-        dollarsCounter+=orc.getPrice();
+        dollarsCounter += orc.getPrice();
     }
 
     public int getNegativelyAliveOrcCount() {
@@ -16,7 +16,7 @@ public class OrcoStat {
 
     public void smashTechnique(Technique technique) {
         technique.destroy();
-        dollarsCounter+=technique.getPrice();
+        dollarsCounter += technique.getPrice();
         if (technique.getEquipage().size() != 0) {
             for (Object object : technique.getEquipage().getElements()) {
                 smashOrc((Orc) object);
