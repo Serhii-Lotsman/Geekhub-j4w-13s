@@ -1,6 +1,6 @@
 package org.geekhub.hw3.orcostat.model.ground;
 
-import org.geekhub.hw3.orcostat.model.Collection;
+import org.geekhub.hw3.orcostat.model.interfaces.Collection;
 import org.geekhub.hw3.orcostat.model.Orc;
 import org.geekhub.hw3.orcostat.model.SimpleCollection;
 

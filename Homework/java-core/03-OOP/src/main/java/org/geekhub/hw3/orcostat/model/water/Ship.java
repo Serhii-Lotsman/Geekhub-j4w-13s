@@ -1,9 +1,9 @@
 package org.geekhub.hw3.orcostat.model.water;
 
-import org.geekhub.hw3.orcostat.model.Collection;
+import org.geekhub.hw3.orcostat.model.interfaces.Collection;
 import org.geekhub.hw3.orcostat.model.Orc;
 import org.geekhub.hw3.orcostat.model.SimpleCollection;
-import org.geekhub.hw3.orcostat.model.Technique;
+import org.geekhub.hw3.orcostat.model.interfaces.Technique;
 
 public class Ship implements Technique {
     private final Collection equipage;

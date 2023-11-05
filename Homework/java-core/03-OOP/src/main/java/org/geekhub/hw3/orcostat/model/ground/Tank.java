@@ -1,9 +1,9 @@
 package org.geekhub.hw3.orcostat.model.ground;
 
-import org.geekhub.hw3.orcostat.model.Collection;
+import org.geekhub.hw3.orcostat.model.interfaces.Collection;
 import org.geekhub.hw3.orcostat.model.Orc;
 import org.geekhub.hw3.orcostat.model.SimpleCollection;
-import org.geekhub.hw3.orcostat.model.Technique;
+import org.geekhub.hw3.orcostat.model.interfaces.Technique;
 
 public class Tank implements Technique {
     private final Collection equipage;
@@ -30,9 +30,18 @@ public class Tank implements Technique {
     }
 
     public boolean putOrc(Orc orc) {
-        if (equipage.size() < seats) {
+        if (equipage.size() < seats && !contains(orc)) {
             equipage.add(orc);
             return true;
+        }
+        return false;
+    }
+
+    private boolean contains(Object element) {
+        for (int seat = 0; seat < equipage.size(); seat++) {
+            if (equipage.getElements()[seat].equals(element)) {
+                return true;
+            }
         }
         return false;
     }

@@ -1,8 +1,8 @@
 package org.geekhub.hw3.orcostat.model.air;
 
-import org.geekhub.hw3.orcostat.model.Collection;
+import org.geekhub.hw3.orcostat.model.interfaces.Collection;
 import org.geekhub.hw3.orcostat.model.SimpleCollection;
-import org.geekhub.hw3.orcostat.model.Technique;
+import org.geekhub.hw3.orcostat.model.interfaces.Technique;
 
 public class Aircraft implements Technique {
     private final Collection equipage;

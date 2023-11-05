@@ -1,5 +1,6 @@
 package org.geekhub.hw3.orcostat.model;
 
+import org.geekhub.hw3.orcostat.model.interfaces.Collection;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

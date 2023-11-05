@@ -1,5 +1,7 @@
 package org.geekhub.hw3.orcostat.model;
 
+import org.geekhub.hw3.orcostat.model.interfaces.Collection;
+
 import java.util.Arrays;
 
 public class SimpleCollection implements Collection {
@@ -12,20 +14,20 @@ public class SimpleCollection implements Collection {
         this.size = 0;
     }
 
-    public SimpleCollection(Object element) {
+    public SimpleCollection(Object... element) {
         this();
-        add(element);
+        addAll(element);
     }
 
-    public SimpleCollection(Object element1, Object element2) {
-        this();
-        add(element1);
-        add(element2);
+    public void addAll(Object... elements) {
+        for (Object element : elements) {
+            add(element);
+        }
     }
 
     @Override
     public void add(Object element) {
-        if (element != null && !contains(element)) {
+        if (element != null) {
             if (size == elements.length) {
                 int newCapacity = elements.length * 2;
                 elements = Arrays.copyOf(elements, newCapacity);
@@ -45,12 +47,4 @@ public class SimpleCollection implements Collection {
         return size;
     }
 
-    private boolean contains(Object element) {
-        for (int i = 0; i < size; i++) {
-            if (elements[i].equals(element)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
