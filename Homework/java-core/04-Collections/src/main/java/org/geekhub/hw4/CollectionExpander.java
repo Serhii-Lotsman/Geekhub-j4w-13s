@@ -8,12 +8,36 @@ import java.util.Map;
 public class CollectionExpander implements Expander {
     @Override
     public double getMinValue(Collection<? extends Number> collection) {
-        return 0.0;
+        double minValue = Double.MAX_VALUE;
+
+        if (collection.isEmpty()) {
+            return minValue;
+        } else {
+            for (Number number : collection) {
+                double value = number.doubleValue();
+                if (value < minValue) {
+                    minValue = value;
+                }
+            }
+        }
+        return minValue;
     }
 
     @Override
     public double getMaxValue(Collection<? extends Number> collection) {
-        return 0.0;
+        double maxValue = Double.MIN_VALUE;
+
+        if (collection.isEmpty()) {
+            return maxValue;
+        } else {
+            for (Number number : collection) {
+                double value = number.doubleValue();
+                if (value > maxValue) {
+                    maxValue = value;
+                }
+            }
+        }
+        return maxValue;
     }
 
     @Override
