@@ -43,6 +43,7 @@ public class CollectionExpander implements Expander {
     @Override
     public double getSum(Collection<? extends Number> collection) {
         double sumOfNumbers = 0.0;
+
         if (!collection.isEmpty()) {
             for (Number number : collection) {
                 sumOfNumbers += number.doubleValue();
@@ -53,7 +54,16 @@ public class CollectionExpander implements Expander {
 
     @Override
     public String join(Collection<?> collection,  char delimiter) {
-        return null;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Object object : collection) {
+            stringBuilder.append(object.toString()).append(delimiter);
+        }
+        if (!collection.isEmpty()) {
+            int indexLastObj = stringBuilder.lastIndexOf(String.valueOf(delimiter));
+            stringBuilder.deleteCharAt(indexLastObj);
+        }
+        return stringBuilder.toString();
     }
 
     @Override
