@@ -79,7 +79,13 @@ public class CollectionExpander implements Expander {
 
     @Override
     public List<List<Object>> chunked(Collection<?> collection, int amount) {
-        return null;
+        List<List<Object>> collectionPieces = new ArrayList<>();
+        List<Object> chunk = new ArrayList<>(collection);
+
+        for (int i = 0; i < chunk.size(); i++) {
+            collectionPieces.add(new ArrayList<>());
+        }
+        return collectionPieces;
     }
 
     @Override
