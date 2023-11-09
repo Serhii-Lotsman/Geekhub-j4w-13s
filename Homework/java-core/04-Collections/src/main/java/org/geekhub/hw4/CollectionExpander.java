@@ -42,7 +42,13 @@ public class CollectionExpander implements Expander {
 
     @Override
     public double getSum(Collection<? extends Number> collection) {
-        return 0.0;
+        double sumOfNumbers = 0.0;
+        if (!collection.isEmpty()) {
+            for (Number number : collection) {
+                sumOfNumbers += number.doubleValue();
+            }
+        }
+        return sumOfNumbers;
     }
 
     @Override
