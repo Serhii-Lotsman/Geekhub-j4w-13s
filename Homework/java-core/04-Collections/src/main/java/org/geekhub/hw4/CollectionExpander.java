@@ -1,5 +1,6 @@
 package org.geekhub.hw4;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,12 @@ public class CollectionExpander implements Expander {
 
     @Override
     public List<Double> reversed(List<? extends Number> collection) {
-        return null;
+        List<Double> reverseCollection = new ArrayList<>();
+
+        for (int num = collection.size() - 1; num >= 0; num--) {
+            reverseCollection.add(collection.get(num).doubleValue());
+        }
+        return reverseCollection;
     }
 
     @Override
