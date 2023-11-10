@@ -2,6 +2,7 @@ package org.geekhub.hw4;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public class CollectionExpander implements Expander {
     }
 
     @Override
-    public String join(Collection<?> collection,  char delimiter) {
+    public String join(Collection<?> collection, char delimiter) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Object object : collection) {
@@ -94,7 +95,19 @@ public class CollectionExpander implements Expander {
 
     @Override
     public List<?> dropElements(List<?> list, Object criteria) {
-        return null;
+        Iterator<?> iterator = list.iterator();
+
+        if (criteria instanceof Integer) {
+            list.remove(list.get((int) criteria));
+        } else {
+            while (iterator.hasNext()) {
+                Object object = iterator.next();
+                if (object.equals(criteria)) {
+                    iterator.remove();
+                }
+            }
+        }
+        return list;
     }
 
     @Override

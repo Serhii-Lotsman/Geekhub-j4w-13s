@@ -19,7 +19,7 @@ public interface Expander {
     double getSum(Collection<? extends Number> collection);
 
     //must combine the entire object into one line, each element must be separated by the provided delimiter,
-    // it is better to use StringBuilder, no separator is needed after the last element;
+    // it is better to use StringBuilder, no separator is needed after the last element
     String join(Collection<?> collection, char delimiter);
 
     //Get a list of numbers, reverse the order of elements, return a double list
@@ -32,6 +32,7 @@ public interface Expander {
     //if criterion is int, only one element by index should be deleted if criterion is an object
     //should remove all the same elements from the list
     //can take a list on any object
+    @SuppressWarnings("java:S1452")
     List<?> dropElements(List<?> list, Object criteria);
 
     // should get any instance of the class and return a parameterized collection with the type of that instance
