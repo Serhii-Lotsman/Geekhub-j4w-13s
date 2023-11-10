@@ -2,9 +2,11 @@ package org.geekhub.hw4;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class CollectionExpander implements Expander {
@@ -119,7 +121,16 @@ public class CollectionExpander implements Expander {
 
     @Override
     public <T> List<T> removeDuplicatesAndNull(List<T> collection) {
-        return null;
+        Set<T> uniqueElements = new HashSet<>();
+        List<T> result = new ArrayList<>();
+
+        for (T element : collection) {
+            if (element != null && uniqueElements.add(element)) {
+                result.add(element);
+            }
+        }
+
+        return result;
     }
 
     @Override
