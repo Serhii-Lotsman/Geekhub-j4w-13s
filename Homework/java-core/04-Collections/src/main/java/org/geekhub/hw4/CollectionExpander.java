@@ -82,8 +82,12 @@ public class CollectionExpander implements Expander {
         List<List<Object>> collectionPieces = new ArrayList<>();
         List<Object> chunk = new ArrayList<>(collection);
 
-        for (int i = 0; i < chunk.size(); i++) {
-            collectionPieces.add(new ArrayList<>());
+        for (int listIterator = 0; listIterator < amount; listIterator++) {
+            List<Object> subList = new ArrayList<>();
+            for (int element = listIterator; element < chunk.size(); element += amount) {
+                subList.add(chunk.get(element));
+            }
+            collectionPieces.add(subList);
         }
         return collectionPieces;
     }
