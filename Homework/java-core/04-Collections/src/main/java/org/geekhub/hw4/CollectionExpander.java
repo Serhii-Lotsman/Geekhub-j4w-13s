@@ -112,7 +112,9 @@ public class CollectionExpander implements Expander {
 
     @Override
     public <T> List<T> getClassList(T t) {
-        return null;
+        List<T> classes = new ArrayList<>();
+        classes.add(t);
+        return classes;
     }
 
     @Override
