@@ -2,6 +2,7 @@ package org.geekhub.hw4;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -135,7 +136,22 @@ public class CollectionExpander implements Expander {
 
     @Override
     public <T> Map<T, Collection<T>> grouping(Collection<T> collection) {
-        return null;
+        Map<T, Collection<T>> groupMap = new HashMap<>();
+        Iterator<T> iterator = collection.iterator();
+        Collection<T> list;
+
+        while (iterator.hasNext()) {
+            var key = iterator.next();
+            if (groupMap.containsKey(key)) {
+                list = groupMap.get(key);
+                list.add(key);
+            } else {
+                list = new ArrayList<>();
+                list.add(key);
+                groupMap.put(key, list);
+            }
+        }
+        return groupMap;
     }
 
     @Override
