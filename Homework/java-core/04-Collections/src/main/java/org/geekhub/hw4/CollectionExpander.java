@@ -163,7 +163,15 @@ public class CollectionExpander implements Expander {
 
     @Override
     public <T, U> Map<T, U> applyForNull(Map<T, U> map, U defaultValue) {
-        return null;
+        Iterator<T> keys = map.keySet().iterator();
+
+        while (keys.hasNext()) {
+            var key = keys.next();
+            if (map.containsValue(null)) {
+                map.replace(key, map.get(key), defaultValue);
+            }
+        }
+        return map;
     }
 
     @Override
