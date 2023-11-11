@@ -174,7 +174,17 @@ public class CollectionExpander implements Expander {
 
     @Override
     public <T> Collection<T> collectingList(Map<T, T> map1, Map<T, T> map2) {
-
-        return null;
+        Set<T> set = new HashSet<>();
+        for (Map.Entry<T,T> entry2 : map2.entrySet()) {
+            for (Map.Entry<T,T> entry1 : map1.entrySet()) {
+                if (entry1.getKey() == entry2.getValue()) {
+                    set.add(entry1.getKey());
+                }
+                if (entry2.getKey() == entry1.getValue()) {
+                    set.add(entry2.getKey());
+                }
+            }
+        }
+        return set;
     }
 }
