@@ -156,7 +156,9 @@ public class CollectionExpander implements Expander {
 
     @Override
     public <T, U> Map<T, U> merge(Map<T, U> map1, Map<T, U> map2) {
-        return null;
+        Map<T, U> mergedMap = new HashMap<>(map1);
+        mergedMap.putAll(map2);
+        return mergedMap;
     }
 
     @Override
