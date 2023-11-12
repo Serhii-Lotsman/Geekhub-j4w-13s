@@ -2,9 +2,11 @@ package org.geekhub.hw4;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,13 +63,14 @@ public class CollectionExpander implements Expander {
     public String join(Collection<?> collection, char delimiter) {
         StringBuilder stringBuilder = new StringBuilder();
 
+        if (collection.isEmpty()) {
+            return "";
+        }
         for (Object object : collection) {
-            stringBuilder.append(object.toString()).append(delimiter);
+            stringBuilder.append(object).append(delimiter);
         }
-        if (!collection.isEmpty()) {
-            int indexLastObj = stringBuilder.lastIndexOf(String.valueOf(delimiter));
-            stringBuilder.deleteCharAt(indexLastObj);
-        }
+        int indexLastObj = stringBuilder.lastIndexOf(String.valueOf(delimiter));
+        stringBuilder.deleteCharAt(indexLastObj);
         return stringBuilder.toString();
     }
 
@@ -75,9 +78,10 @@ public class CollectionExpander implements Expander {
     public List<Double> reversed(List<? extends Number> collection) {
         List<Double> reverseCollection = new ArrayList<>();
 
-        for (int num = collection.size() - 1; num >= 0; num--) {
-            reverseCollection.add(collection.get(num).doubleValue());
+        for (Number number : collection) {
+            reverseCollection.add(number.doubleValue());
         }
+        Collections.reverse(reverseCollection);
         return reverseCollection;
     }
 
@@ -86,10 +90,10 @@ public class CollectionExpander implements Expander {
         List<List<Object>> collectionPieces = new ArrayList<>();
         List<Object> chunk = new ArrayList<>(collection);
 
-        for (int listIterator = 0; listIterator < amount; listIterator++) {
+        for (int chunkIndex = 0; chunkIndex < amount; chunkIndex++) {
             List<Object> subList = new ArrayList<>();
-            for (int element = listIterator; element < chunk.size(); element += amount) {
-                subList.add(chunk.get(element));
+            for (int elementIndex = chunkIndex; elementIndex < chunk.size(); elementIndex += amount) {
+                subList.add(chunk.get(elementIndex));
             }
             collectionPieces.add(subList);
         }
@@ -100,12 +104,11 @@ public class CollectionExpander implements Expander {
     public List<?> dropElements(List<?> list, Object criteria) {
         Iterator<?> iterator = list.iterator();
 
-        if (criteria instanceof Integer) {
-            list.remove(list.get((int) criteria));
+        if (criteria instanceof Integer index) {
+            list.remove(list.get(index));
         } else {
             while (iterator.hasNext()) {
-                Object object = iterator.next();
-                if (object.equals(criteria)) {
+                if (iterator.next().equals(criteria)) {
                     iterator.remove();
                 }
             }
@@ -122,34 +125,18 @@ public class CollectionExpander implements Expander {
 
     @Override
     public <T> List<T> removeDuplicatesAndNull(List<T> collection) {
-        Set<T> uniqueElements = new HashSet<>();
-        List<T> result = new ArrayList<>();
-
-        for (T element : collection) {
-            if (element != null && uniqueElements.add(element)) {
-                result.add(element);
-            }
-        }
-
-        return result;
+        Set<T> uniqueElements = new LinkedHashSet<>(collection);
+        uniqueElements.remove(null);
+        return new ArrayList<>(uniqueElements);
     }
 
     @Override
     public <T> Map<T, Collection<T>> grouping(Collection<T> collection) {
         Map<T, Collection<T>> groupMap = new HashMap<>();
-        Iterator<T> iterator = collection.iterator();
-        Collection<T> list;
 
-        while (iterator.hasNext()) {
-            var key = iterator.next();
-            if (groupMap.containsKey(key)) {
-                list = groupMap.get(key);
-                list.add(key);
-            } else {
-                list = new ArrayList<>();
-                list.add(key);
-                groupMap.put(key, list);
-            }
+        for (T key : collection) {
+            groupMap.putIfAbsent(key, new ArrayList<>());
+            groupMap.get(key).add(key);
         }
         return groupMap;
     }
@@ -164,9 +151,9 @@ public class CollectionExpander implements Expander {
     @Override
     public <T, U> Map<T, U> applyForNull(Map<T, U> map, U defaultValue) {
 
-        for (Map.Entry<T, U> key : map.entrySet()) {
-            if (key.getValue() == null) {
-                map.replace(key.getKey(), defaultValue);
+        for (Map.Entry<T, U> entry : map.entrySet()) {
+            if (entry.getValue() == null) {
+                map.replace(entry.getKey(), defaultValue);
             }
         }
         return map;
@@ -175,12 +162,12 @@ public class CollectionExpander implements Expander {
     @Override
     public <T> Collection<T> collectingList(Map<T, T> map1, Map<T, T> map2) {
         Set<T> set = new HashSet<>();
-        for (Map.Entry<T,T> entry2 : map2.entrySet()) {
-            for (Map.Entry<T,T> entry1 : map1.entrySet()) {
-                if (entry1.getKey() == entry2.getValue()) {
+        for (Map.Entry<T, T> entry2 : map2.entrySet()) {
+            for (Map.Entry<T, T> entry1 : map1.entrySet()) {
+                if (entry1.getKey().equals(entry2.getValue())) {
                     set.add(entry1.getKey());
                 }
-                if (entry2.getKey() == entry1.getValue()) {
+                if (entry2.getKey().equals(entry1.getValue())) {
                     set.add(entry2.getKey());
                 }
             }
