@@ -10,58 +10,42 @@ public class ApplicationStarter {
             System.exit(1);
         } else {
             int numOfStudents = Integer.parseInt(args[0]);
-            userDataInput(numOfStudents);
+            collectAndPrintAnalytics(numOfStudents);
         }
     }
 
-    public static void userDataInput(int numOfStudents) {
+    private static void collectAndPrintAnalytics(int numOfStudents) {
         String[] names = new String[numOfStudents];
-        int numOfSubjects = 3;
-        String[] subjects = new String[numOfSubjects];
-        int[][] marks = new int[numOfStudents][numOfSubjects];
+        String[] subjectName = {"Math", "Science", "History"};
+        int[][] grades = new int[numOfStudents][subjectName.length];
 
         Scanner scanner = new Scanner(System.in);
 
-        for (int i = numOfStudents; i > 0; i--) {
-            System.out.printf("Enter information for student #%s %n", numOfStudents - i + 1);
+        for (int studentIndex = 0; studentIndex < numOfStudents; studentIndex++) {
+            System.out.printf("Enter information for student #%d%n", studentIndex + 1);
             String studentName;
             do {
                 System.out.print("Student's Name: ");
-                studentName = scanner.useDelimiter("\\s").next();
-            } while (validationInput(studentName));
-            names[numOfStudents - i] = studentName;
+                studentName = scanner.useDelimiter("\\n").next();
+            } while (validationInput(studentName.trim()));
+            names[studentIndex] = studentName;
 
-            int mathMark;
-            do {
-                System.out.print("Math Grade (0-100): ");
-                mathMark = scanner.nextInt();
-            } while (validationInput(mathMark));
-            marks[numOfStudents - i][0] = mathMark;
-            subjects[0] = "Math: ";
-
-            int scienceMark;
-            do {
-                System.out.print("Science Grade (0-100): ");
-                scienceMark = scanner.nextInt();
-            } while (validationInput(scienceMark));
-            marks[numOfStudents - i][1] = scienceMark;
-            subjects[1] = "Science: ";
-
-            int historyMark;
-            do {
-                System.out.print("History Grade (0-100): ");
-                historyMark = scanner.nextInt();
-            } while (validationInput(historyMark));
-            marks[numOfStudents - i][2] = historyMark;
-            subjects[2] = "History: ";
+            for (int subjectIndex = 0; subjectIndex < subjectName.length; subjectIndex++) {
+                int grade;
+                do {
+                    System.out.printf("%s Grade (0-100): ", subjectName[subjectIndex]);
+                    grade = scanner.nextInt();
+                } while (validationInput(grade));
+                grades[studentIndex][subjectIndex] = grade;
+            }
         }
         scanner.close();
-        studentGradesInfo(names, getStudentAverageMark(marks));
-        subjectGradesInfo(subjects, getSubjectAverageMark(marks));
+        displayStudentAverageGrades(names, calculateAverage(grades));
+        displaySubjectAverageGrades(subjectName, calculateSubjectAverage(grades));
     }
 
-    public static boolean validationInput(String name) {
-        if (name.length() == 0) {
+    private static boolean validationInput(String name) {
+        if (name.isEmpty()) {
             System.out.printf("Please, enter the correct name, the name \"%s\" is not valid %n", name);
             return true;
         } else {
@@ -69,7 +53,7 @@ public class ApplicationStarter {
         }
     }
 
-    public static boolean validationInput(int mark) {
+    private static boolean validationInput(int mark) {
         if (mark >= 0 && mark <= 100) {
             return false;
         } else {
@@ -78,7 +62,7 @@ public class ApplicationStarter {
         }
     }
 
-    public static void studentGradesInfo(String[] studentNames, double[] mark) {
+    private static void displayStudentAverageGrades(String[] studentNames, double[] mark) {
         int index = mark.length;
         System.out.println("\n");
         System.out.println("Average Grades for Each Student:");
@@ -89,18 +73,18 @@ public class ApplicationStarter {
         }
     }
 
-    public static void subjectGradesInfo(String[] subjects, double[] mark) {
+    private static void displaySubjectAverageGrades(String[] subjects, double[] mark) {
         int index = mark.length;
         System.out.println("\n");
         System.out.println("Average Grades for Each Subject:");
 
         for (String subject : subjects) {
-            System.out.print(subject + mark[index - subjects.length] + "\n");
+            System.out.print(subject + ": " + mark[index - subjects.length] + "\n");
             index++;
         }
     }
 
-    public static double[] getStudentAverageMark(int[][] allMarks) {
+    private static double[] calculateAverage(int[][] allMarks) {
         double[] averageMark = new double[allMarks.length];
 
         for (int i = 0; i < allMarks.length; i++) {
@@ -115,7 +99,7 @@ public class ApplicationStarter {
         return averageMark;
     }
 
-    public static double[] getSubjectAverageMark(int[][] allMarks) {
+    private static double[] calculateSubjectAverage(int[][] allMarks) {
         double[] averageMarks = new double[allMarks[0].length];
 
         for (int i = 0; i < allMarks[0].length; i++) {
