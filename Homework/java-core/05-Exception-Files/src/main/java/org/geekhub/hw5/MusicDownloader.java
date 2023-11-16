@@ -6,7 +6,7 @@ public class MusicDownloader {
 
     public static void main(String[] args) {
         //TODO-1 Replace path-to-playlist.txt with the correct path to playlist.txt
-        String pathToPlaylist = "path-to-playlist.txt";
+        String pathToPlaylist = "../resources/playlist.txt";
         String pathToLogFile = "log.txt";
         String mainDirectory = "library";
         int maxFileSize = 10485760;
