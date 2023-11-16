@@ -1,8 +1,7 @@
 package org.geekhub.hw5.exception;
 
-public class FileException extends Throwable{
+public class FileException extends RuntimeException {
     public FileException() {
-        super();
     }
 
     public FileException(String message) {

@@ -1,19 +1,34 @@
 package org.geekhub.hw5;
 
+import org.geekhub.hw5.exception.FileException;
+
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 public class FileUtils {
 
-    //TODO-2 Add a constructor to make it impossible to create an instance of the class
+    private FileUtils() {
+    }
 
     public static List<String> readAllLines(String file) {
-        //TODO-3 write code here AND REMOVE THIS MESSAGE
+        List<String> strings;
+        try {
+            strings = Files.readAllLines(Path.of(file));
+        } catch (FileException | IOException err) {
+            throw new FileException("File doesn't exist", err);
+        }
+        return strings;
     }
 
     public static void createDirectories(Path path) {
-        //TODO-4 write code here AND REMOVE THIS MESSAGE
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void writeToFile(Path path, byte[] content) {
