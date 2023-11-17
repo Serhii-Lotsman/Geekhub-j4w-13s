@@ -32,11 +32,19 @@ public class FileUtils {
     }
 
     public static void writeToFile(Path path, byte[] content) {
-        //TODO-5 write code here AND REMOVE THIS MESSAGE
+        try {
+            Files.write(path, content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void copyToFile(InputStream inputStream, Path path) {
-        //TODO-6 write code here AND REMOVE THIS MESSAGE
+        try {
+            Files.write(path, inputStream.readAllBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void createFileIfNotExists(Path path) {
