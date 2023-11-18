@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +47,9 @@ public class Downloader {
 
             if (isValid(url, pathToFile, filename)) {
                 createDirectories(pathToFile);
-
-                //TODO-16 Use method for saving content to file AND REMOVE THIS MESSAGE
+                if (url != null) {
+                    saveToFile(url, pathToFile, filename);
+                }
             }
         });
     }
@@ -59,7 +61,7 @@ public class Downloader {
             copyToFile(inputStream, path);
         } catch (IOException e) {
             String message = String.format("Download error: Unable to download file from link %s%n", url);
-            //TODO-17 Use method for writting message to log file AND REMOVE THIS MESSAGE
+            handleException(message);
         }
     }
 
@@ -74,7 +76,7 @@ public class Downloader {
         try {
             return new URL(url);
         } catch (MalformedURLException e) {
-            //TODO-18 write code here AND REMOVE THIS MESSAGE
+            e.printStackTrace();
         }
         return null;
     }
@@ -84,12 +86,21 @@ public class Downloader {
             return contentValidator.isValid(url, pathToFile.toString(), filename);
         } catch (IOException | LimitSizeException | ContentLengthNotKnownException e) {
             String message = e.getMessage();
-            //TODO-19 Use method for writting message to log file AND REMOVE THIS MESSAGE
+            handleException(message);
             return false;
         } catch (FileExistException e) {
             String message = e.getMessage();
-            //TODO-20 Use method for writting message to log file AND REMOVE THIS MESSAGE
+            handleException(message);
             return true;
+        }
+
+    }
+
+    private void handleException(String message) {
+        try {
+            Files.writeString(pathToLogFile, message);
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 }

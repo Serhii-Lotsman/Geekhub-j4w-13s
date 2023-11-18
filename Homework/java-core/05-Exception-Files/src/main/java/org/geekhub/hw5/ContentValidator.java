@@ -34,19 +34,19 @@ public class ContentValidator {
 
     private void hasContent(int contentLength, URL url) throws ContentLengthNotKnownException {
         if (contentLength == CONTENT_LENGTH_IS_NOT_KNOWN) {
-            throw new ContentLengthNotKnownException("Cannot download file from url: " + url + "\n");
+            throw new ContentLengthNotKnownException(String.format("Cannot download file from url: %s%n", url));
         }
     }
 
     private void validateContentLength(int contentLength, URL url) throws LimitSizeException {
         if (contentLength > maxFileSize) {
-            throw new LimitSizeException("Failed to download from url: " + url + " over 10\n");
+            throw new LimitSizeException(String.format("Failed to download from url: %s over 10%n", url));
         }
     }
 
     private void isExistFile(String pathToFile, String filename, URL url) throws FileExistException {
         if (Files.exists(Path.of(pathToFile, filename))) {
-            throw new FileExistException("This file is already exist: " + url);
+            throw new FileExistException(String.format("File: %s updated from URL: %s%n", Path.of(pathToFile, filename), url));
         }
     }
 }

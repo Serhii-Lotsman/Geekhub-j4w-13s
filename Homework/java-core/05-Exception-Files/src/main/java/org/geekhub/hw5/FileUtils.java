@@ -20,8 +20,8 @@ public class FileUtils {
         List<String> strings;
         try {
             strings = Files.readAllLines(Path.of(file));
-        } catch (FileException | IOException err) {
-            throw new FileException("File doesn't exist", err);
+        } catch (FileException | IOException e) {
+            throw new FileException("File doesn't exist", e);
         }
         return strings;
     }
