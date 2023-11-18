@@ -1,6 +1,7 @@
 package org.geekhub.hw5;
 
 import org.geekhub.hw5.exception.ContentLengthNotKnownException;
+import org.geekhub.hw5.exception.FileException;
 import org.geekhub.hw5.exception.FileExistException;
 import org.geekhub.hw5.exception.LimitSizeException;
 
@@ -99,8 +100,8 @@ public class Downloader {
     private void handleException(String message) {
         try {
             Files.writeString(pathToLogFile, message);
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        } catch (FileException | IOException exception) {
+            throw new FileException("Failed to write to log-file", exception);
         }
     }
 }

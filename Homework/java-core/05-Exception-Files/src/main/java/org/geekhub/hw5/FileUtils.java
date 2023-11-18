@@ -29,24 +29,24 @@ public class FileUtils {
     public static void createDirectories(Path path) {
         try {
             Files.createDirectories(path);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (FileException | IOException e) {
+            throw new FileException("Unable to create directories", e);
         }
     }
 
     public static void writeToFile(Path path, byte[] content) {
         try {
             Files.write(path, content);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (FileException | IOException e) {
+            throw new FileException("Failed to write to file", e);
         }
     }
 
     public static void copyToFile(InputStream inputStream, Path path) {
         try {
             Files.write(path, inputStream.readAllBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (FileException | IOException e) {
+            throw new FileException("Failed to copy", e);
         }
     }
 
@@ -54,8 +54,8 @@ public class FileUtils {
         if (!Files.exists(path)) {
             try {
                 Files.createFile(path);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (FileException | IOException e) {
+                throw new FileException("Failed to create the file", e);
             }
         }
     }
@@ -84,8 +84,8 @@ public class FileUtils {
     public static void deleteIfExists(Path path) {
         try {
             Files.deleteIfExists(path);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (FileException | IOException e) {
+            throw new FileException("Failed to delete", e);
         }
     }
 }
