@@ -32,24 +32,21 @@ public class ContentValidator {
         return true;
     }
 
-    //TODO-10 ADD correct throws AND REMOVE THIS MESSAGE
-    private void hasContent(int contentLength, URL url) {
+    private void hasContent(int contentLength, URL url) throws ContentLengthNotKnownException {
         if (contentLength == CONTENT_LENGTH_IS_NOT_KNOWN) {
-            //TODO-11 ADD correct throw and message AND REMOVE THIS MESSAGE
+            throw new ContentLengthNotKnownException("Cannot download file from url: " + url + "\n");
         }
     }
 
-    //TODO-12 ADD correct throws AND REMOVE THIS MESSAGE
-    private void validateContentLength(int contentLength, URL url) {
+    private void validateContentLength(int contentLength, URL url) throws LimitSizeException {
         if (contentLength > maxFileSize) {
-            //TODO-13 ADD correct throw and message AND REMOVE THIS MESSAGE
+            throw new LimitSizeException("Failed to download from url: " + url + " over 10\n");
         }
     }
 
-    //TODO-14 ADD correct throws AND REMOVE THIS MESSAGE
-    private void isExistFile(String pathToFile, String filename, URL url) {
+    private void isExistFile(String pathToFile, String filename, URL url) throws FileExistException {
         if (Files.exists(Path.of(pathToFile, filename))) {
-            //TODO-15 ADD correct throw and message AND REMOVE THIS MESSAGE
+            throw new FileExistException("This file is already exist: " + url);
         }
     }
 }
