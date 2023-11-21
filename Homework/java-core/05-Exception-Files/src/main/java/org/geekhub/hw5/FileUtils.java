@@ -4,12 +4,11 @@ import org.geekhub.hw5.exception.FileException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class FileUtils {
 
@@ -29,24 +28,24 @@ public class FileUtils {
     public static void createDirectories(Path path) {
         try {
             Files.createDirectories(path);
-        } catch (FileException | IOException e) {
-            throw new FileException("Unable to create directories", e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public static void writeToFile(Path path, byte[] content) {
         try {
             Files.write(path, content);
-        } catch (FileException | IOException e) {
-            throw new FileException("Failed to write to file", e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public static void copyToFile(InputStream inputStream, Path path) {
         try {
             Files.write(path, inputStream.readAllBytes());
-        } catch (FileException | IOException e) {
-            throw new FileException("Failed to copy", e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -54,28 +53,21 @@ public class FileUtils {
         if (!Files.exists(path)) {
             try {
                 Files.createFile(path);
-            } catch (FileException | IOException e) {
-                throw new FileException("Failed to create the file", e);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
     public static void deleteDirectories(String directory) {
         try {
-            Files.walkFileTree(Path.of(directory), new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFile(
-                    Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
+            Path rootPath = Path.of(directory);
+            Stream<Path> pathStream = Files.walk(rootPath);
+            final List<Path> pathsToDelete = pathStream.sorted(Collections.reverseOrder()).toList();
+            for(Path path : pathsToDelete) {
+                Files.deleteIfExists(path);
+            }
+            pathStream.close();
         } catch (FileException | IOException e) {
             throw new FileException("Unable to delete directory", e);
         }
@@ -84,8 +76,8 @@ public class FileUtils {
     public static void deleteIfExists(Path path) {
         try {
             Files.deleteIfExists(path);
-        } catch (FileException | IOException e) {
-            throw new FileException("Failed to delete", e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

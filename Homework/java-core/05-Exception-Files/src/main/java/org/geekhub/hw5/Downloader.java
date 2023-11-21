@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.geekhub.hw5.FileUtils.copyToFile;
 import static org.geekhub.hw5.FileUtils.createDirectories;
 import static org.geekhub.hw5.FileUtils.readAllLines;
 
@@ -58,8 +57,7 @@ public class Downloader {
     private void saveToFile(URL url, Path pathToFile, String filename) {
         try (InputStream inputStream = url.openStream()) {
             Path path = Path.of(pathToFile.toString(), filename);
-
-            copyToFile(inputStream, path);
+            Files.copy(inputStream, path);
         } catch (IOException e) {
             String message = String.format("Download error: Unable to download file from link %s%n", url);
             handleException(message);
