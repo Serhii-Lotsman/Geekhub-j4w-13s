@@ -60,14 +60,11 @@ public class FileUtils {
     }
 
     public static void deleteDirectories(String directory) {
-        try {
-            Path rootPath = Path.of(directory);
-            Stream<Path> pathStream = Files.walk(rootPath);
+        try (Stream<Path> pathStream = Files.walk(Path.of(directory))){
             final List<Path> pathsToDelete = pathStream.sorted(Collections.reverseOrder()).toList();
             for(Path path : pathsToDelete) {
                 Files.deleteIfExists(path);
             }
-            pathStream.close();
         } catch (FileException | IOException e) {
             throw new FileException("Unable to delete directory", e);
         }
