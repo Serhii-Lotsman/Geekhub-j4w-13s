@@ -1,5 +1,8 @@
 package org.geekhub.hw6;
 
+import org.geekhub.hw6.exception.CatFactException;
+import org.geekhub.hw6.exception.FileException;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,12 +19,12 @@ public class UniqueCatFact {
             try {
                 Files.createFile(filePath);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new FileException("Failed to create the file", e);
             }
         }
     }
 
-    public void writeFactToFile(String catFact) throws CatFactException{
+    public void writeFactToFile(String catFact) throws CatFactException {
         try {
             Files.writeString(filePath, catFact + "\n", StandardOpenOption.APPEND);
         } catch (Exception e) {
@@ -43,11 +46,10 @@ public class UniqueCatFact {
                 } else retries--;
             }
             Files.writeString(filePath, "I don't know any new facts", StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new CatFactException("Fail to write the fact", e);
         }
     }
 }
