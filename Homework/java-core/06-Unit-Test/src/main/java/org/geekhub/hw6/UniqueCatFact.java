@@ -12,10 +12,10 @@ import java.util.Scanner;
 public class UniqueCatFact {
     private int retries = 5;
 
-    static final String FETCH_PATH = System.getProperty("user.dir");
-    static final Path FILE_PATH = Path.of(FETCH_PATH + Path.of("/resources/catFacts.txt"));
+    private static final String FETCH_PATH = System.getProperty("user.dir");
+    private static final Path FILE_PATH = Path.of(FETCH_PATH + Path.of("/resources/catFacts.txt"));
 
-    public static void createFileIfNotExists(Path filePath) {
+    public void createFileIfNotExists(Path filePath) {
         if (!Files.exists(filePath)) {
             try {
                 Files.createFile(filePath);
@@ -25,7 +25,7 @@ public class UniqueCatFact {
         }
     }
 
-    public static void writeFactToFile(Path path, String catFact) {
+    public void writeFactToFile(Path path, String catFact) {
         try {
             Files.writeString(path, catFact + "\n", StandardOpenOption.APPEND);
         } catch (IOException e) {
@@ -33,7 +33,7 @@ public class UniqueCatFact {
         }
     }
 
-    public static void setInterval(long interval) throws InterruptedException {
+    public void setInterval(long interval) throws InterruptedException {
         Thread.sleep( interval * 1000);
     }
 
@@ -49,8 +49,9 @@ public class UniqueCatFact {
             while (true) {
                 String catFact = catFactService.getRandomCatFact();
                 if (retries == 0) {
-                    catFact = "I don't know any new facts \n";
+                    catFact = "I don't know any new facts";
                     writeFactToFile(FILE_PATH, catFact);
+                    System.out.println("Fetching complete");
                     break;
                 } else if (!Files.readAllLines(FILE_PATH).contains(catFact) && !catFact.isEmpty()) {
                     writeFactToFile(FILE_PATH, catFact);
@@ -60,6 +61,7 @@ public class UniqueCatFact {
             }
         } catch (InterruptedException | IOException e) {
             Thread.currentThread().interrupt();
+            throw new CatFactException("Fail fetching the fact", e);
         }
     }
 }
