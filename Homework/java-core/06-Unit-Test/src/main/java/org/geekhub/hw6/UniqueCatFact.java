@@ -61,7 +61,7 @@ public class UniqueCatFact {
             }
         } catch (InterruptedException | IOException e) {
             Thread.currentThread().interrupt();
-            throw new CatFactException("Fail fetching the fact", e);
+            throw new CatFactException("Fail to fetch new cat fact", e);
         }
     }
 }
