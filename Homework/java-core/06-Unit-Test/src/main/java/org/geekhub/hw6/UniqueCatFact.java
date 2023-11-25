@@ -12,10 +12,10 @@ import java.util.Scanner;
 public class UniqueCatFact {
     private int retries = 5;
 
-    String fetchPath = System.getProperty("user.dir");
-    Path filePath = Path.of(fetchPath + Path.of("/resources/catFacts.txt"));
+    static final String FETCH_PATH = System.getProperty("user.dir");
+    static final Path FILE_PATH = Path.of(FETCH_PATH + Path.of("/resources/catFacts.txt"));
 
-    public void createFileIfNotExist(Path filePath) {
+    public static void createFileIfNotExists(Path filePath) {
         if (!Files.exists(filePath)) {
             try {
                 Files.createFile(filePath);
@@ -25,15 +25,15 @@ public class UniqueCatFact {
         }
     }
 
-    public void writeFactToFile(String catFact) throws CatFactException {
+    public static void writeFactToFile(Path path, String catFact) {
         try {
-            Files.writeString(filePath, catFact + "\n", StandardOpenOption.APPEND);
-        } catch (Exception e) {
-            throw new CatFactException("Fail to write the fact", e);
+            Files.writeString(path, catFact + "\n", StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new FileException("Failed to write the fact", e);
         }
     }
 
-    public void setRetries(long interval) throws InterruptedException {
+    public static void setInterval(long interval) throws InterruptedException {
         Thread.sleep( interval * 1000);
     }
 
@@ -42,22 +42,24 @@ public class UniqueCatFact {
         System.out.print("Enter the number of interval in seconds: ");
         long interval = scanner.nextLong();
         System.out.println("Fetching facts...");
-        createFileIfNotExist(filePath);
+
+        createFileIfNotExists(FILE_PATH);
+
         try {
-            while (retries != 0) {
+            while (true) {
                 String catFact = catFactService.getRandomCatFact();
-                if (!Files.readAllLines(filePath).contains(catFact) && !catFact.isEmpty()) {
-                    writeFactToFile(catFact);
+                if (retries == 0) {
+                    catFact = "I don't know any new facts \n";
+                    writeFactToFile(FILE_PATH, catFact);
+                    break;
+                } else if (!Files.readAllLines(FILE_PATH).contains(catFact) && !catFact.isEmpty()) {
+                    writeFactToFile(FILE_PATH, catFact);
                     retries = 5;
-                    setRetries(interval);
+                    setInterval(interval);
                 } else retries--;
             }
-            Files.writeString(filePath, "I don't know any new facts", StandardOpenOption.APPEND);
-            System.out.println("Fetching complete");
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             Thread.currentThread().interrupt();
-        } catch (IOException e) {
-            throw new CatFactException("Fail to write the fact", e);
         }
     }
 }
