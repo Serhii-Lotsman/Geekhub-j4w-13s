@@ -13,7 +13,7 @@ public class UniqueCatFact {
     private int retries = 5;
 
     private static final String FETCH_PATH = System.getProperty("user.dir");
-    private static final Path FILE_PATH = Path.of(FETCH_PATH + Path.of("/resources/catFacts.txt"));
+    private static final Path FILE_PATH = Path.of(FETCH_PATH + Path.of("/catFacts.txt"));
 
     public void createFileIfNotExists(Path filePath) {
         if (!Files.exists(filePath)) {
