@@ -4,4 +4,8 @@ public class CatFactException extends Exception {
     public CatFactException(String message, Throwable throwable) {
         super(message, throwable);
     }
+
+    public CatFactException(String message) {
+        super(message);
+    }
 }
