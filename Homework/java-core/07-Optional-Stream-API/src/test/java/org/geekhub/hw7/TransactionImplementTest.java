@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,6 +83,12 @@ class TransactionImplementTest {
 
     @Test
     void getSpentAmountByCategory() {
+        Map<String, Double> testMap = new HashMap<>();
+        testMap.put("sales operation", 82.26);
+        testMap.put("currency operation", 39.69);
+        var transactionResult = transactionImplement.getSpentAmountByCategory();
+
+        assertEquals(testMap, transactionResult);
     }
 
     @Test
