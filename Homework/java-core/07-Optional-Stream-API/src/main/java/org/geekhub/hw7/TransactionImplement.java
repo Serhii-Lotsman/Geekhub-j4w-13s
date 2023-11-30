@@ -22,7 +22,10 @@ public class TransactionImplement implements TransactionAnalyzer {
 
     @Override
     public double getTotalSpentForDate(LocalDate date) {
-        return 0;
+        return transactions.stream()
+            .filter(transaction -> transaction.date().isEqual(date))
+            .mapToDouble(Transaction::amount)
+            .reduce(0, Double::sum);
     }
 
     @Override
