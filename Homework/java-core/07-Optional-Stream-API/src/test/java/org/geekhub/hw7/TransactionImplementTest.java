@@ -51,14 +51,19 @@ class TransactionImplementTest {
     }
 
     @Test
-    void getBiggestTransactionInCategory_shouldReturnMaxAmountOptionalOrNull() {
+    void getBiggestTransactionInCategory_shouldReturnMaxAmount() {
         var transactionResult = transactionImplement.getBiggestTransactionInCategory("sales operation");
         Optional<Transaction> testResult = Optional.ofNullable(transactions.get(2));
 
-        assertAll(
-            () -> assertEquals(testResult, transactionResult),
-            () -> assertEquals(testResult.orElse(null), transactionResult.orElse(null)
-        ));
+        assertEquals(testResult, transactionResult);
+    }
+
+    @Test
+    void getBiggestTransactionInCategory_shouldAnEmptyOptional_whenDoesNotTransaction() {
+        transactions.clear();
+        var transactionResult = transactionImplement.getBiggestTransactionInCategory("sales operation");
+
+        assertEquals(Optional.empty(), transactionResult);
     }
 
     @Test
@@ -93,6 +98,18 @@ class TransactionImplementTest {
 
     @Test
     void getDateWithMostExpenses() {
+        Optional<LocalDate> testDate = Optional.of(LocalDate.of(2004, 1, 30));
+        var transactionResult = transactionImplement.getDateWithMostExpenses();
+
+        assertEquals(testDate, transactionResult);
+    }
+
+    @Test
+        void getDateWithMostExpenses_shouldReturnAnEmptyOptional_whenDoesNotTransaction() {
+        transactions.clear();
+        var transactionResult = transactionImplement.getDateWithMostExpenses();
+
+        assertEquals(Optional.empty(), transactionResult);
     }
 
     @Test

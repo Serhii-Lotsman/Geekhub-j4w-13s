@@ -45,7 +45,8 @@ public class TransactionImplement implements TransactionAnalyzer {
 
     @Override
     public Optional<LocalDate> getDateWithMostExpenses() {
-        return Optional.empty();
+        return transactions.stream()
+            .max(Comparator.comparingDouble(Transaction::amount)).map(Transaction::date);
     }
 
     @Override
