@@ -41,6 +41,11 @@ class TransactionImplementTest {
             "currency operation",
             LocalDate.of(2000, 10, 10)
         ));
+        transactions.add(new Transaction(
+            12.23,
+            "currency operation",
+            LocalDate.of(2010, 11, 5)
+        ));
     }
 
     @Test
@@ -64,6 +69,14 @@ class TransactionImplementTest {
 
     @Test
     void getTransactionsByCategoryAndDate() {
+        List<Transaction> testList = new ArrayList<>();
+        testList.add(transactions.get(0));
+        testList.add(transactions.get(3));
+        var transactionResult = transactionImplement.getTransactionsByCategoryAndDate(
+            "currency operation",
+            LocalDate.of(2000, 10, 10));
+
+        assertEquals(testList, transactionResult);
     }
 
     @Test

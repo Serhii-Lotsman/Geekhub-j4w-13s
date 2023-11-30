@@ -1,6 +1,7 @@
 package org.geekhub.hw7;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,10 @@ public class TransactionImplement implements TransactionAnalyzer {
 
     @Override
     public List<Transaction> getTransactionsByCategoryAndDate(String category, LocalDate date) {
-        return null;
+        return transactions.stream()
+            .filter(transaction -> transaction.category().equals(category))
+            .filter(transactionDate -> transactionDate.date().isEqual(date))
+            .toList();
     }
 
     @Override
