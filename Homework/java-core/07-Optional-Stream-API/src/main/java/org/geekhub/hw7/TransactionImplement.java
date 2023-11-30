@@ -51,7 +51,8 @@ public class TransactionImplement implements TransactionAnalyzer {
 
     @Override
     public Map<String, Double> getAverageSpendingPerCategory() {
-        return null;
+        return transactions.stream()
+            .collect(Collectors.groupingBy(Transaction::category, Collectors.averagingDouble(Transaction::amount)));
     }
 
     @Override

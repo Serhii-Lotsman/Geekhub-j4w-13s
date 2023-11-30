@@ -22,7 +22,7 @@ class TransactionImplementTest {
     void setUp() {
         this.transactions = new ArrayList<>();
         transactionImplement = new TransactionImplement(transactions);
-
+        //TODO need to refactors List contain and replaces new ArrayList with ListOf()
         transactions.add(new Transaction(
             12.23,
             "currency operation",
@@ -89,8 +89,8 @@ class TransactionImplementTest {
     @Test
     void getSpentAmountByCategory() {
         Map<String, Double> testMap = new HashMap<>();
-        testMap.put("sales operation", 82.26);
-        testMap.put("currency operation", 39.69);
+        testMap.put(transactions.get(1).category(), 82.26);
+        testMap.put(transactions.get(0).category(), 39.69);
         var transactionResult = transactionImplement.getSpentAmountByCategory();
 
         assertEquals(testMap, transactionResult);
@@ -114,6 +114,12 @@ class TransactionImplementTest {
 
     @Test
     void getAverageSpendingPerCategory() {
+        Map<String, Double> testMap = new HashMap<>();
+        testMap.put(transactions.get(1).category(), 41.13);
+        testMap.put(transactions.get(0).category(), 13.229999999999999);
+        var transactionResult = transactionImplement.getAverageSpendingPerCategory();
+
+        assertEquals(testMap, transactionResult);
     }
 
     @Test
