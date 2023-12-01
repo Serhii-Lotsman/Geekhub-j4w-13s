@@ -1,12 +1,11 @@
 package org.geekhub.hw7;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,27 +21,27 @@ class TransactionImplementTest {
     void setUp() {
         this.transactions = List.of(
             new Transaction(
-                12.23,
+                12.5,
                 "currency operation",
                 LocalDate.of(2000, 10, 10)
             ),
             new Transaction(
-                32.13,
+                32.5,
                 "sales operation",
                 LocalDate.of(2001, 11, 10)
             ),
             new Transaction(
-                50.13,
+                50.5,
                 "sales operation",
                 LocalDate.of(2004, 1, 30)
             ),
             new Transaction(
-                15.23,
+                15.5,
                 "currency operation",
                 LocalDate.of(2000, 10, 10)
             ),
             new Transaction(
-                12.23,
+                17,
                 "currency operation",
                 LocalDate.of(2010, 11, 5)
             )
@@ -69,7 +68,7 @@ class TransactionImplementTest {
     @Test
     void getTotalSpentForDate() {
         var transactionResult = transactionImplement.getTotalSpentForDate(LocalDate.of(2000, 10, 10));
-        double testResult = 27.46;
+        double testResult = transactions.get(0).amount() + transactions.get(3).amount();
 
         assertEquals(testResult, transactionResult);
     }
@@ -88,9 +87,9 @@ class TransactionImplementTest {
 
     @Test
     void getSpentAmountByCategory() {
-        Map<String, Double> testMap = new HashMap<>();
-        testMap.put(transactions.get(1).category(), 82.26);
-        testMap.put(transactions.get(0).category(), 39.69);
+        Map<String, Double> testMap = new LinkedHashMap<>();
+        testMap.put(transactions.get(1).category(), 83.0);
+        testMap.put(transactions.get(0).category(), 45.0);
         var transactionResult = transactionImplement.getSpentAmountByCategory();
 
         assertEquals(testMap, transactionResult);
@@ -114,9 +113,9 @@ class TransactionImplementTest {
 
     @Test
     void getAverageSpendingPerCategory() {
-        Map<String, Double> testMap = new HashMap<>();
-        testMap.put(transactions.get(1).category(), 41.13);
-        testMap.put(transactions.get(0).category(), 13.229999999999999);
+        Map<String, Double> testMap = new LinkedHashMap<>();
+        testMap.put(transactions.get(1).category(), 41.5);
+        testMap.put(transactions.get(0).category(), 15.0);
         var transactionResult = transactionImplement.getAverageSpendingPerCategory();
 
         assertEquals(testMap, transactionResult);
@@ -140,5 +139,11 @@ class TransactionImplementTest {
 
     @Test
     void getCategoryWiseDistribution() {
+        Map<String, Double> testMap = new LinkedHashMap<>();
+        testMap.put(transactions.get(0).category(), 45.0 * 100 / 128);
+        testMap.put(transactions.get(1).category(), 83.0 * 100 / 128);
+        var transactionResult = transactionImplement.getCategoryWiseDistribution();
+
+        assertEquals(testMap, transactionResult);
     }
 }

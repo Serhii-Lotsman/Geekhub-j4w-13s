@@ -67,6 +67,12 @@ public class TransactionImplement implements TransactionAnalyzer {
 
     @Override
     public Map<String, Double> getCategoryWiseDistribution() {
-        return null;
+        var totalSpend = transactions.stream()
+            .mapToDouble(Transaction::amount)
+            .reduce(0, Double::sum);
+
+        return transactions.stream()
+            .collect(Collectors.groupingBy(Transaction::category, Collectors.summingDouble(value ->
+                (value.amount() * 100) / totalSpend)));
     }
 }
