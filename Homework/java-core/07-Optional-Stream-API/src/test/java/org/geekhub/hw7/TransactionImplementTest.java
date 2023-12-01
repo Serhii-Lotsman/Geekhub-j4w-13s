@@ -20,34 +20,34 @@ class TransactionImplementTest {
 
     @BeforeEach
     void setUp() {
-        this.transactions = new ArrayList<>();
+        this.transactions = List.of(
+            new Transaction(
+                12.23,
+                "currency operation",
+                LocalDate.of(2000, 10, 10)
+            ),
+            new Transaction(
+                32.13,
+                "sales operation",
+                LocalDate.of(2001, 11, 10)
+            ),
+            new Transaction(
+                50.13,
+                "sales operation",
+                LocalDate.of(2004, 1, 30)
+            ),
+            new Transaction(
+                15.23,
+                "currency operation",
+                LocalDate.of(2000, 10, 10)
+            ),
+            new Transaction(
+                12.23,
+                "currency operation",
+                LocalDate.of(2010, 11, 5)
+            )
+        );
         transactionImplement = new TransactionImplement(transactions);
-        //TODO need to refactors List contain and replaces new ArrayList with ListOf()
-        transactions.add(new Transaction(
-            12.23,
-            "currency operation",
-            LocalDate.of(2000, 10, 10)
-        ));
-        transactions.add(new Transaction(
-            32.13,
-            "sales operation",
-            LocalDate.of(2001, 11, 10)
-        ));
-        transactions.add(new Transaction(
-            50.13,
-            "sales operation",
-            LocalDate.of(2004, 1, 30)
-        ));
-        transactions.add(new Transaction(
-            15.23,
-            "currency operation",
-            LocalDate.of(2000, 10, 10)
-        ));
-        transactions.add(new Transaction(
-            12.23,
-            "currency operation",
-            LocalDate.of(2010, 11, 5)
-        ));
     }
 
     @Test
@@ -59,8 +59,8 @@ class TransactionImplementTest {
     }
 
     @Test
-    void getBiggestTransactionInCategory_shouldAnEmptyOptional_whenDoesNotTransaction() {
-        transactions.clear();
+    void getBiggestTransactionInCategory_shouldEmptyOptional_whenDoesNotTransaction() {
+        transactionImplement = new TransactionImplement(new ArrayList<>());
         var transactionResult = transactionImplement.getBiggestTransactionInCategory("sales operation");
 
         assertEquals(Optional.empty(), transactionResult);
@@ -105,8 +105,8 @@ class TransactionImplementTest {
     }
 
     @Test
-        void getDateWithMostExpenses_shouldReturnAnEmptyOptional_whenDoesNotTransaction() {
-        transactions.clear();
+        void getDateWithMostExpenses_shouldReturnEmptyOptional_whenDoesNotTransaction() {
+        transactionImplement = new TransactionImplement(new ArrayList<>());
         var transactionResult = transactionImplement.getDateWithMostExpenses();
 
         assertEquals(Optional.empty(), transactionResult);
@@ -124,14 +124,21 @@ class TransactionImplementTest {
 
     @Test
     void getMostPopularCategory() {
+        Optional<String> testResult = Optional.of(transactions.get(0).category());
+        var transactionResult = transactionImplement.getMostPopularCategory();
+
+        assertEquals(testResult, transactionResult);
+    }
+
+    @Test
+    void getMostPopularCategory_shouldReturnEmptyOptional_whenDoesNotTransaction() {
+        transactionImplement = new TransactionImplement(new ArrayList<>());
+        var transactionResult = transactionImplement.getMostPopularCategory();
+
+        assertEquals(Optional.empty(), transactionResult);
     }
 
     @Test
     void getCategoryWiseDistribution() {
-    }
-
-    @AfterEach
-    void tearDown() {
-        transactions.clear();
     }
 }

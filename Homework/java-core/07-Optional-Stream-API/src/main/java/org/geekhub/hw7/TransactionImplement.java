@@ -57,7 +57,12 @@ public class TransactionImplement implements TransactionAnalyzer {
 
     @Override
     public Optional<String> getMostPopularCategory() {
-        return Optional.empty();
+        Map<String, Long> categoryCounts = transactions.stream()
+            .collect(Collectors.groupingBy(Transaction::category, Collectors.counting()));
+
+        return categoryCounts.entrySet().stream()
+            .max(Map.Entry.comparingByValue())
+            .map(Map.Entry::getKey);
     }
 
     @Override
