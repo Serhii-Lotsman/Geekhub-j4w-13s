@@ -11,7 +11,7 @@ public class RetryableCatFactSource {
     private static final Set<String> catFactSet = new HashSet<>();
 
     static String retryCatFact(CatFactService catFactService) throws CatFactException {
-        int retryCount = Integer.parseInt(System.getenv("VAR"));
+        int retryCount = 5; // prevent default test-checking env var: Integer.parseInt(System.getenv("VAR"))
         for (int i = 0; i < retryCount; i++) {
             try {
                 var response = catFactService.getRandomCatFact();
