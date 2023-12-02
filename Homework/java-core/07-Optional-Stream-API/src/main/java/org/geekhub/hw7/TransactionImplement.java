@@ -2,6 +2,7 @@ package org.geekhub.hw7;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +41,13 @@ public class TransactionImplement implements TransactionAnalyzer {
     @Override
     public Map<String, Double> getSpentAmountByCategory() {
         return transactions.stream()
-            .collect(Collectors.groupingBy(Transaction::category, Collectors.summingDouble(Transaction::amount)));
+            .collect(Collectors.groupingBy(Transaction::category, Collectors.summingDouble(Transaction::amount)))
+            .entrySet().stream()
+            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
     @Override

@@ -50,7 +50,7 @@ class TransactionImplementTest {
     }
 
     @Test
-    void getBiggestTransactionInCategory_shouldReturnMaxAmount() {
+    void getBiggestTransactionInCategory() {
         var transactionResult = transactionImplement.getBiggestTransactionInCategory("sales operation");
         Optional<Transaction> testResult = Optional.ofNullable(transactions.get(2));
 
@@ -58,7 +58,7 @@ class TransactionImplementTest {
     }
 
     @Test
-    void getBiggestTransactionInCategory_shouldEmptyOptional_whenDoesNotTransaction() {
+    void getBiggestTransactionInCategory_shouldReturnEmptyOptional_whenDoesNotTransaction() {
         transactionImplement = new TransactionImplement(new ArrayList<>());
         var transactionResult = transactionImplement.getBiggestTransactionInCategory("sales operation");
 
