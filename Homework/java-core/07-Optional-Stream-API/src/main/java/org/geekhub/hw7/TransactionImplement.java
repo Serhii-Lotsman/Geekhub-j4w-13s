@@ -27,7 +27,7 @@ public class TransactionImplement implements TransactionAnalyzer {
         return transactions.stream()
             .filter(transaction -> transaction.date().isEqual(date))
             .mapToDouble(Transaction::amount)
-            .reduce(0, Double::sum);
+            .sum();
     }
 
     @Override
@@ -52,8 +52,12 @@ public class TransactionImplement implements TransactionAnalyzer {
 
     @Override
     public Optional<LocalDate> getDateWithMostExpenses() {
-        return transactions.stream()
-            .max(Comparator.comparingDouble(Transaction::amount)).map(Transaction::date);
+        Map<LocalDate, Double> spentPerDay = transactions.stream()
+            .collect(Collectors.groupingBy(Transaction::date, Collectors.summingDouble(Transaction::amount)));
+
+        return spentPerDay.entrySet().stream()
+            .max(Map.Entry.comparingByValue())
+            .map(Map.Entry::getKey);
     }
 
     @Override
@@ -76,10 +80,11 @@ public class TransactionImplement implements TransactionAnalyzer {
     public Map<String, Double> getCategoryWiseDistribution() {
         var totalSpend = transactions.stream()
             .mapToDouble(Transaction::amount)
-            .reduce(0, Double::sum);
+            .sum();
 
         return transactions.stream()
-            .collect(Collectors.groupingBy(Transaction::category, Collectors.summingDouble(value ->
-                (value.amount() * 100) / totalSpend)));
+            .collect(Collectors.groupingBy(Transaction::category,
+                Collectors.mapping(value -> (value.amount() * 100) / totalSpend,
+                    Collectors.reducing(0.0, Double::sum))));
     }
 }

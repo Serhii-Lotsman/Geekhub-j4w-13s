@@ -53,7 +53,6 @@ class TransactionImplementTest {
     void getBiggestTransactionInCategory() {
         var transactionResult = transactionImplement.getBiggestTransactionInCategory("sales operation");
         Optional<Transaction> testResult = Optional.ofNullable(transactions.get(2));
-
         assertEquals(testResult, transactionResult);
     }
 
@@ -61,7 +60,6 @@ class TransactionImplementTest {
     void getBiggestTransactionInCategory_shouldReturnEmptyOptional_whenDoesNotTransaction() {
         transactionImplement = new TransactionImplement(new ArrayList<>());
         var transactionResult = transactionImplement.getBiggestTransactionInCategory("sales operation");
-
         assertEquals(Optional.empty(), transactionResult);
     }
 
@@ -69,7 +67,6 @@ class TransactionImplementTest {
     void getTotalSpentForDate() {
         var transactionResult = transactionImplement.getTotalSpentForDate(LocalDate.of(2000, 10, 10));
         double testResult = transactions.get(0).amount() + transactions.get(3).amount();
-
         assertEquals(testResult, transactionResult);
     }
 
@@ -81,7 +78,6 @@ class TransactionImplementTest {
         var transactionResult = transactionImplement.getTransactionsByCategoryAndDate(
             "currency operation",
             LocalDate.of(2000, 10, 10));
-
         assertEquals(testList, transactionResult);
     }
 
@@ -91,7 +87,6 @@ class TransactionImplementTest {
         testMap.put(transactions.get(1).category(), 83.0);
         testMap.put(transactions.get(0).category(), 45.0);
         var transactionResult = transactionImplement.getSpentAmountByCategory();
-
         assertEquals(testMap, transactionResult);
     }
 
@@ -99,7 +94,6 @@ class TransactionImplementTest {
     void getDateWithMostExpenses() {
         Optional<LocalDate> testDate = Optional.of(LocalDate.of(2004, 1, 30));
         var transactionResult = transactionImplement.getDateWithMostExpenses();
-
         assertEquals(testDate, transactionResult);
     }
 
@@ -107,7 +101,6 @@ class TransactionImplementTest {
         void getDateWithMostExpenses_shouldReturnEmptyOptional_whenDoesNotTransaction() {
         transactionImplement = new TransactionImplement(new ArrayList<>());
         var transactionResult = transactionImplement.getDateWithMostExpenses();
-
         assertEquals(Optional.empty(), transactionResult);
     }
 
@@ -117,7 +110,6 @@ class TransactionImplementTest {
         testMap.put(transactions.get(1).category(), 41.5);
         testMap.put(transactions.get(0).category(), 15.0);
         var transactionResult = transactionImplement.getAverageSpendingPerCategory();
-
         assertEquals(testMap, transactionResult);
     }
 
@@ -125,7 +117,6 @@ class TransactionImplementTest {
     void getMostPopularCategory() {
         Optional<String> testResult = Optional.of(transactions.get(0).category());
         var transactionResult = transactionImplement.getMostPopularCategory();
-
         assertEquals(testResult, transactionResult);
     }
 
@@ -133,7 +124,6 @@ class TransactionImplementTest {
     void getMostPopularCategory_shouldReturnEmptyOptional_whenDoesNotTransaction() {
         transactionImplement = new TransactionImplement(new ArrayList<>());
         var transactionResult = transactionImplement.getMostPopularCategory();
-
         assertEquals(Optional.empty(), transactionResult);
     }
 
@@ -143,7 +133,6 @@ class TransactionImplementTest {
         testMap.put(transactions.get(0).category(), 45.0 * 100 / 128);
         testMap.put(transactions.get(1).category(), 83.0 * 100 / 128);
         var transactionResult = transactionImplement.getCategoryWiseDistribution();
-
         assertEquals(testMap, transactionResult);
     }
 }
