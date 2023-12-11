@@ -1,7 +1,7 @@
 package org.geekhub.learnit.consoleapi;
 
 import org.geekhub.learnit.model.Student;
-import org.geekhub.learnit.service.StudentService;
+import org.geekhub.learnit.service.StudentsService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,17 +9,17 @@ import java.util.Scanner;
 public class GetStudentApi {
 
     private final Scanner scanner;
-    private final StudentService studentService;
+    private final StudentsService studentsService;
     private static final String NO_STUDENT_FOUND = "No student found!";
 
     public GetStudentApi(Scanner scanner,
-                         StudentService studentService) {
+                         StudentsService studentsService) {
         this.scanner = scanner;
-        this.studentService = studentService;
+        this.studentsService = studentsService;
     }
 
     public void printLastCreatedStudent() {
-        Student student = studentService.getLastCreatedStudent();
+        Student student = studentsService.getLastCreatedStudent();
         if (student == null) {
             System.out.println(NO_STUDENT_FOUND);
             return;
@@ -30,7 +30,7 @@ public class GetStudentApi {
 
     public void printSpecificStudent() {
         System.out.println("In which student you're interested in?");
-        List<Student> students = studentService.getStudents();
+        List<Student> students = studentsService.getStudents();
         for (int index = 0; index < students.size(); index++) {
             String name = students.get(index).name();
             System.out.println(index + " - " + name);
@@ -38,7 +38,7 @@ public class GetStudentApi {
 
         int index = Integer.parseInt(scanner.nextLine());
 
-        Student student = studentService.getStudent(index);
+        Student student = studentsService.getStudent(index);
         if (student == null) {
             System.out.println(NO_STUDENT_FOUND);
             return;
@@ -48,7 +48,7 @@ public class GetStudentApi {
     }
 
     public void printAverageScores() {
-        List<Student> students = studentService.getStudents();
+        List<Student> students = studentsService.getStudents();
         if (students.isEmpty()) {
             System.out.println(NO_STUDENT_FOUND);
             return;

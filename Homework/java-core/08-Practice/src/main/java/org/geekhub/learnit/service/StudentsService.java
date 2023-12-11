@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class StudentService {
+public class StudentsService {
 
     private final StudentRepository studentRepository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentsService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
     public void createStudent(String name, Map<String, Double> scores) {
-        if (Objects.isNull(name)|| name.isBlank()) {
+        if (Objects.isNull(name) || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
 

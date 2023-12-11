@@ -1,6 +1,6 @@
 package org.geekhub.learnit.consoleapi;
 
-import org.geekhub.learnit.service.StudentService;
+import org.geekhub.learnit.service.StudentsService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,18 +9,18 @@ import java.util.Scanner;
 public class CreateStudentApi {
 
     private final Scanner scanner;
-    private final StudentService studentService;
+    private final StudentsService studentsService;
 
-    public CreateStudentApi(Scanner scanner, StudentService studentService) {
+    public CreateStudentApi(Scanner scanner, StudentsService studentsService) {
         this.scanner = scanner;
-        this.studentService = studentService;
+        this.studentsService = studentsService;
     }
 
     public void createStudent() {
         String name = getInputName();
         Map<String, Double> scores = getInputScores();
 
-        studentService.createStudent(name, scores);
+        studentsService.createStudent(name, scores);
     }
 
     private String getInputName() {
