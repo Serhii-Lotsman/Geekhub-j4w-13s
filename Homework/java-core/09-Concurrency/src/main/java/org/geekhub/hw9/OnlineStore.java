@@ -1,50 +1,42 @@
 package org.geekhub.hw9;
 
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class OnlineStore {
 
-    public void addProduct(String product, int quantity) {
+    private final ConcurrentHashMap<String, Integer> productStorage = new ConcurrentHashMap<>();
+    private int totalSales = 0;
 
+    public void addProduct(String product, int quantity) {
+        productStorage.put(product, quantity);
     }
 
     public Future<Boolean> purchase(String product, int quantity) {
-        return new Future<>() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Boolean> future = executor.submit(() -> {
+            if (productStorage.containsKey(product) && productStorage.get(product) >= quantity) {
+                int currentQuantity = productStorage.get(product);
+                productStorage.put(product, currentQuantity - quantity);
+                totalSales += quantity;
+                return true;
+            } else {
                 return false;
             }
+        });
 
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
+        executor.shutdown();
 
-            @Override
-            public boolean isDone() {
-                return false;
-            }
-
-            @Override
-            public Boolean get() throws InterruptedException, ExecutionException {
-                return null;
-            }
-
-            @Override
-            public Boolean get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-                return null;
-            }
-        };
+        return future;
     }
 
     public int getProductQuantity(String product) {
-        return 0;
+        return productStorage.getOrDefault(product, 0);
     }
 
     public int getTotalSales() {
-        return 0;
+        return totalSales;
     }
 }
