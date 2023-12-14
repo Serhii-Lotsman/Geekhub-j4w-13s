@@ -5,10 +5,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class OnlineStore {
+public class OnlineStore implements Runnable{
+
+    @Override
+    public void run() {
+        System.out.println("Run");
+    }
 
     private final ConcurrentHashMap<String, Integer> productStorage = new ConcurrentHashMap<>();
-    private int totalSales = 0;
+    private volatile int totalSales = 0;
 
     public void addProduct(String product, int quantity) {
         productStorage.put(product, quantity);
@@ -16,20 +21,21 @@ public class OnlineStore {
 
     public Future<Boolean> purchase(String product, int quantity) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Boolean> future = executor.submit(() -> {
-            if (productStorage.containsKey(product) && productStorage.get(product) >= quantity) {
-                int currentQuantity = productStorage.get(product);
-                productStorage.put(product, currentQuantity - quantity);
-                totalSales += quantity;
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        executor.shutdown();
-
-        return future;
+        try {
+            return executor.submit(() -> {
+                if (productStorage.containsKey(product) && productStorage.get(product) >= quantity) {
+                    productStorage.compute(product, (ware, amount) -> amount - quantity);
+                    synchronized (this) {
+                        this.totalSales += quantity;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        } finally {
+            executor.shutdown();
+        }
     }
 
     public int getProductQuantity(String product) {
