@@ -8,9 +8,9 @@ public class StockManager {
 
     private final ScheduledExecutorService service;
 
-    public StockManager(OnlineStore onlineStore, long productDeliveryTime, int goodsQuantity) {
+    public StockManager(OnlineStore onlineStore, long period, int addQuantity) {
         this.service = Executors.newSingleThreadScheduledExecutor();
-        this.service.scheduleAtFixedRate(onlineStore.addGoods(goodsQuantity), 0, productDeliveryTime, TimeUnit.SECONDS);
+        this.service.scheduleAtFixedRate(onlineStore.addGoods(addQuantity), 1, period, TimeUnit.SECONDS);
     }
 
     public void shutdown() {

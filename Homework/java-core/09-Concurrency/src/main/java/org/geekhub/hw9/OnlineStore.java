@@ -9,19 +9,21 @@ import java.util.concurrent.Future;
 
 public class OnlineStore {
 
-    private static final Storage storage = new StorageInMemory();
+    private final Storage storage = new StorageInMemory();
     private volatile int totalSales = 0;
 
     public void addProduct(String product, int quantity) {
-        storage.addWare(product, quantity);
+        storage.addGoods(product, quantity);
     }
 
     public Future<Boolean> purchase(String product, int quantity) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         try {
             return executor.submit(() -> {
-                if (storage.getProductStorage().containsKey(product) && storage.getProductStorage().get(product) >= quantity) {
-                    storage.getProductStorage().compute(product, (ware, amount) -> amount == null ? 0 : amount - quantity);
+                if (storage.getGoodsStorage().containsKey(product) &&
+                    storage.getGoodsStorage().get(product) >= quantity) {
+                    storage.getGoodsStorage().compute(product, (goods, amount) ->
+                        amount == null ? 0 : amount - quantity);
                     synchronized (this) {
                         this.totalSales += quantity;
                     }
@@ -36,17 +38,17 @@ public class OnlineStore {
     }
 
     public int getProductQuantity(String product) {
-        return storage.getWareQuantity(product);
+        return storage.getGoodsQuantity(product);
     }
 
     public int getTotalSales() {
         return totalSales;
     }
 
-    public synchronized Runnable addGoods(int goodsQuantity) {
-        return () -> storage.getProductStorage().forEach((key, value) -> {
-            int updatedValue = value + goodsQuantity;
-            storage.getProductStorage().put(key, updatedValue);
+    public Runnable addGoods(int addQuantity) {
+        return () -> storage.getGoodsStorage().forEach((key, value) -> {
+            int updatedValue = value + addQuantity;
+            storage.getGoodsStorage().put(key, updatedValue);
         });
     }
 }

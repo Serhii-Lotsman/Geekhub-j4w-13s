@@ -7,17 +7,17 @@ public class StorageInMemory implements Storage {
     private final ConcurrentHashMap<String, Integer> productStorage = new ConcurrentHashMap<>();
 
     @Override
-    public void addWare(String product, int quantity) {
+    public void addGoods(String product, int quantity) {
         productStorage.put(product, quantity);
     }
 
     @Override
-    public int getWareQuantity(String product) {
+    public int getGoodsQuantity(String product) {
         return productStorage.getOrDefault(product, 0);
     }
 
     @Override
-    public ConcurrentHashMap<String, Integer> getProductStorage() {
+    public ConcurrentHashMap<String, Integer> getGoodsStorage() {
         return productStorage;
     }
 }
