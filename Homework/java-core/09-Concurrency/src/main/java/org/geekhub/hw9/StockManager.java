@@ -13,7 +13,8 @@ public class StockManager {
         this.service.scheduleAtFixedRate(onlineStore.addGoods(addQuantity), 1, period, TimeUnit.SECONDS);
     }
 
-    public void shutdown() {
+    public void shutdown() throws InterruptedException {
         service.shutdown();
+        service.awaitTermination(1, TimeUnit.SECONDS);
     }
 }
