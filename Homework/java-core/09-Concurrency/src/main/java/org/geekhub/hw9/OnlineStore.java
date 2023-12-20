@@ -4,7 +4,6 @@ import org.geekhub.hw9.repository.Storage;
 import org.geekhub.hw9.repository.StorageInMemory;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,14 +13,16 @@ public class OnlineStore {
     private final AtomicInteger totalSales;
     private final ExecutorService executor;
 
-    public OnlineStore() {
+    public OnlineStore(ExecutorService executor) {
         this.storage = new StorageInMemory();
         this.totalSales = new AtomicInteger(0);
-        this.executor = Executors.newFixedThreadPool(10);
+        this.executor = executor;
     }
 
     public void addProduct(String product, int quantity) {
-        storage.addGoods(product, getProductQuantity(product) + quantity);
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity should be non-negative");
+        } else storage.addGoods(product, getProductQuantity(product) + quantity);
     }
 
     public Future<Boolean> purchase(String product, int quantity) {
