@@ -3,6 +3,7 @@ package org.geekhub.hw10;
 import org.geekhub.hw10.annotations.AfterMethod;
 import org.geekhub.hw10.annotations.BeforeMethod;
 import org.geekhub.hw10.annotations.Test;
+import org.geekhub.hw10.exception.TestRunnerException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,7 +30,7 @@ public class TestRunner {
         try {
             classObject = testClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Error creating an instance of " + testClass.getName(), e);
+            throw new TestRunnerException("Error creating an instance of " + testClass.getName(), e);
         }
         System.out.printf("Running tests in %s class %n", classObject.getClass().getSimpleName());
 
@@ -49,13 +50,17 @@ public class TestRunner {
             method.setAccessible(true);
             method.invoke(instance);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            System.err.println(e.getMessage());
+            throw new TestRunnerException(e.getMessage(), e.getCause());
         }
     }
 
     private void printTestResult(Method method, Object instance) {
         try {
-            Object testResult = method.invoke(instance);
+            double annotationParam = method.getAnnotation(Test.class).parameterSource();
+            Object testResult;
+            if (method.getParameterCount() == 0) {
+                testResult = method.invoke(instance);
+            } else testResult = method.invoke(instance, annotationParam);
             totalTest++;
             if ("Passed".equals(testResult)) {
                 System.out.printf("  + Test: %s - %s %n", method.getName(), testResult);
@@ -65,7 +70,7 @@ public class TestRunner {
                 failedTest++;
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
-            System.err.println(e.getMessage());
+            throw new TestRunnerException(e.getMessage(), e.getCause());
         }
     }
 

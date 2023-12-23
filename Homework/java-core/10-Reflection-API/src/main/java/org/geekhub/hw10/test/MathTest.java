@@ -22,6 +22,12 @@ public class MathTest {
         return assertion.assertEquals(8.0, result - 1);
     }
 
+    @Test(parameterSource = 3.0)
+    public String testAddWithParams(double value) {
+        double result = math.add(value, 5.0);
+        return assertion.assertEquals(8.0, result + 1);
+    }
+
     @Test
     public String testSubtract() {
         double result = math.subtract(8.0, 3.0);
