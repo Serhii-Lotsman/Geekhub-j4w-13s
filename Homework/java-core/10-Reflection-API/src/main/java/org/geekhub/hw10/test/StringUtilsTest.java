@@ -20,7 +20,7 @@ public class StringUtilsTest {
 
     @Test
     public String testConcatenate() {
-        return assertion.assertEquals("Hello, world!", string1.concatenate(string2));
+        return assertion.assertEquals("Hello, world!", string1.concatenate(string2.toString()));
     }
 
     @Test
@@ -35,7 +35,12 @@ public class StringUtilsTest {
 
     @Test(parameterSource = 3.3)
     public String testConcatWithParams(double value) {
-        return assertion.assertEquals("3.3.3.3", value + value);
+        return assertion.assertEquals("Hello, 3.3", string1.concatenate(String.valueOf(value)));
+    }
+
+    @Test
+    public String testReflection() {
+        return assertion.assertReflectionEquals(StringUtilsTest.class, string1.getClass());
     }
 
     @AfterMethod

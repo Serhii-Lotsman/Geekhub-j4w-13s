@@ -56,6 +56,7 @@ public class TestRunner {
 
     private void printTestResult(Method method, Object instance) {
         try {
+            method.setAccessible(true);
             double annotationParam = method.getAnnotation(Test.class).parameterSource();
             Object testResult;
             if (method.getParameterCount() == 0) {

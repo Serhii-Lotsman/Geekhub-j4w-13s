@@ -1,15 +1,15 @@
 package org.geekhub.hw10;
 
 public class SimpleString {
-    private String value;
+    private final String value;
 
     public SimpleString(String value) {
         this.value = value;
     }
 
-    public String concatenate(SimpleString otherString) {
+    public String concatenate(String otherString) {
         if (otherString != null) {
-            return this.value.concat(otherString.value);
+            return this.value.concat(otherString);
         } else {
             throw new IllegalArgumentException("Input must be a SimpleString object.");
         }

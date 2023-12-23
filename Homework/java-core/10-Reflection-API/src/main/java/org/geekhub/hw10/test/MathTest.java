@@ -60,6 +60,16 @@ public class MathTest {
         return assertion.assertThrows(IllegalArgumentException.class, () -> math.divide(10.0, 0.0));
     }
 
+    @Test
+    public String testReflection() {
+        return assertion.assertReflectionEquals(SimpleMath.class, math.getClass());
+    }
+
+    @Test
+    public String testReflectionFail() {
+        return assertion.assertReflectionEquals(SimpleMath.class, math.getClass().getSimpleName());
+    }
+
     @AfterMethod
     void tearDown() {
         operand1 = 0.0;

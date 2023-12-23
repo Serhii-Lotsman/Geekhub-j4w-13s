@@ -17,6 +17,7 @@ public class Report {
         System.out.println(SEPARATOR + "\n");
         testRunner.runTestMethods(MathTest.class);
         testRunner.runTestMethods(StringUtilsTest.class);
+        System.out.println();
         System.out.println(SEPARATOR);
         System.out.println("Summary");
         System.out.println(SEPARATOR);
