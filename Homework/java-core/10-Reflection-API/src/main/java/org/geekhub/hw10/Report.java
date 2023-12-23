@@ -18,6 +18,6 @@ public class Report {
         System.out.println(SEPARATOR);
         System.out.println("Summary");
         System.out.println(SEPARATOR);
-
+        testRunner.totalResults();
     }
 }

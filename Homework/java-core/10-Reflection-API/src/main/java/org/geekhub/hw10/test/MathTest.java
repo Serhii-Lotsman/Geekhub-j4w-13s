@@ -6,25 +6,20 @@ import org.geekhub.hw10.annotations.AfterMethod;
 import org.geekhub.hw10.annotations.BeforeMethod;
 import org.geekhub.hw10.annotations.Test;
 
-//TODO need to use before() for init fields
 public class MathTest {
     private SimpleMath math;
     private Assertions assertion;
 
-    public MathTest() {
+    @BeforeMethod
+    void setUp() {
         math = new SimpleMath();
         assertion = new Assertions();
-    }
-
-    @BeforeMethod
-    public void before() {
-        System.out.println("Ok");
     }
 
     @Test
     public String testAdd() {
         double result = math.add(3.0, 5.0);
-        return assertion.assertEquals(8.0, result);
+        return assertion.assertEquals(8.0, result - 1);
     }
 
     @Test
@@ -36,7 +31,7 @@ public class MathTest {
     @Test
     public String testMultiply() {
         double result = math.multiply(3.0, 5.0);
-        return assertion.assertEquals(15.0, result);
+        return assertion.assertEquals(15.0, result - 1);
     }
 
     @Test
@@ -47,17 +42,15 @@ public class MathTest {
 
     @Test
     public String testDivideByZero() {
-        Throwable actualThrow = null;
-        try {
-            math.divide(10.0, 0.0);
-        } catch (Exception e) {
-            actualThrow = e.getCause();
-        }
-        return assertion.assertThrows(ArithmeticException.class, actualThrow);
+        return assertion.assertThrows(ArithmeticException.class, () -> math.divide(10.0, 0.0));
+    }
+
+    @Test
+    public String testException() {
+        return assertion.assertThrows(IllegalArgumentException.class, () -> math.divide(10.0, 0.0));
     }
 
     @AfterMethod
-    public void after() {
-        System.out.println("Tear down");
+    void tearDown() {
     }
 }

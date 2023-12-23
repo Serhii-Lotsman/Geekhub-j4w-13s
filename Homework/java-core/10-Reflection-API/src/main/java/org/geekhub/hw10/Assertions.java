@@ -13,8 +13,18 @@ public class Assertions {
         }
     }
 
-    public String assertThrows(Class<?> expectedType, Throwable throwable) {
-        return expectedType.isInstance(throwable) ? PASSED : FAILED;
+    public String assertThrows(Class<?> expected, Runnable executable) {
+        try {
+            executable.run();
+        } catch (Throwable actualException) {
+            if (expected.isInstance(actualException)) {
+                return PASSED;
+            } else {
+                return FAILED + "\n" +
+                    "      Reason: Expected " + expected + " but got " + actualException.getClass().getName();
+            }
+        }
+        throw new AssertionError("Expected " + expected.getName() + " but no exception was thrown");
     }
 
     public String assertReflectionEquals(Object expected, Object actual) {
