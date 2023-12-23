@@ -6,54 +6,58 @@ import org.geekhub.hw10.annotations.AfterMethod;
 import org.geekhub.hw10.annotations.BeforeMethod;
 import org.geekhub.hw10.annotations.Test;
 
+//TODO need to use before() for init fields
 public class MathTest {
     private SimpleMath math;
     private Assertions assertion;
 
-    //TODO need to impl before and after annotations
-    /*@BeforeMethod
-    void setUp() {
+    public MathTest() {
         math = new SimpleMath();
         assertion = new Assertions();
-    }*/
+    }
+
+    @BeforeMethod
+    public void before() {
+        System.out.println("Ok");
+    }
 
     @Test
-    public void testAdd() {
+    public String testAdd() {
         double result = math.add(3.0, 5.0);
-        assertion.assertEquals(8.0, result);
+        return assertion.assertEquals(8.0, result);
     }
 
     @Test
-    public void testSubtract() {
+    public String testSubtract() {
         double result = math.subtract(8.0, 3.0);
-        assertion.assertEquals(5.0, result);
+        return assertion.assertEquals(5.0, result);
     }
 
     @Test
-    public void testMultiply() {
+    public String testMultiply() {
         double result = math.multiply(3.0, 5.0);
-        assertion.assertEquals(15.0, result);
+        return assertion.assertEquals(15.0, result);
     }
 
     @Test
-    public void testDivide() {
+    public String testDivide() {
         double result = math.divide(15.0, 3.0);
-        assertion.assertEquals(5.0, result);
+        return assertion.assertEquals(5.0, result);
     }
 
     @Test
-    public void testDivideByZero() {
-        Throwable actualThrow = new Throwable();
+    public String testDivideByZero() {
+        Throwable actualThrow = null;
         try {
             math.divide(10.0, 0.0);
         } catch (Exception e) {
             actualThrow = e.getCause();
         }
-        assertion.assertThrows(ArithmeticException.class, actualThrow);
+        return assertion.assertThrows(ArithmeticException.class, actualThrow);
     }
 
-    /*@AfterMethod
-    void tearDown() {
-
-    }*/
+    @AfterMethod
+    public void after() {
+        System.out.println("Tear down");
+    }
 }
