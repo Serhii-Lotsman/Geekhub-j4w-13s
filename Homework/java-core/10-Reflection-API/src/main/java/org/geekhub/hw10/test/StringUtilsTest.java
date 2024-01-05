@@ -7,45 +7,46 @@ import org.geekhub.hw10.annotations.BeforeMethod;
 import org.geekhub.hw10.annotations.Test;
 
 public class StringUtilsTest {
+
     private Assertions assertion;
-    private SimpleString string1;
-    private SimpleString string2;
+    private SimpleString firstString;
+    private SimpleString secondString;
 
     @BeforeMethod
     void setUp() {
         this.assertion = new Assertions();
-        this.string1 = new SimpleString("Hello, ");
-        this.string2 = new SimpleString("world!");
+        this.firstString = new SimpleString("Hello, ");
+        this.secondString = new SimpleString("world!");
     }
 
     @Test
     public String testConcatenate() {
-        return assertion.assertEquals("Hello, world!", string1.concatenate(string2.toString()));
+        return assertion.assertEquals("Hello, world!", firstString.concatenate(secondString.toString()));
     }
 
     @Test
     public String testReverse() {
-        return assertion.assertEquals(" ,olleH", string1.reverse());
+        return assertion.assertEquals(" ,olleH", firstString.reverse());
     }
 
     @Test
     public String testUppercase() {
-        return assertion.assertEquals("WORLD", string2.uppercase());
+        return assertion.assertEquals("WORLD", secondString.uppercase());
     }
 
     @Test(parameterSource = 3.3)
     public String testConcatWithParams(double value) {
-        return assertion.assertEquals("Hello, 3.3", string1.concatenate(String.valueOf(value)));
+        return assertion.assertEquals("Hello, 3.3", firstString.concatenate(String.valueOf(value)));
     }
 
     @Test
     public String testReflection() {
-        return assertion.assertReflectionEquals(StringUtilsTest.class, string1.getClass());
+        return assertion.assertReflectionEquals(StringUtilsTest.class, firstString.getClass());
     }
 
     @AfterMethod
     void tearDown() {
-        string1 = null;
-        string2 = null;
+        firstString = null;
+        secondString = null;
     }
 }

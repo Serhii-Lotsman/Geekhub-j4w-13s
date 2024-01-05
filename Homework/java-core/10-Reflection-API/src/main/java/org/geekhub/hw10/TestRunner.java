@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class TestRunner {
+
     private Set<Method> methods;
     private int totalTest = 0;
     private int passedTest = 0;
@@ -24,8 +25,10 @@ public class TestRunner {
 
     public void runTestMethods(Class<?> testClass) {
         methods = Set.of(testClass.getDeclaredMethods());
-        Optional<Method> before = methods.stream().filter(method -> method.isAnnotationPresent(BeforeMethod.class)).findFirst();
-        Optional<Method> after = methods.stream().filter(method -> method.isAnnotationPresent(AfterMethod.class)).findFirst();
+        Optional<Method> before = methods.stream()
+            .filter(method -> method.isAnnotationPresent(BeforeMethod.class)).findFirst();
+        Optional<Method> after = methods.stream()
+            .filter(method -> method.isAnnotationPresent(AfterMethod.class)).findFirst();
         Object classObject;
         try {
             classObject = testClass.getDeclaredConstructor().newInstance();
@@ -45,6 +48,7 @@ public class TestRunner {
         }
     }
 
+    @SuppressWarnings("java:S3011")
     private void invokeMethod(Method method, Object instance) {
         try {
             method.setAccessible(true);
@@ -54,24 +58,39 @@ public class TestRunner {
         }
     }
 
+    @SuppressWarnings("java:S3011")
     private void printTestResult(Method method, Object instance) {
         try {
             method.setAccessible(true);
             double annotationParam = method.getAnnotation(Test.class).parameterSource();
-            Object testResult;
-            if (method.getParameterCount() == 0) {
-                testResult = method.invoke(instance);
-            } else testResult = method.invoke(instance, annotationParam);
+            Object testResult = invokeInstance(method, instance, annotationParam);
             totalTest++;
-            if ("Passed".equals(testResult)) {
-                System.out.printf("  + Test: %s - %s %n", method.getName(), testResult);
-                passedTest++;
-            } else {
-                System.out.printf("  - Test: %s - %s %n", method.getName(), testResult);
-                failedTest++;
-            }
+            resultOutput(method, testResult);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new TestRunnerException(e.getMessage(), e.getCause());
+        }
+    }
+
+    private Object invokeInstance(Method method, Object instance, double annotationParam)
+        throws InvocationTargetException, IllegalAccessException {
+        Object testResult;
+        if (method.getParameterCount() == 0) {
+            testResult = method.invoke(instance);
+        } else {
+            testResult = method.invoke(instance, annotationParam);
+        }
+        return testResult;
+    }
+
+    private void resultOutput(Method method, Object testResult) {
+        String output = String.format("  + Test: %s - %s", method.getName(), testResult);
+
+        if ("Passed".equals(testResult)) {
+            System.out.println(output);
+            passedTest++;
+        } else {
+            System.out.println(output.replace("+", "-"));
+            failedTest++;
         }
     }
 

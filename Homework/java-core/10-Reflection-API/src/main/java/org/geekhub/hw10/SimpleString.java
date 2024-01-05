@@ -1,6 +1,7 @@
 package org.geekhub.hw10;
 
 public class SimpleString {
+
     private final String value;
 
     public SimpleString(String value) {
