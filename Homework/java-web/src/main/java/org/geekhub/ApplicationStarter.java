@@ -1,5 +1,7 @@
 package org.geekhub;
 
+import org.geekhub.service.CaesarEncrypt;
+
 public class ApplicationStarter {
 
     public static void main(String[] args) {
