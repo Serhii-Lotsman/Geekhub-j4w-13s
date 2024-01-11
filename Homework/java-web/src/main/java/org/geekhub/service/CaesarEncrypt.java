@@ -4,14 +4,14 @@ import org.geekhub.annotation.Injectable;
 
 public class CaesarEncrypt {
 
-    @Injectable()
+    @Injectable(property = "caesar.offset")
     private final int offset;
     private final StringBuilder encryptedMessage;
-    private final AppConfig appConfig = new AppConfig();
 
 
     public CaesarEncrypt() {
-        appConfig.loadProperties();
+        AppConfig appConfig = new AppConfig();
+        appConfig.loadProperties(CaesarEncrypt.class);
         this.offset = appConfig.getOffset();
         this.encryptedMessage = new StringBuilder();
     }

@@ -8,14 +8,14 @@ import java.util.Set;
 public class InjectableExecutor {
 
     @SuppressWarnings("java:S3011")
-    public int getAnnotatedFieldValue(Class<?> encryptClass) {
+    public String getAnnotatedFieldValue(Class<?> encryptClass) {
         Set<Field> declaredFields = Set.of(encryptClass.getDeclaredFields());
-        int getValue = 0;
+        String getValue = null;
 
         for (Field field : declaredFields) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(Injectable.class))
-                getValue = field.getAnnotation(Injectable.class).offset();
+                getValue = field.getAnnotation(Injectable.class).property();
         }
         return getValue;
     }
