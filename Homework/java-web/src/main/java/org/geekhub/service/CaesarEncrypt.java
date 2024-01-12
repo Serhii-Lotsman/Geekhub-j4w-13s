@@ -25,7 +25,6 @@ public class CaesarEncrypt {
                 encryptedMessage.append(character);
             }
         }
-
         return encryptedMessage.toString();
     }
 }
