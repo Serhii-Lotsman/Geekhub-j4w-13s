@@ -36,21 +36,6 @@ public class LogInMemory implements LogRepository{
     }
 
     @Override
-    public List<String> getMessages() {
-        return new ArrayList<>(history);
-    }
-
-    @Override
-    public String getMessage(int index) {
-        return history.get(index);
-    }
-
-    @Override
-    public int size() {
-        return history.size();
-    }
-
-    @Override
     public void loadHistory() {
         try (BufferedReader reader = new BufferedReader(new FileReader(historyFilePath.toFile()))) {
             String line;
