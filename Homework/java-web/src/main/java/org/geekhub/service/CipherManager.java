@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Scanner;
@@ -20,21 +20,24 @@ public class CipherManager {
     private final LogRepository logHistory;
 
     public CipherManager() {
-        this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
+        this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         this.logHistory = new LogInMemory();
     }
 
     public void setEncrypt(Scanner scanner, Class<?> instance) {
         Object classObject;
+        Set<Method> methods = Set.of(instance.getDeclaredMethods());
+
         try {
             classObject = instance.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new EncryptException("Error creating an instance of " + instance.getName());
         }
-        Set<Method> methods = Set.of(instance.getDeclaredMethods());
+
         Optional<Method> getMethod = methods.stream()
             .filter(method -> method.getName().equals("encrypt")).findFirst();
         Method method = getMethod.orElseGet(getMethod::get);
+
         System.out.println("Enter a message to encrypt: ");
         String originalMessage = scanner.nextLine();
         String encryptedMessage = invokeMethod(method, classObject, originalMessage);

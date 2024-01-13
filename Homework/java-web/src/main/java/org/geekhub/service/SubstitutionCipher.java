@@ -29,6 +29,9 @@ public class SubstitutionCipher {
     }
 
     public String encrypt(String message) {
+        if (message == null) {
+            throw new IllegalArgumentException("Message cannot be null");
+        }
         StringBuilder encryptedMessage = new StringBuilder();
 
         for (char character : message.toCharArray()) {
