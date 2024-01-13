@@ -1,7 +1,7 @@
 package org.geekhub.consoleapi;
 
-import org.geekhub.repository.MessagesRepository;
-import org.geekhub.repository.MessagesInMemory;
+import org.geekhub.repository.LogInMemory;
+import org.geekhub.repository.LogRepository;
 import org.geekhub.service.CaesarEncrypt;
 
 import java.util.Map;
@@ -21,14 +21,12 @@ public class Console {
 
     private final Scanner scanner;
     private final CaesarEncrypt caesarEncrypt;
-    private final MessagesRepository originalMessages;
-    private final MessagesRepository encryptedMessages;
+    private final LogRepository logHistory;
 
     public Console() {
         this.scanner = new Scanner(System.in);
         this.caesarEncrypt = new CaesarEncrypt();
-        this.originalMessages = new MessagesInMemory();
-        this.encryptedMessages = new MessagesInMemory();
+        this.logHistory = new LogInMemory();
     }
 
     public void mainMenu() {
@@ -44,7 +42,7 @@ public class Console {
             switch (option) {
                 case 0 -> scanner.close();
                 case 1 -> encryptMethod();
-                case 2 -> System.out.println("history");
+                case 2 -> logHistory.loadHistory();
                 default -> System.out.println(assortment.get("AVAILABLE"));
             }
         } while (option != 0);
@@ -67,6 +65,7 @@ public class Console {
                 case 2 -> System.out.println("Other");
                 default -> System.out.println(assortment.get("AVAILABLE"));
             }
+            return; //back to main menu
         } while (subOption != 0);
     }
 
@@ -74,8 +73,9 @@ public class Console {
         System.out.println("Enter a message to encrypt: ");
         String originalMessage = scanner.nextLine();
         String encryptedMessage = caesarEncrypt.cipher(originalMessage);
-        originalMessages.addMessage(originalMessage);
-        encryptedMessages.addMessage(encryptedMessage);
-        System.out.println(encryptedMessages.getMessage(encryptedMessages.size() - 1));
+        logHistory.addMessage(originalMessage);
+        logHistory.addMessage(encryptedMessage);
+        System.out.println(logHistory.getMessage(logHistory.size() - 1));
+        logHistory.saveHistory();
     }
 }
