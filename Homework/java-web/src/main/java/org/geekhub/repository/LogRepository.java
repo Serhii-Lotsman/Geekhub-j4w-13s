@@ -7,6 +7,6 @@ public interface LogRepository {
     List<String> getMessages();
     String getMessage(int index);
     int size();
-    List<String> loadHistory();
-    void saveHistory();
+    void loadHistory();
+    String saveHistory();
 }

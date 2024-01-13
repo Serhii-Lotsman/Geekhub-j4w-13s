@@ -6,17 +6,15 @@ public class CaesarEncrypt {
 
     @Injectable(property = "caesar.offset")
     private final int offset;
-    private final StringBuilder encryptedMessage;
-
 
     public CaesarEncrypt() {
         AppConfig appConfig = new AppConfig();
         appConfig.loadProperties(CaesarEncrypt.class);
-        this.offset = appConfig.getOffset();
-        this.encryptedMessage = new StringBuilder();
+        this.offset = Integer.parseInt(appConfig.getProperty().toString());
     }
 
     public String cipher(String message) {
+        StringBuilder encryptedMessage = new StringBuilder();
         for (char character : message.toCharArray()) {
             if (Character.isLetter(character)) {
                 char base = Character.isUpperCase(character) ? 'A' : 'a';

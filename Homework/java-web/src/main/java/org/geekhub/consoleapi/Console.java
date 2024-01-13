@@ -4,19 +4,17 @@ import org.geekhub.repository.LogInMemory;
 import org.geekhub.repository.LogRepository;
 import org.geekhub.service.CaesarEncrypt;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Console {
 
     private final Map<String, String> assortment = Map.of(
-        "BORDER", "+--------------------------+",
         "EXIT", "| [0] - Exit",
         "ENCRYPT", "| [1] - Encrypt message",
         "HISTORY", "| [2] - View history",
-        "CAESAR", "| [1] - Caesar encrypt",
-        "BACK", "| [0] - Back to menu",
-        "AVAILABLE", "Only [0], [1], [2] available"
+        "CAESAR", "[1] - Caesar encrypt"
     );
 
     private final Scanner scanner;
@@ -33,49 +31,47 @@ public class Console {
         int option;
         do {
             System.out.println("Please, select an option");
-            System.out.println(assortment.get("BORDER"));
+            System.out.println("+--------------------------+");
             System.out.println(assortment.get("ENCRYPT"));
             System.out.println(assortment.get("HISTORY"));
             System.out.println(assortment.get("EXIT"));
-            System.out.println(assortment.get("BORDER"));
+            System.out.println("+--------------------------+");
             option = scanner.nextInt();
             switch (option) {
                 case 0 -> scanner.close();
                 case 1 -> encryptMethod();
                 case 2 -> logHistory.loadHistory();
-                default -> System.out.println(assortment.get("AVAILABLE"));
+                default -> System.out.println("Only [0], [1], [2] available");
             }
         } while (option != 0);
     }
 
     private void encryptMethod() {
         int subOption;
-        do {
-            System.out.println("Choose an encryption method: ");
-            System.out.println(assortment.get("BORDER"));
-            System.out.println(assortment.get("CAESAR"));
-            System.out.println("| [2] - Other");
-            System.out.println(assortment.get("BACK"));
-            System.out.println(assortment.get("BORDER"));
-            subOption = scanner.nextInt();
-            scanner.nextLine(); //to prevent showing sub-menu
-            switch (subOption) {
-                case 0 -> System.out.println("Main menu");
-                case 1 -> setCaesarEncrypt();
-                case 2 -> System.out.println("Other");
-                default -> System.out.println(assortment.get("AVAILABLE"));
-            }
-            return; //back to main menu
-        } while (subOption != 0);
+        System.out.println("Choose an encryption method: ");
+        System.out.println(assortment.get("CAESAR"));
+        System.out.println("[2] - Other");
+        subOption = scanner.nextInt();
+        scanner.nextLine(); //to prevent showing sub-menu
+        switch (subOption) {
+            case 1 -> setCaesarEncrypt();
+            case 2 -> System.out.println("Other");
+            default -> System.out.println("Only [0], [1], [2] available");
+        }
     }
 
     private void setCaesarEncrypt() {
         System.out.println("Enter a message to encrypt: ");
         String originalMessage = scanner.nextLine();
         String encryptedMessage = caesarEncrypt.cipher(originalMessage);
-        logHistory.addMessage(originalMessage);
-        logHistory.addMessage(encryptedMessage);
-        System.out.println(logHistory.getMessage(logHistory.size() - 1));
-        logHistory.saveHistory();
+        saveLogs(originalMessage, encryptedMessage, new Date());
+    }
+
+    private void saveLogs(String originalMessage, String encryptedMessage, Date date) {
+        String message = date.toString() + String.format(
+            " - Message '%s' was encrypted via %s into '%s'",
+            originalMessage, CaesarEncrypt.class.getSimpleName(), encryptedMessage);
+        logHistory.addMessage(message);
+        System.out.println(logHistory.saveHistory());
     }
 }

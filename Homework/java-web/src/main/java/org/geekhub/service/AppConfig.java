@@ -1,5 +1,7 @@
 package org.geekhub.service;
 
+import org.geekhub.exception.EncryptException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -8,7 +10,7 @@ public class AppConfig {
 
     private final Properties properties;
     private final InjectableExecutor executor;
-    private int offset;
+    private Object property;
 
     public AppConfig() {
         this.properties = new Properties();
@@ -24,15 +26,17 @@ public class AppConfig {
             String getProperty = properties.getProperty(
                 executor.getAnnotatedFieldValue(encryptClass)
             );
-            offset = getProperty == null ? 0 : Integer.parseInt(getProperty);
-
+            if (getProperty == null) {
+                System.exit(1);
+            } else
+                property = getProperty;
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new EncryptException(e.getMessage());
         }
     }
 
-    public int getOffset() {
-        return offset;
+    public Object getProperty() {
+        return property;
     }
 }
 
