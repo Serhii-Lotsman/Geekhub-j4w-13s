@@ -2,18 +2,18 @@ package org.geekhub.service;
 
 import org.geekhub.annotation.Injectable;
 
-public class CaesarEncrypt {
+public class CaesarCipher {
 
     @Injectable(property = "caesar.offset")
     private final int offset;
 
-    public CaesarEncrypt() {
+    public CaesarCipher() {
         AppConfig appConfig = new AppConfig();
-        appConfig.loadProperties(CaesarEncrypt.class);
+        appConfig.loadProperties(CaesarCipher.class);
         this.offset = Integer.parseInt(appConfig.getProperty().toString());
     }
 
-    public String cipher(String message) {
+    public String encrypt(String message) {
         StringBuilder encryptedMessage = new StringBuilder();
         for (char character : message.toCharArray()) {
             if (Character.isLetter(character)) {
