@@ -15,21 +15,21 @@ class SubstitutionCipherTest {
     }
 
     @Test
-    void encrypt_ValidMessage_ReturnsEncryptedMessage() {
+    void encrypt_whenValidMessage_shouldReturnEncryptedMessage() {
         String originalMessage = "Hello, World!";
         String encryptedMessage = substitutionCipher.encrypt(originalMessage);
         assertEquals("Oiwwd, Tdjwg!", encryptedMessage);
     }
 
     @Test
-    void encrypt_EmptyMessage_ReturnsEmptyMessage() {
+    void encrypt_whenEmptyMessage_shouldReturnEmptyMessage() {
         String originalMessage = "";
         String encryptedMessage = substitutionCipher.encrypt(originalMessage);
         assertEquals("", encryptedMessage);
     }
 
     @Test
-    void encrypt_NullMessage_ThrowsIllegalArgumentException() {
+    void encrypt_whenNullMessage_shouldThrowIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> substitutionCipher.encrypt(null));
     }
 }
