@@ -10,14 +10,20 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CipherManager {
 
     private final OffsetDateTime dateTime;
     private final LogRepository logHistory;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
 
     public CipherManager() {
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
@@ -57,7 +63,6 @@ public class CipherManager {
     }
 
     private void saveLogs(String originalMessage, String encryptedMessage, OffsetDateTime dateTime, Object object) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-uuuu HH:mm:ss");
         String message = dateTime.format(formatter) + String.format(
             " - Message '%s' was encrypted via %s into '%s'",
             originalMessage, object.getClass().getSimpleName(), encryptedMessage);
@@ -65,7 +70,42 @@ public class CipherManager {
         System.out.println(logHistory.saveHistory());
     }
 
+    public void getCountOfUsage() {
+        List<String> messages = logHistory.loadHistory();
+
+        Map<String, Integer> statistic = messages.stream()
+            .map(message -> message.substring(message.indexOf("via") + "via".length(),
+                message.indexOf("into")).trim())
+            .collect(HashMap::new, (map, algorithmName) -> map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
+
+        statistic.forEach((algorithmType, count) ->
+            System.out.printf("%s was used %d times%n", algorithmType, count));
+    }
+
     public void getLoadHistory() {
-        logHistory.loadHistory();
+        for (String message : logHistory.loadHistory()) {
+            System.out.println(message);
+        }
+    }
+
+    public void getMessagesByDate(Scanner scanner) {
+        List<String> messages = logHistory.loadHistory();
+        System.out.println("Enter a specific date and time (dd-MM-yyyy): ");
+        String specificDate = scanner.nextLine();
+
+        Map<String, List<String>> historyByDate = messages.stream()
+            .filter(message -> getMessageDate(message).equals(specificDate))
+            .collect(Collectors.groupingBy(this::getMessageDate));
+
+        historyByDate.forEach((date, dateMessages) -> {
+            List<String> substrings = dateMessages.stream()
+                .map(message -> message.substring(11)).toList();
+
+            System.out.printf("[%s] %n%s %n", date, String.join("\n", substrings));
+        });
+    }
+
+    private String getMessageDate(String message) {
+        return message.substring(0, 10);
     }
 }

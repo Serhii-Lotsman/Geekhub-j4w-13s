@@ -1,6 +1,7 @@
 package org.geekhub.repository;
 
 import org.geekhub.annotation.Injectable;
+import org.geekhub.exception.EncryptException;
 import org.geekhub.service.AppConfig;
 
 import java.io.BufferedReader;
@@ -36,19 +37,22 @@ public class LogInMemory implements LogRepository{
     }
 
     @Override
-    public void loadHistory() {
+    public List<String> loadHistory() {
+        List<String> messageHistory;
         try (BufferedReader reader = new BufferedReader(new FileReader(historyFilePath.toFile()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 history.add(line);
             }
+            messageHistory = new ArrayList<>(history);
+            if (history.isEmpty()) {
+                throw new EncryptException("History is empty");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (String message : history) {
-            System.out.println(message);
+            throw new EncryptException(e.getMessage());
         }
         history.clear();
+        return messageHistory;
     }
 
     @Override

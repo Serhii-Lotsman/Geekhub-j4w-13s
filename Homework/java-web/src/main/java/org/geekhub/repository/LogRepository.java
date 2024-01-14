@@ -1,7 +1,9 @@
 package org.geekhub.repository;
 
+import java.util.List;
+
 public interface LogRepository {
     void addMessage(String message);
-    void loadHistory();
+    List<String> loadHistory();
     String saveHistory();
 }
