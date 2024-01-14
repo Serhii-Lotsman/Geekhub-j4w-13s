@@ -1,7 +1,6 @@
 package org.geekhub.consoleapi;
 
 import org.geekhub.service.CaesarCipher;
-import org.geekhub.service.CipherManager;
 import org.geekhub.service.SubstitutionCipher;
 
 import java.util.Map;
@@ -23,10 +22,12 @@ public class Console {
 
     private final Scanner scanner;
     private final CipherManager cipherManager;
+    private final EncryptSetter encryptSetter;
 
     public Console() {
         this.scanner = new Scanner(System.in);
         this.cipherManager = new CipherManager();
+        this.encryptSetter = new EncryptSetter();
     }
 
     public void mainMenu() {
@@ -56,8 +57,8 @@ public class Console {
         subOption = scanner.nextInt();
         scanner.nextLine(); //to prevent showing sub-menu
         switch (subOption) {
-            case 1 -> cipherManager.setEncrypt(scanner, CaesarCipher.class);
-            case 2 -> cipherManager.setEncrypt(scanner, SubstitutionCipher.class);
+            case 1 -> encryptSetter.setEncrypt(scanner, CaesarCipher.class);
+            case 2 -> encryptSetter.setEncrypt(scanner, SubstitutionCipher.class);
             default -> System.out.println("Main menu");
         }
     }
@@ -75,6 +76,7 @@ public class Console {
             case 1 -> cipherManager.getLoadHistory();
             case 2 -> cipherManager.getCountOfUsage();
             case 3 -> cipherManager.getMessagesByDate(scanner);
+            case 4 -> cipherManager.getUniqueMessages();
             default -> System.out.println("Main menu");
         }
     }
