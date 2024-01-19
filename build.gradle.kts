@@ -85,3 +85,8 @@ dependencies {
 kotlin {
     jvmToolchain(17)
 }
+
+tasks.wrapper {
+    gradleVersion = "8.5"
+    distributionType = Wrapper.DistributionType.ALL
+}

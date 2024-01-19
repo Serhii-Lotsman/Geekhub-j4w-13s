@@ -1,11 +1,10 @@
 pluginManagement {
     plugins {
         kotlin("jvm") version "1.9.21"
+        id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
     }
 }
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
-}
+
 rootProject.name = "GeekHub-J4W-13"
 
 include("Homework:java-core:01-Introduction")
