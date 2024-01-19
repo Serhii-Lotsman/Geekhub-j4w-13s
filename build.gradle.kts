@@ -27,15 +27,15 @@ allprojects {
         implementation("com.google.code.findbugs:jsr305:3.0.2")
     }
 
-    tasks.named("build") {
+    tasks.build {
         dependsOn("checkstyleMain", "sonarlintMain")
     }
 
-    tasks.named<JavaCompile>("compileJava") {
+    tasks.compileJava {
         options.encoding = "UTF-8"
     }
 
-    tasks.named<JavaCompile>("compileTestJava") {
+    tasks.compileTestJava {
         options.encoding = "UTF-8"
     }
 
@@ -73,7 +73,7 @@ allprojects {
         }
     }
 
-    tasks.named<Test>("test") {
+    tasks.test {
         useJUnitPlatform()
     }
 }
