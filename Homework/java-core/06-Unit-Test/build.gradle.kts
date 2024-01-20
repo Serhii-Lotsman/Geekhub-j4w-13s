@@ -1,8 +1,5 @@
 dependencies {
-    implementation("org.apache.httpcomponents:httpclient:4.5.14") {
-        exclude(group = "commons-codec", module = "commons-codec")
-    }
-    implementation("commons-codec:commons-codec:1.13")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.0")
     implementation ("com.google.code.gson:gson:2.10.1")
 
     testImplementation (platform("org.junit:junit-bom:5.9.1"))
