@@ -16,6 +16,7 @@ val gzipArchiver = tasks.register<Tar>("gzipArchive") {
         rename { it.replace(".text", ".txt") }
     }
     compression = Compression.GZIP
+    archiveBaseName.set("archivedFiles")
     destinationDirectory.set(file("build/archive"))
 
     doLast {
@@ -23,8 +24,44 @@ val gzipArchiver = tasks.register<Tar>("gzipArchive") {
     }
 }
 
-tasks.register("gzipRunner") {
+tasks.register("archiveRunner") {
     group = "custom-Gzip"
     description = "Run Gzip-archiver"
     dependsOn(gzipArchiver)
+}
+
+val gzipDecompressor = tasks.register("gzipDecompress") {
+    group = "custom-Gzip"
+    description = "Decompress all files into the test directory"
+
+    doFirst{
+        println("Unpacking txt files...")
+    }
+
+    doLast {
+        project.copy {
+            from(project.tarTree("build/archive/archivedFiles.tgz"))
+            into(layout.projectDirectory.dir("src/test/resources"))
+        }
+        println("Files successfully unpacked")
+    }
+    dependsOn(gzipArchiver)
+}
+
+tasks.register("decompressRunner") {
+    group = "custom-Gzip"
+    description = "Run Gzip-archiver"
+    dependsOn(gzipDecompressor)
+}
+
+tasks.register<Delete>("cleanup") {
+    group = "custom-Gzip"
+    description = "Delete all files from archive and test directories"
+
+    doLast {
+        project.delete("build/archive")
+        project.delete("src/test/resources")
+        println("Cleanup complete.")
+    }
+    dependsOn(gzipArchiver, gzipDecompressor)
 }
