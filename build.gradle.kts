@@ -78,10 +78,6 @@ allprojects {
     }
 }
 
-dependencies {
-    implementation(kotlin("stdlib"))
-}
-
 kotlin {
     jvmToolchain(17)
 }

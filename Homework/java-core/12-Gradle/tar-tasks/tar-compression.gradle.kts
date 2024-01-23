@@ -26,21 +26,21 @@ tasks.register("archiveRunner") {
     dependsOn(gzipArchiver)
 }
 
-val gzipDecompressor = tasks.register("gzipDecompress") {
+val gzipDecompressor = tasks.register<Copy>("gzipDecompress") {
     group = "custom-Gzip"
     description = "Decompress all files into the test directory"
 
-    doFirst{
+    doFirst {
         println("Unpacking txt files...")
     }
 
+    from(project.tarTree("build/archive/archivedFiles.tgz"))
+    into(layout.projectDirectory.dir("src/test/resources"))
+
     doLast {
-        project.copy {
-            from(project.tarTree("build/archive/archivedFiles.tgz"))
-            into(layout.projectDirectory.dir("src/test/resources"))
-        }
         println("Files successfully unpacked")
     }
+
     dependsOn(gzipArchiver)
 }
 
@@ -55,9 +55,9 @@ tasks.register<Delete>("cleanup") {
     description = "Delete all files from archive and test directories"
 
     doLast {
-        project.delete("build/archive")
-        project.delete("src/test/resources")
+        project.delete("build/archive", "src/test/resources")
         println("Cleanup complete.")
     }
+
     dependsOn(gzipArchiver, gzipDecompressor)
 }
