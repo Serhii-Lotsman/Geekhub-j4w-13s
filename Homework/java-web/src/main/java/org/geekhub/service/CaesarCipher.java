@@ -1,17 +1,13 @@
 package org.geekhub.service;
 
-import org.geekhub.annotation.Injectable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-public class CaesarCipher {
+@Component
+public class CaesarCipher implements Cipher {
 
-    @Injectable(property = "caesar.offset")
-    private final int offset;
-
-    public CaesarCipher() {
-        AppConfig appConfig = new AppConfig();
-        appConfig.loadProperties(CaesarCipher.class);
-        this.offset = Integer.parseInt(appConfig.getProperty().toString());
-    }
+    @Value("${cipher.caesar}")
+    private int offset;
 
     public String encrypt(String message) {
         if (message == null) {

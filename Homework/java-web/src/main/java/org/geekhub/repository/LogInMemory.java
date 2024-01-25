@@ -1,8 +1,7 @@
 package org.geekhub.repository;
 
-import org.geekhub.annotation.Injectable;
 import org.geekhub.exception.EncryptException;
-import org.geekhub.service.AppConfig;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,22 +9,18 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogInMemory implements LogRepository{
 
     private final List<String> history;
-    @Injectable(property = "path.file")
-    private final Path resourcesPath;
+    @Value("${path.file}")
+    private Path resourcesPath;
     private final Path historyFilePath;
 
 
     public LogInMemory() {
-        AppConfig property = new AppConfig();
-        property.loadProperties(LogInMemory.class);
-        this.resourcesPath = Paths.get((String) property.getProperty());
         String historyFile = "log_history.txt";
         this.historyFilePath = resourcesPath.resolve(historyFile);
         this.history = new ArrayList<>();
@@ -66,7 +61,7 @@ public class LogInMemory implements LogRepository{
             }
             history.clear();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         return lastMessage;
     }
