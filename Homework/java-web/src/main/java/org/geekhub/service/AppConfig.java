@@ -12,13 +12,13 @@ import org.springframework.context.annotation.PropertySource;
 public class AppConfig {
 
     @Bean
-    @Profile("caesar")
+    @Profile("caesarCipher")
     public CaesarCipher caesarCipher() {
         return new CaesarCipher();
     }
 
     @Bean
-    @Profile("vigenere")
+    @Profile("vigenereCipher")
     public VigenereCipher vigenereCipher() {
         return new VigenereCipher();
     }

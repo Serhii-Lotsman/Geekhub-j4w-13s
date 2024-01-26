@@ -1,19 +1,18 @@
 package org.geekhub;
 
 import org.geekhub.service.AppConfig;
-import org.geekhub.service.CaesarCipher;
-import org.geekhub.service.VigenereCipher;
+import org.geekhub.service.Cipher;
+import org.geekhub.service.CipherManager;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ApplicationStarter {
-
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         context.registerShutdownHook();
-        context.getEnvironment().setActiveProfiles("caesar", "vigenere");
         context.register(AppConfig.class);
-
-        System.out.println(context.getBean(CaesarCipher.class).encrypt("Message to encrypt"));
-        System.out.println(context.getBean(VigenereCipher.class).encrypt("Message to encrypt"));
+        String[] profiles = context.getEnvironment().getActiveProfiles();
+        Cipher cipher = context.getBean(profiles[0], Cipher.class);
+        CipherManager cipherManager = new CipherManager(cipher);
+        System.out.println(cipherManager.getEncryptedMessage("Message to encrypt"));
     }
 }
