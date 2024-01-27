@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class CipherHistory {
@@ -27,6 +26,10 @@ public class CipherHistory {
     private static final String COUNT_OF_USAGE = "-------------------------------" +
         "C-O-U-N-T--O-F--U-S-A-G-E" +
         "-------------------------------";
+    private static final String MESSAGES_BY_DATE = "-----------------------------" +
+        "M-E-S-S-A-G-E-S--B-Y--D-A-T-E" +
+        "-----------------------------";
+    private static final String HISTORY_EMPTY = "History empty";
     private static final int INDEX_BEGIN_DATE = 0;
     private static final int INDEX_END_DATE = 10;
     private final LogRepository logHistory;
@@ -56,59 +59,54 @@ public class CipherHistory {
                 message.indexOf("into")).trim())
             .collect(HashMap::new, (map, algorithmName) -> map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
 
-        statistic.forEach((algorithmType, count) ->
-            System.out.printf("%s was used %s times%n", algorithmType, count));
+        if (statistic.isEmpty()) {
+            System.out.println(HISTORY_EMPTY);
+        } else {
+            statistic.forEach((algorithmType, count) ->
+                System.out.printf("%s was used %s times%n", algorithmType, count));
+        }
         System.out.println(END_LINE);
     }
 
     public void getLoadHistory() {
         System.out.println(HISTORY);
-        for (String message : logHistory.loadHistory()) {
-            System.out.println(message);
+        if (logHistory.loadHistory().isEmpty()) {
+            System.out.println(HISTORY_EMPTY);
+        } else {
+            for (String message : logHistory.loadHistory()) {
+                System.out.println(message);
+            }
         }
         System.out.println(END_LINE);
     }
 
-    public void getMessagesByDate(Scanner scanner) {
+    public void getMessagesByDate(String specificDate) {
+        System.out.println(MESSAGES_BY_DATE);
         List<String> messages = logHistory.loadHistory();
 
         Map<String, List<String>> historyByDate = messages.stream()
-            .collect(
-                Collectors.groupingBy(
-                    this::getMessageDate,
-                    Collectors.mapping(message -> message.substring(INDEX_END_DATE+1), Collectors.toList()))
-            );
-        getAvailableDates(historyByDate, scanner);
+            .filter(message -> getMessageDate(message).equals(specificDate))
+            .collect(Collectors.groupingBy(this::getMessageDate));
+
+        if (historyByDate.isEmpty()) {
+            System.out.println(HISTORY_EMPTY);
+        } else {
+            historyByDate.forEach((date, dateMessages) -> {
+                List<String> substrings = dateMessages.stream()
+                    .map(message -> message.substring(INDEX_END_DATE + 1)).toList();
+
+                System.out.printf("[%s] %n%s %n", date, String.join("\n", substrings));
+            });
+        }
+        System.out.println(END_LINE);
     }
 
     private String getMessageDate(String message) {
         return message.substring(INDEX_BEGIN_DATE, INDEX_END_DATE);
     }
 
-    private void getAvailableDates(Map<String, List<String>> historyByDate, Scanner scanner) {
-        List<String> availableDates = historyByDate.keySet().stream().toList();
-        int subOption;
-        System.out.println("Available dates:");
-        int index = 0;
-        for (String element : availableDates) {
-            System.out.printf("[%s] - %s%n", index++, element);
-        }
-        subOption = scanner.nextInt();
-        if (subOption == availableDates.indexOf(availableDates.get(subOption))) {
-            historyByDate.forEach((date, dateMessages) -> {
-                if (availableDates.get(subOption).equals(date)) {
-                    List<String> substrings = dateMessages.stream()
-                        .map(message -> message.substring(INDEX_END_DATE+1))
-                        .toList();
-
-                    System.out.printf("[%s] %n%s %n", date, String.join("\n", substrings));
-                }
-            });
-        }
-    }
-
     public void getUniqueMessages() {
-        boolean foundDuplicates = false;
+        boolean isDuplicateMessage = false;
         int uniqueCount = 1;
         List<String> messages = logHistory.loadHistory();
 
@@ -125,11 +123,11 @@ public class CipherHistory {
             long count = entry.getValue();
             if (count > uniqueCount) {
                 System.out.printf("%s %s times%n", message, count);
-                foundDuplicates = true;
+                isDuplicateMessage = true;
             }
         }
-        if (!foundDuplicates) {
-            System.out.println("All messages and algorithms are unique");
+        if (!isDuplicateMessage) {
+            System.out.println(HISTORY_EMPTY);
         }
         System.out.println(END_LINE);
     }

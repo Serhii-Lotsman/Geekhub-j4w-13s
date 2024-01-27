@@ -15,11 +15,13 @@ public class HistoryPrinter {
         CipherManager cipherManager = new CipherManager(cipher);
 
         String originalMessage = "Message";
+        String specificDate = "27-01-2024"; //"dd-MM-yyyy"
         String encryptedMessage = cipherManager.getEncryptedMessage(originalMessage);
 
         printAllHistory();
         printCountOfUsage();
         printUniqueMessages();
+        printMessageByDate(specificDate);
         printAndSaveMessage(originalMessage, encryptedMessage, encryptor);
     }
 
@@ -37,5 +39,9 @@ public class HistoryPrinter {
 
     private void printUniqueMessages() {
         cipherHistory.getUniqueMessages();
+    }
+
+    private void printMessageByDate(String specificDate) {
+        cipherHistory.getMessagesByDate(specificDate);
     }
 }

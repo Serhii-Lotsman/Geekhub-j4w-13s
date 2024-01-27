@@ -4,9 +4,11 @@ import org.geekhub.exception.EncryptException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +16,28 @@ import java.util.List;
 public class LogInMemory implements LogRepository{
 
     private final List<String> history;
-    private final Path historyFilePath;
+    private Path historyFilePath;
 
 
     public LogInMemory() {
+        this.history = new ArrayList<>();
+        createFile();
+    }
+
+    private void createFile() {
         String historyFile = "log_history.txt";
         Path resourcesPath = Path.of("Homework/java-web/src/main/resources");
-        this.historyFilePath = resourcesPath.resolve(historyFile);
-        this.history = new ArrayList<>();
+        historyFilePath = resourcesPath.resolve(historyFile);
+
+        File file = historyFilePath.toFile();
+
+        if (!file.exists()) {
+            try {
+                Files.createFile(historyFilePath);
+            } catch (IOException e) {
+                throw new EncryptException("Error creating file: " + e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -38,9 +54,6 @@ public class LogInMemory implements LogRepository{
                 history.add(line);
             }
             messageHistory = new ArrayList<>(history);
-            if (history.isEmpty()) {
-                throw new EncryptException("History is empty");
-            }
         } catch (IOException e) {
             throw new EncryptException(e.getMessage());
         }
