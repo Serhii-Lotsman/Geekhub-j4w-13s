@@ -5,5 +5,5 @@ import java.util.List;
 public interface LogRepository {
     void addMessage(String message);
     List<String> loadHistory();
-    String saveHistory();
+    void saveHistory();
 }

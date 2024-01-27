@@ -29,11 +29,11 @@ public class HistoryPrinter {
     }
 
     private void printAndSaveMessage(String originalMessage, String encryptedMessage, String encryptor) {
-        cipherHistory.saveLogs(originalMessage, encryptedMessage, dateTime, encryptor);
+        cipherHistory.saveCurrentMessage(originalMessage, encryptedMessage, dateTime, encryptor);
     }
 
     private void printAllHistory() {
-        cipherHistory.getLoadHistory();
+        cipherHistory.getLoadedHistory();
     }
 
     private void printCountOfUsage() {
@@ -45,6 +45,6 @@ public class HistoryPrinter {
     }
 
     private void printMessageByDate(String specificDate) {
-        cipherHistory.getMessagesByDate(specificDate);
+        cipherHistory.getHistoryByDate(specificDate);
     }
 }

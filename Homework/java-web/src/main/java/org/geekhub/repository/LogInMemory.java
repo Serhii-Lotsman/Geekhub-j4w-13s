@@ -62,18 +62,15 @@ public class LogInMemory implements LogRepository{
     }
 
     @Override
-    public String saveHistory() {
-        String lastMessage = "";
+    public void saveHistory() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath.toFile(), true))) {
             for (String entry : history) {
                 writer.write(entry);
                 writer.newLine();
-                lastMessage = entry;
             }
             history.clear();
         } catch (IOException e) {
             throw new EncryptException(e.getMessage());
         }
-        return lastMessage;
     }
 }
