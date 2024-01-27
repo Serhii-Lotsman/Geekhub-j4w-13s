@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 
 public class CipherHistory {
 
-    private static final String CURRENTLY_MESSAGE = "---------------------------" +
-        "C-U-R-R-E-N-T-L-Y---M-E-S-S-A-G-E" +
-        "---------------------------";
+    private static final String CURRENTLY_MESSAGE = "-----------------------------" +
+        "C-U-R-R-E-N-T--M-E-S-S-A-G-E" +
+        "------------------------------";
     private static final String HISTORY = "-------------------------------------" +
         "H-I-S-T-O-R-Y" +
         "-------------------------------------";

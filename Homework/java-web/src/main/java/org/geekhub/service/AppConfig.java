@@ -1,5 +1,6 @@
 package org.geekhub.service;
 
+import org.geekhub.consoleapi.HistoryPrinter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,11 @@ public class AppConfig {
     @Profile("vigenereCipher")
     public VigenereCipher vigenereCipher() {
         return new VigenereCipher();
+    }
+
+    @Bean
+    public HistoryPrinter historyPrinter() {
+        return new HistoryPrinter();
     }
 }
 
