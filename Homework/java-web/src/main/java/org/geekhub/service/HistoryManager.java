@@ -35,15 +35,13 @@ public class HistoryManager {
     }
 
     public void print(Cipher cipher, String encryptor) {
-        CipherManager cipherManager = new CipherManager(cipher);
-
-        String encryptedMessage = cipherManager.getEncryptedMessage(originalMessage);
-
         getAllHistory();
         getCountOfUsage();
         getUniqueMessages();
         getMessageByDate(specificDate);
-        saveMessage(originalMessage, encryptedMessage, encryptor);
+
+        CipherManager cipherManager = new CipherManager(cipher);
+        saveMessage(originalMessage, cipherManager.getEncryptedMessage(originalMessage), encryptor);
     }
 
     private void saveMessage(String originalMessage, String encryptedMessage, String encryptor) {

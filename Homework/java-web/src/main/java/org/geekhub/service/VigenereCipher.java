@@ -14,8 +14,8 @@ public class VigenereCipher implements Cipher {
             throw new IllegalArgumentException("Message cannot be null");
         }
         StringBuilder encryptedMessage = new StringBuilder();
-
-        for (int i = 0, j = 0; i < message.length(); i++) {
+        int j = 0;
+        for (int i = 0; i < message.length(); i++) {
             char currentChar = message.charAt(i);
             char encryptedChar;
 

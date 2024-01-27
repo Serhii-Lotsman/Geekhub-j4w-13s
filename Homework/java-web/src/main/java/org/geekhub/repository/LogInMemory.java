@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogInMemory implements LogRepository{
+public class LogInMemory implements LogRepository {
 
     private final List<String> history;
     private Path historyFilePath;

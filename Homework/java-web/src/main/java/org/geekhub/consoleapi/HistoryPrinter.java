@@ -5,23 +5,23 @@ import java.util.Map;
 
 public class HistoryPrinter {
 
-    private static final String COUNT_OF_USAGE = "-------------------------------" +
-        "C-O-U-N-T--O-F--U-S-A-G-E" +
-        "-------------------------------";
-    private static final String CURRENT_MESSAGE = "-----------------------------" +
-        "C-U-R-R-E-N-T--M-E-S-S-A-G-E" +
-        "------------------------------";
-    private static final String END_LINE = "-------------------------------------" +
-        "--------------------------------------------------";
-    private static final String HISTORY = "-------------------------------------" +
-        "H-I-S-T-O-R-Y" +
-        "-------------------------------------";
-    private static final String MESSAGES_BY_DATE = "-----------------------------" +
-        "M-E-S-S-A-G-E-S--B-Y--D-A-T-E" +
-        "-----------------------------";
-    private static final String UNIQUE_MESSAGE = "-----------------------------" +
-        "U-N-I-Q-U-E---M-E-S-S-A-G-E-S" +
-        "-----------------------------";
+    private static final String COUNT_OF_USAGE = "-------------------------------"
+        + "C-O-U-N-T--O-F--U-S-A-G-E"
+        + "-------------------------------";
+    private static final String CURRENT_MESSAGE = "-----------------------------"
+        + "C-U-R-R-E-N-T--M-E-S-S-A-G-E"
+        + "------------------------------";
+    private static final String END_LINE = "-------------------------------------"
+        + "--------------------------------------------------";
+    private static final String HISTORY = "-------------------------------------"
+        + "H-I-S-T-O-R-Y"
+        + "-------------------------------------";
+    private static final String MESSAGES_BY_DATE = "-----------------------------"
+        + "M-E-S-S-A-G-E-S--B-Y--D-A-T-E"
+        + "-----------------------------";
+    private static final String UNIQUE_MESSAGE = "-----------------------------"
+        + "U-N-I-Q-U-E---M-E-S-S-A-G-E-S"
+        + "-----------------------------";
     private static final String HISTORY_EMPTY = "History empty";
     private static final int INDEX_END_DATE = 10;
 
