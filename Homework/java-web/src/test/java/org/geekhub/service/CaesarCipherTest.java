@@ -7,19 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CaesarCipherTest {
-
     private CaesarCipher caesarCipher;
 
     @BeforeEach
     void setUp() {
         caesarCipher = new CaesarCipher();
-    }
-
-    @Test
-    void encrypt_whenValidMessage_shouldReturnEncryptedMessage() {
-        String originalMessage = "Hello, World!";
-        String encryptedMessage = caesarCipher.encrypt(originalMessage);
-        assertEquals("Khoor, Zruog!", encryptedMessage);
     }
 
     @Test

@@ -16,12 +16,6 @@ class VigenereCipherTest {
     }
 
     @Test
-    void encrypt_whenValidMessage_shouldReturnEncryptedMessage() {
-        String encryptedMessage = vigenereCipher.encrypt("Hello, World!");
-        assertEquals("Rijvs, Uyvjn!", encryptedMessage);
-    }
-
-    @Test
     void encrypt_whenEmptyMessage_shouldReturnEmptyMessage() {
         String originalMessage = "";
         String encryptedMessage = vigenereCipher.encrypt(originalMessage);

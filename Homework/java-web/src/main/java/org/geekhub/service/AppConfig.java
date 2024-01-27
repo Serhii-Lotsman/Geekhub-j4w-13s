@@ -1,6 +1,7 @@
 package org.geekhub.service;
 
 import org.geekhub.consoleapi.HistoryPrinter;
+import org.geekhub.repository.LogInMemory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,16 @@ public class AppConfig {
     @Bean
     public HistoryPrinter historyPrinter() {
         return new HistoryPrinter();
+    }
+
+    @Bean
+    public LogInMemory logInMemory() {
+        return new LogInMemory();
+    }
+
+    @Bean
+    public HistoryManager historyManager() {
+        return new HistoryManager(historyPrinter(), logInMemory());
     }
 }
 
