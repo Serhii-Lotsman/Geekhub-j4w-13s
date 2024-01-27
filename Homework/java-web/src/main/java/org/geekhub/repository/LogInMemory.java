@@ -1,7 +1,6 @@
 package org.geekhub.repository;
 
 import org.geekhub.exception.EncryptException;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,13 +14,12 @@ import java.util.List;
 public class LogInMemory implements LogRepository{
 
     private final List<String> history;
-    @Value("${path.file}")
-    private Path resourcesPath;
     private final Path historyFilePath;
 
 
     public LogInMemory() {
         String historyFile = "log_history.txt";
+        Path resourcesPath = Path.of("Homework/java-web/src/main/resources");
         this.historyFilePath = resourcesPath.resolve(historyFile);
         this.history = new ArrayList<>();
     }
@@ -61,7 +59,7 @@ public class LogInMemory implements LogRepository{
             }
             history.clear();
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new EncryptException(e.getMessage());
         }
         return lastMessage;
     }
