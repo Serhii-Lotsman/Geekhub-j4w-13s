@@ -3,14 +3,11 @@ package org.geekhub.repository;
 import org.geekhub.exception.EncryptException;
 import org.springframework.stereotype.Repository;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,27 +46,19 @@ public class LogInMemory implements LogRepository {
 
     @Override
     public List<String> loadHistory() {
-        List<String> messageHistory;
-        try (BufferedReader reader = new BufferedReader(new FileReader(historyFilePath.toFile()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                history.add(line);
-            }
-            messageHistory = new ArrayList<>(history);
+        try {
+            List<String> messageHistory = Files.readAllLines(historyFilePath);
+            history.clear();
+            return new ArrayList<>(messageHistory);
         } catch (IOException e) {
             throw new EncryptException(e.getMessage());
         }
-        history.clear();
-        return messageHistory;
     }
 
     @Override
     public void saveHistory() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath.toFile(), true))) {
-            for (String entry : history) {
-                writer.write(entry);
-                writer.newLine();
-            }
+        try {
+            Files.write(historyFilePath, history, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
             history.clear();
         } catch (IOException e) {
             throw new EncryptException(e.getMessage());

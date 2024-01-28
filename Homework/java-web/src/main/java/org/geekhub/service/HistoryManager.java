@@ -52,9 +52,9 @@ public class HistoryManager {
     }
 
     private void saveMessage(String originalMessage, String encryptedMessage, String encryptor) {
-        String message = dateTime.format(formatter) + String.format(
-            " - Message '%s' was encrypted via %s into '%s'",
-            originalMessage, encryptor, encryptedMessage);
+        String messageInfo = " - Message '%s' was encrypted via %s into '%s'";
+        String message = dateTime.format(formatter)
+            + String.format(messageInfo, originalMessage, encryptor, encryptedMessage);
         logRepository.addMessage(message);
         logRepository.saveHistory();
 
@@ -69,31 +69,37 @@ public class HistoryManager {
     private void getCountOfUsage() {
         List<String> messages = logRepository.loadHistory();
         Map<String, Integer> statistic = messages.stream()
-            .map(message -> message.substring(
-                message.indexOf("via") + "via".length(), message.indexOf("into")
-            ).trim())
+            .map(HistoryManager::getAlgorithmName)
             .collect(HashMap::new, (map, algorithmName) ->
                 map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
 
         historyPrinter.printCountOfUsage(statistic);
     }
 
+    private static String getAlgorithmName(String message) {
+        return message.substring(
+            message.indexOf("via") + "via".length(), message.indexOf("into"))
+            .trim();
+    }
+
     private void getUniqueMessages() {
-        boolean isDuplicateMessage = false;
-        int uniqueCount = 1;
         List<String> messages = logRepository.loadHistory();
         Map<String, Long> uniqueMessages = getMapUniqueMessages(messages);
 
-        historyPrinter.printUniqueMessages(uniqueMessages, uniqueCount, isDuplicateMessage);
+        historyPrinter.printUniqueMessages(uniqueMessages);
     }
 
     private Map<String, Long> getMapUniqueMessages(List<String> messages) {
         return messages.stream()
-            .map(message -> message.substring(
-                message.indexOf("Message"), message.indexOf("into")
-            ).trim())
+            .map(HistoryManager::getUniqueMessage)
             .collect(Collectors.groupingBy(message ->
                 message, Collectors.counting()));
+    }
+
+    private static String getUniqueMessage(String message) {
+        return message.substring(
+            message.indexOf("Message"), message.indexOf("into"))
+            .trim();
     }
 
     private void getMessageByDate(String specificDate) {

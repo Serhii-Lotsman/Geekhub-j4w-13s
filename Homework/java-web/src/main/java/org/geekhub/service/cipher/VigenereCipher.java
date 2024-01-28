@@ -17,24 +17,25 @@ public class VigenereCipher implements Cipher {
         if (message == null) {
             throw new IllegalArgumentException("Message cannot be null");
         }
-        StringBuilder encryptedMessage = new StringBuilder();
-        int j = 0;
-        for (int i = 0; i < message.length(); i++) {
-            char currentChar = message.charAt(i);
-            char encryptedChar;
 
-            if (Character.isLetter(currentChar)) {
-                char base = Character.isUpperCase(currentChar) ? 'A' : 'a';
-                int offset = key.toUpperCase().charAt(j) - 'A';
-                encryptedChar = (char) ((currentChar - base + offset) % 26 + base);
-                j = (j + 1) % key.length();
-            } else {
-                encryptedChar = currentChar;
-            }
+        return IntStream.range(0, message.length())
+            .mapToObj(index -> getEncryptedChar(message, index))
+            .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+            .toString();
+    }
 
-            encryptedMessage.append(encryptedChar);
+    private char getEncryptedChar(String message, int index) {
+        char currentChar = message.charAt(index);
+        char encryptedChar;
+
+        if (Character.isLetter(currentChar)) {
+            char base = Character.isUpperCase(currentChar) ? 'A' : 'a';
+            int offset = key.toUpperCase().charAt(index % key.length()) - 'A';
+            encryptedChar = (char) ((currentChar - base + offset) % 26 + base);
+        } else {
+            encryptedChar = currentChar;
         }
 
-        return encryptedMessage.toString();
+        return encryptedChar;
     }
 }
