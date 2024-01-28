@@ -1,6 +1,6 @@
 package org.geekhub.repository;
 
-import org.geekhub.exception.EncryptException;
+import org.geekhub.exception.FileException;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -34,7 +34,7 @@ public class LogInMemory implements LogRepository {
             try {
                 Files.createFile(historyFilePath);
             } catch (IOException e) {
-                throw new EncryptException("Error creating file: " + e.getMessage());
+                throw new FileException("Error creating file: " + e.getMessage());
             }
         }
     }
@@ -51,7 +51,7 @@ public class LogInMemory implements LogRepository {
             history.clear();
             return new ArrayList<>(messageHistory);
         } catch (IOException e) {
-            throw new EncryptException(e.getMessage());
+            throw new FileException(e.getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ public class LogInMemory implements LogRepository {
             Files.write(historyFilePath, history, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
             history.clear();
         } catch (IOException e) {
-            throw new EncryptException(e.getMessage());
+            throw new FileException(e.getMessage());
         }
     }
 }
