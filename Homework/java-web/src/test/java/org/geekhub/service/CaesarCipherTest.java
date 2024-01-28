@@ -1,5 +1,6 @@
 package org.geekhub.service;
 
+import org.geekhub.service.cipher.CaesarCipher;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.BeforeEach;

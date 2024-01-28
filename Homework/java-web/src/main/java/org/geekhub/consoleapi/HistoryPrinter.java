@@ -1,8 +1,11 @@
 package org.geekhub.consoleapi;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class HistoryPrinter {
 
     private static final String COUNT_OF_USAGE = "-------------------------------"

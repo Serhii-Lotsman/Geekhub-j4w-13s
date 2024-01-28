@@ -1,5 +1,6 @@
 package org.geekhub.service;
 
+import org.geekhub.service.cipher.VigenereCipher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

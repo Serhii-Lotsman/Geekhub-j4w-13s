@@ -1,6 +1,7 @@
 package org.geekhub.repository;
 
 import org.geekhub.exception.EncryptException;
+import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,6 +14,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class LogInMemory implements LogRepository {
 
     private final List<String> history;

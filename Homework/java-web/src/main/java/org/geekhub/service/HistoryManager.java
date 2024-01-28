@@ -2,7 +2,9 @@ package org.geekhub.service;
 
 import org.geekhub.consoleapi.HistoryPrinter;
 import org.geekhub.repository.LogRepository;
+import org.geekhub.service.cipher.Cipher;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -13,35 +15,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class HistoryManager {
-    private final LogRepository logRepository;
-    private final HistoryPrinter historyPrinter;
     private static final int INDEX_BEGIN_DATE = 0;
     private static final int INDEX_END_DATE = 10;
 
+    private final LogRepository logRepository;
+    private final HistoryPrinter historyPrinter;
     private final OffsetDateTime dateTime;
     private final DateTimeFormatter formatter;
+    private final Cipher cipher;
+    private final String originalMessage;
+    private final String specificDate;
 
-    @Value("${message.to.encrypt}")
-    private String originalMessage;
-    @Value("${message.by.date}")
-    private String specificDate;
-
-    public HistoryManager(HistoryPrinter historyPrinter, LogRepository logRepository) {
+    public HistoryManager(@Value("${message.to.encrypt}") String originalMessage,
+                          @Value("${message.by.date}") String specificDate,
+                          HistoryPrinter historyPrinter,
+                          LogRepository logRepository,
+                          Cipher cipher) {
+        this.originalMessage = originalMessage;
+        this.specificDate = specificDate;
         this.logRepository = logRepository;
         this.historyPrinter = historyPrinter;
+        this.cipher = cipher;
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         this.formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     }
 
-    public void print(Cipher cipher, String encryptor) {
+    public void print(String encryptor) {
         getAllHistory();
         getCountOfUsage();
         getUniqueMessages();
         getMessageByDate(specificDate);
 
-        CipherManager cipherManager = new CipherManager(cipher);
-        saveMessage(originalMessage, cipherManager.getEncryptedMessage(originalMessage), encryptor);
+        saveMessage(originalMessage, cipher.encrypt(originalMessage), encryptor);
     }
 
     private void saveMessage(String originalMessage, String encryptedMessage, String encryptor) {

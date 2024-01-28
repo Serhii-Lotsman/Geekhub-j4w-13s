@@ -1,9 +1,13 @@
-package org.geekhub.service;
+package org.geekhub.service.cipher;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.stream.IntStream;
+
+@Profile("vigenereCipher")
+@Service
 public class VigenereCipher implements Cipher {
 
     @Value("${cipher.vigenere}")
