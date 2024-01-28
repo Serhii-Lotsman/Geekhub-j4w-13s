@@ -48,7 +48,6 @@ public class LogInMemory implements LogRepository {
     public List<String> loadHistory() {
         try {
             List<String> messageHistory = Files.readAllLines(historyFilePath);
-            history.clear();
             return new ArrayList<>(messageHistory);
         } catch (IOException e) {
             throw new FileException(e.getMessage());
@@ -59,7 +58,6 @@ public class LogInMemory implements LogRepository {
     public void saveHistory() {
         try {
             Files.write(historyFilePath, history, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-            history.clear();
         } catch (IOException e) {
             throw new FileException(e.getMessage());
         }
