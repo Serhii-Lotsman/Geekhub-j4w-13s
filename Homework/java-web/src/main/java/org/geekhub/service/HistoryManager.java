@@ -43,6 +43,7 @@ public class HistoryManager {
     }
 
     public void print(String encryptor) {
+        logRepository.createFileIfNotExists();
         getAllHistory();
         getCountOfUsage();
         getUniqueMessages();

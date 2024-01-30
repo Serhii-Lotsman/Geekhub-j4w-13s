@@ -1,9 +1,9 @@
 package org.geekhub.repository;
 
 import org.geekhub.exception.FileException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,26 +15,20 @@ import java.util.List;
 public class LogInMemory implements LogRepository {
 
     private final List<String> history;
-    private Path historyFilePath;
+    private final Path historyFilePath;
 
 
-    public LogInMemory() {
+    public LogInMemory(@Value("${path.to.file}") Path historyFilePath) {
         this.history = new ArrayList<>();
-        createFile();
+        this.historyFilePath = historyFilePath;
     }
 
-    private void createFile() {
-        String historyFile = "log_history.txt";
-        Path resourcesPath = Path.of("Homework/java-web/src/main/resources");
-        historyFilePath = resourcesPath.resolve(historyFile);
-
-        File file = historyFilePath.toFile();
-
-        if (!file.exists()) {
+    public void createFileIfNotExists() {
+        if (!Files.exists(historyFilePath)) {
             try {
                 Files.createFile(historyFilePath);
             } catch (IOException e) {
-                throw new FileException("Error creating file: " + e.getMessage());
+                throw new FileException("Failed to create the file");
             }
         }
     }
@@ -47,10 +41,11 @@ public class LogInMemory implements LogRepository {
     @Override
     public List<String> loadHistory() {
         try {
-            List<String> messageHistory = Files.readAllLines(historyFilePath);
-            return new ArrayList<>(messageHistory);
+            return Files.readAllLines(historyFilePath)
+                .stream()
+                .toList();
         } catch (IOException e) {
-            throw new FileException(e.getMessage());
+            throw new FileException("Failed to load the file");
         }
     }
 
