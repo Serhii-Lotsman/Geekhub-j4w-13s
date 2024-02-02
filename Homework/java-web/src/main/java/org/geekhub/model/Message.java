@@ -2,20 +2,19 @@ package org.geekhub.model;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import java.time.format.DateTimeFormatter;
 
 public class Message {
     private final long userId;
     private String originalMessage;
     private final String encryptedMessage;
     private final String algorithm;
-    private final DateTimeFormatter date;
+    private final String date;
 
     public Message(@Value("${user.id}") long userId,
                    String originalMessage,
                    String encryptedMessage,
                    String algorithm,
-                   DateTimeFormatter date) {
+                   String date) {
         this.userId = userId;
         this.originalMessage = originalMessage;
         this.encryptedMessage = encryptedMessage;
@@ -43,7 +42,7 @@ public class Message {
         return algorithm;
     }
 
-    public DateTimeFormatter getDate() {
+    public String getDate() {
         return date;
     }
 }

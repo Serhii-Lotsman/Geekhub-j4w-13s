@@ -2,6 +2,7 @@ dependencies {
     implementation("org.springframework:spring-context:6.1.3")
     implementation("org.springframework:spring-jdbc:6.1.0")
     implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("org.postgresql:postgresql:42.6.0")
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation(platform("org.mockito:mockito-bom:5.7.0"))

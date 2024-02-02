@@ -24,20 +24,20 @@ public class HistoryManager {
     private final HistoryPrinter historyPrinter;
     private final OffsetDateTime dateTime;
     private final DateTimeFormatter formatter;
-    private final Cipher cipher;
+    //private final Cipher cipher;
     private final String originalMessage;
     private final String specificDate;
 
     public HistoryManager(@Value("${message.to.encrypt}") String originalMessage,
                           @Value("${message.by.date}") String specificDate,
                           HistoryPrinter historyPrinter,
-                          LogRepository logRepository,
-                          Cipher cipher) {
+                          LogRepository logRepository
+                          ) {
         this.originalMessage = originalMessage;
         this.specificDate = specificDate;
         this.logRepository = logRepository;
         this.historyPrinter = historyPrinter;
-        this.cipher = cipher;
+        //this.cipher = cipher;
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         this.formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     }
@@ -49,7 +49,7 @@ public class HistoryManager {
         getUniqueMessages();
         getMessageByDate(specificDate);
 
-        saveMessage(originalMessage, cipher.encrypt(originalMessage), encryptor);
+        saveMessage(originalMessage, "cipher.encrypt(originalMessage)", encryptor);
     }
 
     private void saveMessage(String originalMessage, String encryptedMessage, String encryptor) {
