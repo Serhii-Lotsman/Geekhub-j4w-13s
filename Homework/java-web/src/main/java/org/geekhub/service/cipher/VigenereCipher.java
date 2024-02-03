@@ -11,7 +11,7 @@ public class VigenereCipher implements Cipher {
 
     private final String key;
 
-    public VigenereCipher(@Value("${cipher.vigenere}") String key) {
+    public VigenereCipher(@Value("${cipher.vigenere.key}") String key) {
         this.key = key;
     }
 

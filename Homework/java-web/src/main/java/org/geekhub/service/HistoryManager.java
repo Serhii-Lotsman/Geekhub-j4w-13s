@@ -1,8 +1,11 @@
 package org.geekhub.service;
 
 import org.geekhub.consoleapi.HistoryPrinter;
+import org.geekhub.model.Message;
+import org.geekhub.repository.EncryptedMessageRepository;
 import org.geekhub.repository.LogRepository;
 import org.geekhub.service.cipher.Cipher;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,86 +27,74 @@ public class HistoryManager {
     private final HistoryPrinter historyPrinter;
     private final OffsetDateTime dateTime;
     private final DateTimeFormatter formatter;
-    //private final Cipher cipher;
-    private final String originalMessage;
-    private final String specificDate;
-
-    public HistoryManager(@Value("${message.to.encrypt}") String originalMessage,
-                          @Value("${message.by.date}") String specificDate,
+    private final Cipher cipher;
+    private final EncryptedMessageRepository repository;
+    private final long userId;
+    public HistoryManager(@Value("${user.id}") long userId,
                           HistoryPrinter historyPrinter,
-                          LogRepository logRepository
-                          ) {
-        this.originalMessage = originalMessage;
-        this.specificDate = specificDate;
+                          LogRepository logRepository,
+                          EncryptedMessageRepository repository,
+                          @Qualifier("caesarCipher") Cipher cipher) {
+        this.userId = userId;
         this.logRepository = logRepository;
         this.historyPrinter = historyPrinter;
-        //this.cipher = cipher;
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
-        this.formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.repository = repository;
+        this.cipher = cipher;
     }
 
-    public void print(String encryptor) {
-        logRepository.createFileIfNotExists();
-        getAllHistory();
-        getCountOfUsage();
-        getUniqueMessages();
-        getMessageByDate(specificDate);
 
-        saveMessage(originalMessage, "cipher.encrypt(originalMessage)", encryptor);
-    }
+    public void saveMessage(String originalMessage, String algorithm) {
+        String encryptedMessage = cipher.encrypt(originalMessage);
 
-    private void saveMessage(String originalMessage, String encryptedMessage, String encryptor) {
-        String messageInfo = " - Message '%s' was encrypted via %s into '%s'";
-        String message = dateTime.format(formatter)
-            + String.format(messageInfo, originalMessage, encryptor, encryptedMessage);
-        logRepository.addMessage(message);
-        logRepository.saveHistory();
+        Message message = new Message(
+            userId,
+            originalMessage,
+            encryptedMessage,
+            algorithm,
+            dateTime.format(formatter)
+            );
 
+        repository.saveMessage(message);
         historyPrinter.printCurrentMessage(message);
     }
 
-    private void getAllHistory() {
-        List<String> allHistory = logRepository.loadHistory();
+    public void getAllHistory() {
+        List<Message> allHistory = repository.findAll();
         historyPrinter.printLoadedHistory(allHistory);
     }
 
-    private void getCountOfUsage() {
-        List<String> messages = logRepository.loadHistory();
+    public void getCountOfUsage() {
+        List<Message> messages = repository.findAll();
         Map<String, Integer> statistic = messages.stream()
-            .map(HistoryManager::getAlgorithmName)
+            .map(Message::getAlgorithm)
             .collect(HashMap::new, (map, algorithmName) ->
                 map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
 
         historyPrinter.printCountOfUsage(statistic);
     }
 
-    private static String getAlgorithmName(String message) {
-        return message.substring(
-            message.indexOf("via") + "via".length(), message.indexOf("into"))
-            .trim();
-    }
-
-    private void getUniqueMessages() {
-        List<String> messages = logRepository.loadHistory();
+    public void getUniqueMessages() {
+        List<Message> messages = repository.findAll();
         Map<String, Long> uniqueMessages = getMapUniqueMessages(messages);
 
         historyPrinter.printUniqueMessages(uniqueMessages);
     }
 
-    private Map<String, Long> getMapUniqueMessages(List<String> messages) {
+    private Map<String, Long> getMapUniqueMessages(List<Message> messages) {
         return messages.stream()
-            .map(HistoryManager::getUniqueMessage)
+            .map(message ->
+                String.format("'%s' was encrypted via %s into '%s'",
+                message.getOriginalMessage(),
+                message.getAlgorithm(),
+                message.getEncryptedMessage()
+            ))
             .collect(Collectors.groupingBy(message ->
                 message, Collectors.counting()));
     }
 
-    private static String getUniqueMessage(String message) {
-        return message.substring(
-            message.indexOf("Message"), message.indexOf("into"))
-            .trim();
-    }
-
-    private void getMessageByDate(String specificDate) {
+    public void getMessageByDate(String specificDate) {
         List<String> messages = logRepository.loadHistory();
         Map<String, List<String>> historyByDate = messages.stream()
             .filter(message -> getMessageDate(message).equals(specificDate))

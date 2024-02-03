@@ -52,9 +52,11 @@ public class Console {
         System.out.println(assortment.get("CAESAR"));
         System.out.println(assortment.get("VIGENERE"));
         subOption = scanner.nextInt();
+        System.out.println("Enter message:");
         scanner.nextLine();
         switch (subOption) {
-           // case 1, 2 -> historyManager.saveMessage(scanner.nextLine());
+            case 1 -> historyManager.saveMessage(scanner.nextLine(), "caesar cipher");
+            case 2 -> historyManager.saveMessage(scanner.nextLine(), "vigenere cipher");
             default -> System.out.println("Main menu");
         }
     }
@@ -69,10 +71,13 @@ public class Console {
         subOption = scanner.nextInt();
         scanner.nextLine();
         switch (subOption) {
-            //case 1 -> historyManager.getAllHistory();
-            //case 2 -> historyManager.getCountOfUsage();
-            //case 3 -> historyManager.getMessageByDate(scanner.nextLine());
-            //case 4 -> historyManager.getUniqueMessages();
+            case 1 -> historyManager.getAllHistory();
+            case 2 -> historyManager.getCountOfUsage();
+            case 3 -> {
+                System.out.println("Enter the date and time in the following pattern 'yyyy-MM-dd HH:mm:ss'");
+                historyManager.getMessageByDate(scanner.nextLine());
+            }
+            case 4 -> historyManager.getUniqueMessages();
             default -> System.out.println("Main menu");
         }
     }

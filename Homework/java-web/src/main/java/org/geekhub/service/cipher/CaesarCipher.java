@@ -11,7 +11,7 @@ public class CaesarCipher implements Cipher {
 
     private final int offset;
 
-    public CaesarCipher(@Value("${cipher.caesar}") int offset) {
+    public CaesarCipher(@Value("${cipher.caesar.key}") int offset) {
         this.offset = Math.abs(offset);
     }
 

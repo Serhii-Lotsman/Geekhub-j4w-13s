@@ -12,5 +12,5 @@ public interface EncryptedMessageRepository {
 
     List<Message> findByAlgorithm(String algorithm);
 
-    List<Message> findByDate(OffsetDateTime date);
+    List<Message> findByDate(OffsetDateTime dateFrom, OffsetDateTime dateTo);
 }

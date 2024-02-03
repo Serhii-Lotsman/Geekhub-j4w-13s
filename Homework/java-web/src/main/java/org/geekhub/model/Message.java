@@ -1,16 +1,13 @@
 package org.geekhub.model;
 
-import org.springframework.beans.factory.annotation.Value;
-
-
 public class Message {
     private final long userId;
-    private String originalMessage;
+    private final String originalMessage;
     private final String encryptedMessage;
     private final String algorithm;
     private final String date;
 
-    public Message(@Value("${user.id}") long userId,
+    public Message(long userId,
                    String originalMessage,
                    String encryptedMessage,
                    String algorithm,
@@ -28,10 +25,6 @@ public class Message {
 
     public String getOriginalMessage() {
         return originalMessage;
-    }
-
-    public void setOriginalMessage(String originalMessage) {
-        this.originalMessage = originalMessage;
     }
 
     public String getEncryptedMessage() {
