@@ -32,7 +32,7 @@ public class HistoryManager {
     public HistoryManager(@Value("${user.id}") long userId,
                           HistoryPrinter historyPrinter,
                           EncryptedMessageRepository repository,
-                          @Qualifier("caesarCipher") Cipher cipher) {
+                          Cipher cipher) {
         this.userId = userId;
         this.historyPrinter = historyPrinter;
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
