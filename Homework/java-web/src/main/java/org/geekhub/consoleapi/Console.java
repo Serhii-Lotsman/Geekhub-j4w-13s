@@ -74,11 +74,16 @@ public class Console {
             case 1 -> historyManager.getAllHistory();
             case 2 -> historyManager.getCountOfUsage();
             case 3 -> {
-                System.out.println("Enter the date and time in the following pattern 'yyyy-MM-dd HH:mm:ss'");
-                historyManager.getMessageByDate(scanner.nextLine());
+                System.out.println("Enter the date and time in the following pattern 'dd-MM-yyyy HH:mm:ss'");
+                historyManager.getMessageByDate(setDate(), setDate());
             }
             case 4 -> historyManager.getUniqueMessages();
             default -> System.out.println("Main menu");
         }
+    }
+
+    private String setDate() {
+        System.out.print("Enter the date: ");
+        return scanner.nextLine();
     }
 }

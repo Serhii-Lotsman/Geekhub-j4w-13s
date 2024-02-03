@@ -1,6 +1,5 @@
 package org.geekhub.repository;
 
-import org.geekhub.consoleapi.HistoryPrinter;
 import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Message;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,11 +16,9 @@ import java.util.List;
 @Repository
 public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final HistoryPrinter historyPrinter;
 
-    public EncryptedMessageRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate, HistoryPrinter historyPrinter) {
+    public EncryptedMessageRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.historyPrinter = historyPrinter;
     }
 
     @Override

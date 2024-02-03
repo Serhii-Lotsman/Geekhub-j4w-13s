@@ -9,7 +9,6 @@ import java.util.Map;
 @Component
 public class HistoryPrinter {
     private static final String HISTORY_EMPTY = "History empty";
-    private static final int INDEX_END_DATE = 10;
 
     public void printCurrentMessage(Message message) {
         String messageInfo = String.format(
@@ -39,21 +38,13 @@ public class HistoryPrinter {
         }
     }
 
-    public void printHistoryByDate(Map<String, List<String>> historyByDate) {
-        if (historyByDate.isEmpty()) {
+    public void printHistoryByDate(List<Message> messages) {
+        if (messages.isEmpty()) {
             System.out.println(HISTORY_EMPTY);
         }
-        printMessageByDate(historyByDate);
-    }
-
-    private static void printMessageByDate(Map<String, List<String>> historyByDate) {
-        historyByDate.forEach((date, dateMessages) -> {
-            List<String> substrings = dateMessages.stream()
-                .map(message -> message.substring(INDEX_END_DATE + 1))
-                .toList();
-
-            System.out.printf("[%s] %n%s %n", date, String.join("\n", substrings));
-        });
+        for (Message message : messages) {
+            printCurrentMessage(message);
+        }
     }
 
     public void printUniqueMessages(Map<String, Long> uniqueMessages) {
