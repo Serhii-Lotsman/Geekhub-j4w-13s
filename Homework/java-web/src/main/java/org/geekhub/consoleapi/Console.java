@@ -17,7 +17,8 @@ public class Console {
         "ALL", "[1] - All history",
         "COUNTER", "[2] - Count of usage of all algorithms",
         "DATE", "[3] - By specific date",
-        "UNIQUE", "[4] - Unique encryption"
+        "UNIQUE", "[4] - Unique encryption",
+        "ALGORITHM", "[5] - By algorithm"
     );
 
     private final Scanner scanner;
@@ -69,6 +70,7 @@ public class Console {
         System.out.println(assortment.get("COUNTER"));
         System.out.println(assortment.get("DATE"));
         System.out.println(assortment.get("UNIQUE"));
+        System.out.println(assortment.get("ALGORITHM"));
         subOption = scanner.nextInt();
         scanner.nextLine();
         switch (subOption) {
@@ -79,6 +81,7 @@ public class Console {
                 historyManager.getMessageByDate(setDate("from"), setDate("to"));
             }
             case 4 -> historyManager.getUniqueMessages();
+            case 5 -> setAlgorithm();
             default -> System.out.println("Main menu");
         }
     }
@@ -86,5 +89,19 @@ public class Console {
     private String setDate(String range) {
         System.out.printf("Enter the date-range %s: ", range);
         return scanner.nextLine();
+    }
+
+    private void setAlgorithm() {
+        int subOption;
+        System.out.println("Select available algorithm:");
+        System.out.println(assortment.get("CAESAR"));
+        System.out.println(assortment.get("VIGENERE"));
+        subOption = scanner.nextInt();
+        scanner.nextLine();
+        switch (subOption) {
+            case 1 -> historyManager.getMessageByAlgorithm(Algorithm.CAESAR.name());
+            case 2 -> historyManager.getMessageByAlgorithm(Algorithm.VIGENERE.name());
+            default -> System.out.println("Main menu");
+        }
     }
 }

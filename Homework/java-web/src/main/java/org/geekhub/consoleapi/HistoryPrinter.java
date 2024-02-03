@@ -10,6 +10,15 @@ import java.util.Map;
 public class HistoryPrinter {
     private static final String HISTORY_EMPTY = "History empty";
 
+    public void printMessages(List<Message> allHistory) {
+        if (allHistory.isEmpty()) {
+            System.out.println(HISTORY_EMPTY);
+        }
+        for (Message message : allHistory) {
+            printCurrentMessage(message);
+        }
+    }
+
     public void printCurrentMessage(Message message) {
         String messageInfo = String.format(
             "%s - Message '%s' was encrypted via %s into '%s'",
@@ -27,24 +36,6 @@ public class HistoryPrinter {
         }
         statistic.forEach((algorithmType, count) ->
             System.out.printf("%s was used %s times%n", algorithmType, count));
-    }
-
-    public void printLoadedHistory(List<Message> allHistory) {
-        if (allHistory.isEmpty()) {
-            System.out.println(HISTORY_EMPTY);
-        }
-        for (Message message : allHistory) {
-            printCurrentMessage(message);
-        }
-    }
-
-    public void printHistoryByDate(List<Message> messages) {
-        if (messages.isEmpty()) {
-            System.out.println(HISTORY_EMPTY);
-        }
-        for (Message message : messages) {
-            printCurrentMessage(message);
-        }
     }
 
     public void printUniqueMessages(Map<String, Long> uniqueMessages) {

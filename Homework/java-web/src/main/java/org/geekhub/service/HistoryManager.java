@@ -66,7 +66,7 @@ public class HistoryManager {
 
     public void getAllHistory() {
         List<Message> allHistory = repository.findAll();
-        historyPrinter.printLoadedHistory(allHistory);
+        historyPrinter.printMessages(allHistory);
     }
 
     public void getCountOfUsage() {
@@ -98,12 +98,18 @@ public class HistoryManager {
                 message, Collectors.counting()));
     }
 
+    public void getMessageByAlgorithm(String algorithm) {
+        List<Message> messages = repository.findByAlgorithm(algorithm);
+
+        historyPrinter.printMessages(messages);
+    }
+
     public void getMessageByDate(String inputDateFrom, String inputDateTo) {
         OffsetDateTime dateFrom = parse(inputDateFrom);
         OffsetDateTime dateTo = parse(inputDateTo);
         List<Message> messages = repository.findByDate(dateFrom, dateTo);
 
-        historyPrinter.printHistoryByDate(messages);
+        historyPrinter.printMessages(messages);
     }
 
     private OffsetDateTime parse(String date) {
