@@ -1,5 +1,6 @@
 package org.geekhub.consoleapi;
 
+import org.geekhub.model.Algorithm;
 import org.geekhub.service.HistoryManager;
 
 import java.util.Map;
@@ -55,8 +56,8 @@ public class Console {
         System.out.println("Enter message:");
         scanner.nextLine();
         switch (subOption) {
-            case 1 -> historyManager.saveMessage(scanner.nextLine(), "caesar cipher");
-            case 2 -> historyManager.saveMessage(scanner.nextLine(), "vigenere cipher");
+            case 1 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.CAESAR);
+            case 2 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.VIGENERE);
             default -> System.out.println("Main menu");
         }
     }
@@ -75,15 +76,15 @@ public class Console {
             case 2 -> historyManager.getCountOfUsage();
             case 3 -> {
                 System.out.println("Enter the date and time in the following pattern 'dd-MM-yyyy HH:mm:ss'");
-                historyManager.getMessageByDate(setDate(), setDate());
+                historyManager.getMessageByDate(setDate("from"), setDate("to"));
             }
             case 4 -> historyManager.getUniqueMessages();
             default -> System.out.println("Main menu");
         }
     }
 
-    private String setDate() {
-        System.out.print("Enter the date: ");
+    private String setDate(String range) {
+        System.out.printf("Enter the date-range %s: ", range);
         return scanner.nextLine();
     }
 }

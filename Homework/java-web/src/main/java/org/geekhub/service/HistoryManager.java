@@ -1,6 +1,7 @@
 package org.geekhub.service;
 
 import org.geekhub.consoleapi.HistoryPrinter;
+import org.geekhub.model.Algorithm;
 import org.geekhub.model.Message;
 import org.geekhub.repository.EncryptedMessageRepository;
 import org.geekhub.service.cipher.Cipher;
@@ -17,41 +18,47 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class HistoryManager {
 
+    private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter GET_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     private final HistoryPrinter historyPrinter;
     private final OffsetDateTime dateTime;
-    private final DateTimeFormatter formatter;
-    private final Cipher cipher;
     private final EncryptedMessageRepository repository;
     private final long userId;
-
-    public HistoryManager(@Value("${user.id}") long userId,
-                          HistoryPrinter historyPrinter,
-                          EncryptedMessageRepository repository,
-                          Cipher cipher) {
+    private final Map<Algorithm, Function<String, String>> ciphers;
+    public HistoryManager(
+        @Value("${user.id}") long userId,
+        HistoryPrinter historyPrinter,
+        EncryptedMessageRepository repository,
+        @Qualifier("caesarCipher") Cipher caesarCipher,
+        @Qualifier("vigenereCipher") Cipher vigenereCipher
+    ) {
         this.userId = userId;
         this.historyPrinter = historyPrinter;
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
-        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.repository = repository;
-        this.cipher = cipher;
+        this.ciphers = Map.of(
+            Algorithm.CAESAR, caesarCipher::encrypt,
+            Algorithm.VIGENERE, vigenereCipher::encrypt
+        );
     }
 
 
-    public void saveMessage(String originalMessage, String algorithm) {
-        String encryptedMessage = cipher.encrypt(originalMessage);
+    public void saveMessage(String originalMessage, Algorithm algorithm) {
+        String encryptedMessage = ciphers.get(algorithm).apply(originalMessage);
 
         Message message = new Message(
             userId,
             originalMessage,
             encryptedMessage,
-            algorithm,
-            dateTime.format(formatter)
-            );
+            algorithm.name(),
+            dateTime.format(SAVE_FORMATTER)
+        );
 
         repository.saveMessage(message);
         historyPrinter.printCurrentMessage(message);
@@ -83,25 +90,25 @@ public class HistoryManager {
         return messages.stream()
             .map(message ->
                 String.format("'%s' was encrypted via %s into '%s'",
-                message.getOriginalMessage(),
-                message.getAlgorithm(),
-                message.getEncryptedMessage()
-            ))
+                    message.getOriginalMessage(),
+                    message.getAlgorithm(),
+                    message.getEncryptedMessage()
+                ))
             .collect(Collectors.groupingBy(message ->
                 message, Collectors.counting()));
     }
 
     public void getMessageByDate(String inputDateFrom, String inputDateTo) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        OffsetDateTime dateFrom = null;
-        OffsetDateTime dateTo = null;
-        if (!inputDateFrom.isEmpty()) {
-            dateFrom = OffsetDateTime.of(LocalDateTime.parse(inputDateFrom, formatter), ZoneOffset.UTC);
-        } else if (!inputDateTo.isEmpty()){
-            dateTo = OffsetDateTime.of(LocalDateTime.parse(inputDateTo, formatter), ZoneOffset.UTC);
-        }
+        OffsetDateTime dateFrom = parse(inputDateFrom);
+        OffsetDateTime dateTo = parse(inputDateTo);
         List<Message> messages = repository.findByDate(dateFrom, dateTo);
 
         historyPrinter.printHistoryByDate(messages);
+    }
+
+    private OffsetDateTime parse(String date) {
+        return date.isEmpty()
+            ? null
+            : OffsetDateTime.of(LocalDateTime.parse(date, GET_FORMATTER), ZoneOffset.UTC);
     }
 }
