@@ -65,12 +65,7 @@ public class Console {
 
     private void printHistoryMessage() {
         int subOption;
-        System.out.println("Select the view history option: ");
-        System.out.println(assortment.get("ALL"));
-        System.out.println(assortment.get("COUNTER"));
-        System.out.println(assortment.get("DATE"));
-        System.out.println(assortment.get("UNIQUE"));
-        System.out.println(assortment.get("ALGORITHM"));
+        subMenu();
         subOption = scanner.nextInt();
         scanner.nextLine();
         switch (subOption) {
@@ -82,8 +77,19 @@ public class Console {
             }
             case 4 -> historyManager.getUniqueMessages();
             case 5 -> setAlgorithm();
+            case 6 -> historyManager.getFailedMessage();
             default -> System.out.println("Main menu");
         }
+    }
+
+    private void subMenu() {
+        System.out.println("Select the view history option: ");
+        System.out.println(assortment.get("ALL"));
+        System.out.println(assortment.get("COUNTER"));
+        System.out.println(assortment.get("DATE"));
+        System.out.println(assortment.get("UNIQUE"));
+        System.out.println(assortment.get("ALGORITHM"));
+        System.out.println("[6] - By status 'failed'");
     }
 
     private String setDate(String range) {

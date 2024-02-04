@@ -1,4 +1,4 @@
-CREATE TABLE encryption_message
+CREATE TABLE IF NOT EXISTS encryption_message
 (
     id                SERIAL PRIMARY KEY,
     user_id           INTEGER      NOT NULL,

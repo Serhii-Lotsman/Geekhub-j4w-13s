@@ -1,6 +1,5 @@
 package org.geekhub.repository;
 
-import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Message;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,15 +23,28 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
     @Override
     public void saveMessage(Message message) {
         String sql = """
-            INSERT INTO encryption_message (user_id, original_message, encrypted_message, algorithm, date)
-            VALUES (:userId, :originalMessage, :encryptedMessage, :algorithm, :date)
+            INSERT INTO encryption_message (
+            user_id,
+            original_message,
+            encrypted_message,
+            algorithm,
+            date,
+            status)
+            VALUES (
+            :userId,
+            :originalMessage,
+            :encryptedMessage,
+            :algorithm,
+            :date,
+            :status)
             """;
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("userId", message.getUserId())
             .addValue("originalMessage", message.getOriginalMessage())
             .addValue("encryptedMessage", message.getEncryptedMessage())
             .addValue("algorithm", message.getAlgorithm())
-            .addValue("date", Timestamp.valueOf(message.getDate()));
+            .addValue("date", Timestamp.valueOf(message.getDate()))
+            .addValue("status", message.getStatus());
         jdbcTemplate.update(sql, parameterSource);
     }
 
@@ -42,7 +54,8 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
             rs.getString("original_message"),
             rs.getString("encrypted_message"),
             rs.getString("algorithm"),
-            formatDate(rs.getTimestamp("date"))
+            formatDate(rs.getTimestamp("date")),
+            rs.getString("status")
         );
     }
 
@@ -56,22 +69,28 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
 
     @Override
     public List<Message> findAll() {
-        String sql = "SELECT * FROM encryption_message";
+        String sql = "SELECT * FROM encryption_message ORDER BY date";
         return jdbcTemplate.query(sql, (rs, rowNum) -> getMessage(rs));
     }
 
     @Override
     public List<Message> findByAlgorithm(String algorithmEncryption) {
-        String sql = "SELECT * FROM encryption_message WHERE algorithm = :algorithm";
+        String sql = "SELECT * FROM encryption_message WHERE algorithm = :algorithm ORDER BY date";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-        .addValue("algorithm", algorithmEncryption);
+            .addValue("algorithm", algorithmEncryption);
 
         return jdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> getMessage(rs));
     }
 
     @Override
     public List<Message> findByDate(OffsetDateTime dateFrom, OffsetDateTime dateTo) {
-        String sql = getDateByRange(dateFrom, dateTo);
+        String sql =
+            """
+                SELECT * FROM encryption_message
+                        WHERE date AT TIME ZONE 'UTC' <= :dateTo
+                        OR date AT TIME ZONE 'UTC' >= :dateFrom
+                        ORDER BY algorithm, date
+                """;
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("dateFrom", dateFrom)
             .addValue("dateTo", dateTo);
@@ -79,25 +98,8 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
         return jdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> getMessage(rs));
     }
 
-    private String getDateByRange(OffsetDateTime dateFrom, OffsetDateTime dateTo) {
-        if (dateFrom == null && dateTo == null) {
-          throw new EncryptException(
-              "Please indicate at least one of the dates: dateFrom = null, dateTo = null"
-          );
-        } else if (dateFrom == null || dateTo == null) {
-            return """
-                SELECT * FROM encryption_message
-                        WHERE date AT TIME ZONE 'UTC' <= :dateTo
-                        OR date AT TIME ZONE 'UTC' >= :dateFrom
-                        ORDER BY algorithm
-                """;
-        }
-            return """
-        SELECT * FROM encryption_message
-        WHERE (:dateFrom IS NULL OR date AT TIME ZONE 'UTC' >= :dateFrom)
-          AND (:dateTo IS NULL OR date AT TIME ZONE 'UTC' <= :dateTo)
-        ORDER BY algorithm
-        """;
+    public List<Message> findFailedEncoding() {
+        String sql = "SELECT * FROM encryption_message WHERE status = 'failed' ORDER BY algorithm, date";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> getMessage(rs));
     }
-
 }

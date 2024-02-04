@@ -1,6 +1,7 @@
 package org.geekhub.service;
 
 import org.geekhub.consoleapi.HistoryPrinter;
+import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Algorithm;
 import org.geekhub.model.Message;
 import org.geekhub.repository.EncryptedMessageRepository;
@@ -50,6 +51,7 @@ public class HistoryManager {
 
 
     public void saveMessage(String originalMessage, Algorithm algorithm) {
+        String status = originalMessage != null ? "successfully" : "failed";
         String encryptedMessage = ciphers.get(algorithm).apply(originalMessage);
 
         Message message = new Message(
@@ -57,7 +59,8 @@ public class HistoryManager {
             originalMessage,
             encryptedMessage,
             algorithm.name(),
-            dateTime.format(SAVE_FORMATTER)
+            dateTime.format(SAVE_FORMATTER),
+            status
         );
 
         repository.saveMessage(message);
@@ -107,6 +110,12 @@ public class HistoryManager {
     public void getMessageByDate(String inputDateFrom, String inputDateTo) {
         OffsetDateTime dateFrom = parse(inputDateFrom);
         OffsetDateTime dateTo = parse(inputDateTo);
+
+        if (dateFrom == null && dateTo == null) {
+            throw new EncryptException(
+                "Please indicate at least one of the dates"
+            );
+        }
         List<Message> messages = repository.findByDate(dateFrom, dateTo);
 
         historyPrinter.printMessages(messages);
@@ -116,5 +125,11 @@ public class HistoryManager {
         return date.isEmpty()
             ? null
             : OffsetDateTime.of(LocalDateTime.parse(date, GET_FORMATTER), ZoneOffset.UTC);
+    }
+
+    public void getFailedMessage() {
+        List<Message> messages = repository.findFailedEncoding();
+
+        historyPrinter.printMessages(messages);
     }
 }
