@@ -60,14 +60,14 @@ public class UserInteractionService {
         historyService.saveRecord(historyRecord);
         System.out.println("Original message:" + inputMessage + "\nEncoded message: " + encodedMessage);
 
-//        All history for specific date range
+        //All history for specific date range
         OffsetDateTime from = OffsetDateTime.now().minusMonths(1);
         OffsetDateTime to = OffsetDateTime.now();
         List<HistoryRecord> historyDateRange = historyService.getRecords(from, to);
         System.out.println("History for the last month: " + historyDateRange);
 
 
-//        History of a user paginated
+        //History of a user paginated
         List<HistoryRecord> activeUserHistory = historyService.getRecords(activeUserId, 1, 2);
         System.out.println(activeUserHistory);
     }

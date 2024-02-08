@@ -22,6 +22,7 @@ public class NamedJdbcTemplateBookRepository implements BookRepository {
         this.namedJdbcTemplate = namedJdbcTemplate;
     }
 
+    @SuppressWarnings("java:S2259")
     @Override
     public Book createBook(Book book) {
         String query = """

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class HistoryService{
+public class HistoryService {
 
     private final HistoryRepository historyRepository;
 
@@ -17,8 +17,8 @@ public class HistoryService{
         this.historyRepository = historyRepository;
     }
 
-    public void saveRecord(@NonNull HistoryRecord record) {
-        historyRepository.saveRecord(record);
+    public void saveRecord(@NonNull HistoryRecord historyRecord) {
+        historyRepository.saveRecord(historyRecord);
     }
 
     public void deleteRecord(int id) {

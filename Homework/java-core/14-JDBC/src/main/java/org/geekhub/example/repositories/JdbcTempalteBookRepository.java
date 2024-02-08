@@ -35,6 +35,7 @@ public class JdbcTempalteBookRepository implements BookRepository {
         jdbcTemplate.execute(sqlQuery);
     }
 
+    @SuppressWarnings("java:S2259")
     @Override
     public Book createBook(@NonNull Book book) {
         String sqlQuery = """

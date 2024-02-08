@@ -5,7 +5,6 @@ import org.geekhub.crypto.encoding.EncodingOperation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 class HistoryMapper {
@@ -13,6 +12,7 @@ class HistoryMapper {
     private HistoryMapper() {
     }
 
+    @SuppressWarnings("java:S1172")
     static HistoryRecord mapToPojo(ResultSet rs, int rowNum) throws SQLException {
         return new HistoryRecord(
             rs.getInt("record_id"),

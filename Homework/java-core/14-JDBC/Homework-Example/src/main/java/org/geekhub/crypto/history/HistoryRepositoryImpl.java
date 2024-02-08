@@ -22,19 +22,19 @@ public class HistoryRepositoryImpl implements HistoryRepository {
     }
 
     @Override
-    public void saveRecord(@NonNull HistoryRecord record) {
+    public void saveRecord(@NonNull HistoryRecord historyRecord) {
         String query = """
                 INSERT INTO history (user_id, operation, algorithm, original_text, encoded_text, date)
                 VALUES (:userId, :operation, :algorithm, :originalText, :encodedText, :date)
             """;
 
         SqlParameterSource params = new MapSqlParameterSource()
-            .addValue("userId", record.userId())
-            .addValue("operation", record.operation().name())
-            .addValue("algorithm", record.algorithm().name())
-            .addValue("originalText", record.originalText())
-            .addValue("encodedText", record.encodedText())
-            .addValue("date", Timestamp.from(record.date().toInstant()));
+            .addValue("userId", historyRecord.userId())
+            .addValue("operation", historyRecord.operation().name())
+            .addValue("algorithm", historyRecord.algorithm().name())
+            .addValue("originalText", historyRecord.originalText())
+            .addValue("encodedText", historyRecord.encodedText())
+            .addValue("date", Timestamp.from(historyRecord.date().toInstant()));
 
         jdbcTemplate.update(query, params);
     }

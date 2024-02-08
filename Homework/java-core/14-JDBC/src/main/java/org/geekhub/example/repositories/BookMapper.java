@@ -9,6 +9,7 @@ import java.time.ZoneOffset;
 
 public class BookMapper {
 
+    @SuppressWarnings("java:S1172")
     public static Book mapToBook(ResultSet resultSet, int i) throws SQLException {
         int id = resultSet.getInt("id");
         String name = resultSet.getString("name");
