@@ -21,9 +21,10 @@ public class HistoryPrinter {
 
     public void printCurrentMessage(Message message) {
         String messageInfo = String.format(
-            "%s - Message '%s' was encrypted via %s into '%s'",
+            "%s - Message '%s' was %sed via %s into '%s'",
             message.getDate(),
             message.getOriginalMessage(),
+            message.getOperation().toLowerCase(),
             message.getAlgorithm(),
             message.getEncryptedMessage()
         );

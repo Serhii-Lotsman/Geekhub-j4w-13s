@@ -29,14 +29,16 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
             encrypted_message,
             algorithm,
             date,
-            status)
+            status,
+            operation)
             VALUES (
             :userId,
             :originalMessage,
             :encryptedMessage,
             :algorithm,
             :date,
-            :status)
+            :status,
+            :operation)
             """;
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("userId", message.getUserId())
@@ -44,7 +46,8 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
             .addValue("encryptedMessage", message.getEncryptedMessage())
             .addValue("algorithm", message.getAlgorithm())
             .addValue("date", Timestamp.valueOf(message.getDate()))
-            .addValue("status", message.getStatus());
+            .addValue("status", message.getStatus())
+            .addValue("operation", message.getOperation());
         jdbcTemplate.update(sql, parameterSource);
     }
 
@@ -54,6 +57,7 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
             rs.getString("original_message"),
             rs.getString("encrypted_message"),
             rs.getString("algorithm"),
+            rs.getString("operation"),
             formatDate(rs.getTimestamp("date")),
             rs.getString("status")
         );
@@ -98,6 +102,7 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
         return jdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> getMessage(rs));
     }
 
+    @Override
     public List<Message> findFailedEncoding() {
         String sql = "SELECT * FROM encryption_message WHERE status = 'failed' ORDER BY algorithm, date";
         return jdbcTemplate.query(sql, (rs, rowNum) -> getMessage(rs));

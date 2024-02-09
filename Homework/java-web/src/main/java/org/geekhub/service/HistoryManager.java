@@ -3,6 +3,7 @@ package org.geekhub.service;
 import org.geekhub.consoleapi.HistoryPrinter;
 import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Algorithm;
+import org.geekhub.model.CipherOperation;
 import org.geekhub.model.Message;
 import org.geekhub.repository.EncryptedMessageRepository;
 import org.geekhub.service.cipher.Cipher;
@@ -31,7 +32,7 @@ public class HistoryManager {
     private final OffsetDateTime dateTime;
     private final EncryptedMessageRepository repository;
     private final long userId;
-    private final Map<Algorithm, Function<String, String>> ciphers;
+    private final Map<Map<Algorithm, CipherOperation>, Function<String, String>> ciphers;
     public HistoryManager(
         @Value("${user.id}") long userId,
         HistoryPrinter historyPrinter,
@@ -44,21 +45,24 @@ public class HistoryManager {
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         this.repository = repository;
         this.ciphers = Map.of(
-            Algorithm.CAESAR, caesarCipher::encrypt,
-            Algorithm.VIGENERE, vigenereCipher::encrypt
+            Map.of(Algorithm.CAESAR, CipherOperation.ENCRYPT), caesarCipher::encrypt,
+            Map.of(Algorithm.VIGENERE, CipherOperation.ENCRYPT), vigenereCipher::encrypt,
+            Map.of(Algorithm.CAESAR, CipherOperation.DECRYPT), caesarCipher::decrypt,
+            Map.of(Algorithm.VIGENERE, CipherOperation.DECRYPT), vigenereCipher::decrypt
         );
     }
 
 
-    public void saveMessage(String originalMessage, Algorithm algorithm) {
+    public void saveMessage(String originalMessage, Algorithm algorithm, CipherOperation operation) {
         String status = originalMessage != null ? "successfully" : "failed";
-        String encryptedMessage = ciphers.get(algorithm).apply(originalMessage);
+        String encryptedMessage = ciphers.get(Map.of(algorithm, operation)).apply(originalMessage);
 
         Message message = new Message(
             userId,
             originalMessage,
             encryptedMessage,
             algorithm.name(),
+            operation.name(),
             dateTime.format(SAVE_FORMATTER),
             status
         );

@@ -7,17 +7,20 @@ public class Message {
     private final String algorithm;
     private final String date;
     private final String status;
+    private final String operation;
 
     public Message(long userId,
                    String originalMessage,
                    String encryptedMessage,
                    String algorithm,
+                   String operation,
                    String date,
                    String status) {
         this.userId = userId;
         this.originalMessage = originalMessage;
         this.encryptedMessage = encryptedMessage;
         this.algorithm = algorithm;
+        this.operation = operation;
         this.date = date;
         this.status = status;
     }
@@ -44,5 +47,9 @@ public class Message {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getOperation() {
+        return operation;
     }
 }

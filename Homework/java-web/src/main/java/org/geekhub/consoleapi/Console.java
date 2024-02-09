@@ -1,6 +1,7 @@
 package org.geekhub.consoleapi;
 
 import org.geekhub.model.Algorithm;
+import org.geekhub.model.CipherOperation;
 import org.geekhub.service.HistoryManager;
 
 import java.util.Map;
@@ -10,10 +11,10 @@ public class Console {
 
     private final Map<String, String> assortment = Map.of(
         "EXIT", "| [0] - Exit",
-        "ENCRYPT", "| [1] - Encrypt message",
+        "ENCRYPT", "| [1] - Encrypt/Decrypt message",
         "HISTORY", "| [2] - View history",
-        "CAESAR", "[1] - Caesar encrypt",
-        "VIGENERE", "[2] - Vigenere encrypt",
+        "CAESAR", "[1] - Caesar cipher",
+        "VIGENERE", "[2] - Vigenere cipher",
         "ALL", "[1] - All history",
         "COUNTER", "[2] - Count of usage of all algorithms",
         "DATE", "[3] - By specific date",
@@ -41,24 +42,38 @@ public class Console {
             option = scanner.nextInt();
             switch (option) {
                 case 0 -> scanner.close();
-                case 1 -> encryptMethod();
+                case 1 -> operation();
                 case 2 -> printHistoryMessage();
                 default -> System.out.println("Only [0], [1], [2] available");
             }
         } while (option != 0);
     }
 
-    private void encryptMethod() {
+    private void operation() {
         int subOption;
-        System.out.println("Choose an encryption method: ");
+        System.out.println("What would you like to do: ");
+        System.out.println("[1] - Encrypt");
+        System.out.println("[2] - Decrypt");
+        subOption = scanner.nextInt();
+        scanner.nextLine();
+        switch (subOption) {
+            case 1 -> encryptMethod(CipherOperation.ENCRYPT);
+            case 2 -> encryptMethod(CipherOperation.DECRYPT);
+            default -> System.out.println("Main menu");
+        }
+    }
+
+    private void encryptMethod(CipherOperation operation) {
+        int subOption;
+        System.out.println("Choose method: ");
         System.out.println(assortment.get("CAESAR"));
         System.out.println(assortment.get("VIGENERE"));
         subOption = scanner.nextInt();
         System.out.println("Enter message:");
         scanner.nextLine();
         switch (subOption) {
-            case 1 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.CAESAR);
-            case 2 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.VIGENERE);
+            case 1 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.CAESAR, operation);
+            case 2 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.VIGENERE, operation);
             default -> System.out.println("Main menu");
         }
     }
