@@ -21,3 +21,5 @@ include("Homework:java-core:15-CI-CD")
 include ("Homework:java-web")
 
 include ("Coursework")
+include("Homework:java-web:cipher")
+findProject(":Homework:java-web:cipher")?.name = "cipher"

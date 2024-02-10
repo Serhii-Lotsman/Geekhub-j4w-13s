@@ -24,3 +24,7 @@ jobs:
   checkstype:
     name: Check application style via checkstyle
     uses: ./.github/workflows/run_checkstyle_job.yml
+
+  cipher-build:
+    name: Build and deploy artifact to repsy.io
+    uses: ./.github/workflows/run_lib_publish_job.yml
