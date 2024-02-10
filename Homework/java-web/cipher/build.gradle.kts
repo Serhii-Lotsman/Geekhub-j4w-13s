@@ -3,18 +3,6 @@ plugins {
     id("maven-publish")
 }
 
-repositories {
-    maven(url = "https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo") {
-        credentials {
-            username = System.getenv("REPSY_LOGIN")
-            password = System.getenv("REPSY_PASSWORD")
-        }
-    }
-}
-
-group = "com.ciphers"
-version = "1.0.0"
-
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -35,6 +23,10 @@ publishing {
     publications {
         create<MavenPublication>("Cipher") {
             from(components["java"])
+            groupId = "com.ciphers"
+            version = "1.0.0"
+            artifactId = "cipherAlgorithms"
+            description = "A library for cryptographic algorithms."
         }
     }
     repositories {
