@@ -1,10 +1,18 @@
 plugins {
-    id("java")
+    id("java-library")
     id("maven-publish")
 }
 
 repositories {
     mavenCentral()
+
+    maven {
+        url = uri("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")
+        credentials {
+            username = System.getenv("REPSY_LOGIN")
+            password = System.getenv("REPSY_PASSWORD")
+        }
+    }
 }
 
 dependencies {
@@ -16,37 +24,22 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val sourceJar = tasks.register<Jar>("cipher") {
-    from(sourceSets.getByName("main").java)
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 publishing {
     publications {
-        create<MavenPublication>("Cipher") {
+        register<MavenPublication>("MavenCipher") {
             from(components["java"])
-            artifact(sourceJar)
             groupId = "com.ciphers"
             version = "1.0.0"
-            artifactId = "cipherAlgorithms"
+            artifactId = "cipherAlgorithm"
             description = "A library for cryptographic algorithms."
-            pom {
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-            }
         }
     }
     repositories {
         maven {
-            name = "CipherStorage"
             url = uri("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")
             credentials {
-                username = project.findProperty("REPSY_USER")?.toString() ?: System.getenv("REPSY_USER")
-                password = project.findProperty("REPSY_PASSWORD")?.toString() ?: System.getenv("REPSY_PASSWORD")
+                username = System.getenv("REPSY_LOGIN")
+                password = System.getenv("REPSY_PASSWORD")
             }
         }
     }

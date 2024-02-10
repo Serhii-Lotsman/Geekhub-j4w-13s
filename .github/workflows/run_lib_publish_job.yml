@@ -17,12 +17,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Gradle
-        run: ./gradlew build
-
-      - name: Publish to repsy.io Maven repository
-        run: |
-          ./gradlew publish -Prepo_user=$REPSY_LOGIN -Prepo_password=$REPSY_PASSWORD
+      - name: Publish with build to repsy.io
+        uses: gradle/gradle-build-action@v3
+        with:
+          args: publish
         env:
           REPSY_LOGIN: ${{ secrets.REPSY_LOGIN }}
           REPSY_PASSWORD: ${{ secrets.REPSY_PASSWORD }}
