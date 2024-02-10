@@ -3,9 +3,6 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.cipherStorage"
-version = "1.0.0"
-
 repositories {
     mavenCentral()
 }
@@ -28,9 +25,13 @@ val sourceJar by tasks.registering(Jar::class) {
 
 publishing {
     publications {
-        create<MavenPublication>("publish") {
+        create<MavenPublication>("CipherPublication") {
             from(components["java"])
             artifact(sourceJar)
+            groupId = "com.ciphers"
+            version = "1.0.0"
+            artifactId = "cipherAlgorithms"
+            description = "A library for cryptographic algorithms."
             pom {
                 name.set("Ciphers")
                 url.set("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")

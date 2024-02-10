@@ -1,12 +1,7 @@
 name: Build and deploy artifact to repsy.io
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  workflow_call:
 
 jobs:
   cipher-build:
@@ -21,9 +16,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Setup build
-        uses: gradle/gradle-build-action@v2
 
       - name: Publish to repsy.io Maven repository
         run: |
