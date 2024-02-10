@@ -3,6 +3,7 @@ plugins {
     id("maven-publish")
 }
 
+group = "com.ciphers"
 version = "1.0.0"
 
 repositories {
@@ -30,10 +31,6 @@ publishing {
     publications {
         register<MavenPublication>("MavenCipher") {
             from(components["java"])
-            groupId = "com.ciphers"
-            version = "1.0.0"
-            artifactId = "cipherAlgorithm"
-            description = "A library for cryptographic algorithms."
         }
     }
     repositories {
