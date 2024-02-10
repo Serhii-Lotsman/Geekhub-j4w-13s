@@ -1,10 +1,7 @@
 package org.geekhub.service.cipher;
 
-import org.geekhub.exception.EncryptException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,8 +23,8 @@ class CaesarCipherTest {
     }
 
     @Test
-    void encrypt_shouldThrowEncryptException_whenNullMessage() {
-        EncryptException exception = assertThrows(EncryptException.class, () -> caesarCipher.encrypt(null));
+    void encrypt_shouldThrowException_whenNullMessage() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> caesarCipher.encrypt(null));
 
         assertEquals("Message cannot be null", exception.getMessage());
     }
@@ -48,10 +45,10 @@ class CaesarCipherTest {
 
     @Test
     void encrypt_shouldReturnValidEncryptedMessage_whenNegativeOffset() {
-        CaesarCipher negativeOffsetCipher = new CaesarCipher(-2);
+        CaesarCipher negativeOffsetCipher = new CaesarCipher(-5);
         String encryptedMessage = negativeOffsetCipher.encrypt("Hello, World!");
 
-        assertEquals("Jgnnq, Yqtnf!", encryptedMessage);
+        assertEquals("Mjqqt, Btwqi!", encryptedMessage);
     }
 
     @Test
@@ -62,13 +59,48 @@ class CaesarCipherTest {
         assertEquals("Gdkkn, Vnqkc!", encryptedMessage);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 26, -26, 52, -52, 78, 104})
-    void encrypt_shouldThrowEncryptException_whenZeroOrMultiply26Offset(int offset) {
-        CaesarCipher nullOffsetCipher = new CaesarCipher(offset);
-        EncryptException exception = assertThrows(EncryptException.class, () -> nullOffsetCipher.encrypt(""));
+    @Test
+    void decrypt_shouldReturnDecryptedMessage_whenValidEncryptedMessage() {
+        String decryptedMessage = caesarCipher.decrypt("Khoor, Zruog!");
 
-        assertEquals("The key cannot be zero or multiple of 26", exception.getMessage());
+        assertEquals("Hello, World!", decryptedMessage);
+    }
+
+    @Test
+    void decrypt_shouldThrowException_whenNullMessage() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> caesarCipher.decrypt(null));
+
+        assertEquals("Message cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void decrypt_shouldReturnDecryptedEmptyMessage_whenEmptyMessage() {
+        String decryptedMessage = caesarCipher.decrypt("");
+
+        assertEquals("", decryptedMessage);
+    }
+
+    @Test
+    void decrypt_shouldNotDecryptSpecialCharacters_whenMessageHasSpecialCharacters() {
+        String decryptedMessage = caesarCipher.decrypt("!@#$%^&*(),:.[]'`_-");
+
+        assertEquals("!@#$%^&*(),:.[]'`_-", decryptedMessage);
+    }
+
+    @Test
+    void decrypt_shouldReturnValidDecryptedMessage_whenNegativeOffset() {
+        CaesarCipher negativeOffsetCipher = new CaesarCipher(-5);
+        String decryptedMessage = negativeOffsetCipher.decrypt("Mjqqt, Btwqi!");
+
+        assertEquals("Hello, World!", decryptedMessage);
+    }
+
+    @Test
+    void decrypt_shouldReturnValidMessage_whenBigOffset() {
+        CaesarCipher largeOffsetCipher = new CaesarCipher(155);
+        String decryptedMessage = largeOffsetCipher.decrypt("Gdkkn, Vnqkc!");
+
+        assertEquals("Hello, World!", decryptedMessage);
     }
 }
 

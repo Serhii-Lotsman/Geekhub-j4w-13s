@@ -1,39 +1,50 @@
 package org.geekhub.service.cipher;
 
-import org.geekhub.exception.EncryptException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Service
 public class VigenereCipher implements Cipher {
+
+    private static final int LETTERS_OF_ALPHABET = 26;
 
     private final String key;
 
-    public VigenereCipher(@Value("${cipher.vigenere.key}") String key) {
+    public VigenereCipher(String key) {
         this.key = key;
     }
 
+    @Override
     public String encrypt(String message) {
-        if (message == null) {
-            throw new EncryptException("Message cannot be null");
-        }
-
-        return IntStream.range(0, message.length())
-            .mapToObj(index -> getEncryptedChar(message, index))
-            .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-            .toString();
+        return modifyMessage(message, true);
     }
 
-    private char getEncryptedChar(String message, int index) {
-        char currentChar = message.charAt(index);
+    @Override
+    public String decrypt(String encryptedMessage) {
+        return modifyMessage(encryptedMessage, false);
+    }
 
+    private String modifyMessage(String text, boolean isEncrypt) {
+        if (text == null) {
+            throw new IllegalArgumentException("Message cannot be null");
+        }
+
+        return IntStream.range(0, text.length())
+            .mapToObj(index -> getCharacter(text, isEncrypt, index))
+            .map(Object::toString)
+            .collect(Collectors.joining());
+    }
+
+    private Character getCharacter(String text, boolean isEncrypt, int index) {
+        char currentChar = text.charAt(index);
         if (Character.isLetter(currentChar)) {
             char base = Character.isUpperCase(currentChar) ? 'A' : 'a';
             int offset = key.toUpperCase().charAt(index % key.length()) - 'A';
-            return (char) ((currentChar - base + offset) % 26 + base);
+            int modifiedChar = isEncrypt
+                ? (currentChar - base + offset) % LETTERS_OF_ALPHABET
+                : (currentChar - base - offset + LETTERS_OF_ALPHABET) % LETTERS_OF_ALPHABET;
+            return (char) (modifiedChar + base);
         }
         return currentChar;
     }
 }
+
