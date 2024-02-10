@@ -18,9 +18,8 @@ tasks.test {
 
 val mainSourceSet = sourceSets.getByName("main")
 
-val sourceJar by tasks.registering(Jar::class) {
+val sourceJar = tasks.register<Jar>("cipher") {
     from(mainSourceSet.java)
-    archiveClassifier.set("CipherStorage")
 }
 
 publishing {

@@ -17,6 +17,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Build with Gradle
+        run: ./gradlew build
+
       - name: Publish to repsy.io Maven repository
         run: |
           ./gradlew publish -Prepo_user=$REPO_USER -Prepo_password=$REPO_PASSWORD
