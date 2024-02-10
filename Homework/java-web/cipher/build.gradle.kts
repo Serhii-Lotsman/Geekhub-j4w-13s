@@ -23,6 +23,16 @@ val sourceJar = tasks.register<Jar>("cipher") {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "CipherStorage"
+            url = uri("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")
+            credentials {
+                username = project.findProperty("REPSY_USER")?.toString() ?: System.getenv("REPSY_USER")
+                password = project.findProperty("REPSY_PASSWORD")?.toString() ?: System.getenv("REPSY_PASSWORD")
+            }
+        }
+    }
     publications {
         create<MavenPublication>("CipherPublication") {
             from(components["java"])
@@ -32,19 +42,10 @@ publishing {
             artifactId = "cipherAlgorithms"
             description = "A library for cryptographic algorithms."
             pom {
-                name.set("Ciphers")
-                url.set("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
                         url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("slotsman")
-                        name.set("Serhii")
-                        email.set("lotsman.961@gmail.com")
                     }
                 }
             }
