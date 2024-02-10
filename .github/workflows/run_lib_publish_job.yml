@@ -22,7 +22,7 @@ jobs:
 
       - name: Publish to repsy.io Maven repository
         run: |
-          ./gradlew publish -Prepo_user=$REPO_USER -Prepo_password=$REPO_PASSWORD
+          ./gradlew publish -Prepo_user=$REPSY_LOGIN -Prepo_password=$REPSY_PASSWORD
         env:
-          REPO_LOGIN: ${{ secrets.REPSY_LOGIN }}
-          REPO_PASSWORD: ${{ secrets.REPSY_PASSWORD }}
+          REPSY_LOGIN: ${{ secrets.REPSY_LOGIN }}
+          REPSY_PASSWORD: ${{ secrets.REPSY_PASSWORD }}
