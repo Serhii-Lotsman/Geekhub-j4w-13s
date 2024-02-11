@@ -7,8 +7,6 @@ group = "com.ciphers"
 version = "1.0.0"
 
 repositories {
-    mavenCentral()
-
     maven {
         url = uri("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")
         credentials {
