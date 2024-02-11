@@ -28,3 +28,4 @@ jobs:
   cipher-build:
     name: Build and deploy artifact to repsy.io
     uses: ./.github/workflows/run_lib_publish_job.yml
+    secrets: inherit
