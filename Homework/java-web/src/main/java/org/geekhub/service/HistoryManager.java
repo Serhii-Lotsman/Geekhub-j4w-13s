@@ -1,13 +1,12 @@
 package org.geekhub.service;
 
+import cipherStorage.*;
 import org.geekhub.consoleapi.HistoryPrinter;
 import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Algorithm;
 import org.geekhub.model.CipherOperation;
 import org.geekhub.model.Message;
 import org.geekhub.repository.EncryptedMessageRepository;
-import org.geekhub.service.cipher.Cipher;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,17 +32,20 @@ public class HistoryManager {
     private final EncryptedMessageRepository repository;
     private final long userId;
     private final Map<Map<Algorithm, CipherOperation>, Function<String, String>> ciphers;
+
     public HistoryManager(
-        @Value("${user.id}") long userId,
-        HistoryPrinter historyPrinter,
-        EncryptedMessageRepository repository,
-        @Qualifier("caesarCipher") Cipher caesarCipher,
-        @Qualifier("vigenereCipher") Cipher vigenereCipher
+            @Value("${user.id}") long userId,
+            @Value("${cipher.caesar.key}") int caesarKey,
+            @Value("${cipher.vigenere.key}") String vigenereKey,
+            HistoryPrinter historyPrinter,
+            EncryptedMessageRepository repository
     ) {
         this.userId = userId;
         this.historyPrinter = historyPrinter;
         this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         this.repository = repository;
+        Cipher caesarCipher = new CaesarCipher(caesarKey);
+        Cipher vigenereCipher = new VigenereCipher(vigenereKey);
         this.ciphers = Map.of(
             Map.of(Algorithm.CAESAR, CipherOperation.ENCRYPT), caesarCipher::encrypt,
             Map.of(Algorithm.VIGENERE, CipherOperation.ENCRYPT), vigenereCipher::encrypt,

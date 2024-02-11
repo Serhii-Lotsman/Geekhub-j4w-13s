@@ -28,6 +28,6 @@ jobs:
   cipher-build:
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: [build, test, sonarlint, checkstype]
-    name: Build and deploy artifact to repsy.io
+    name: Build and publish artifact to repsy.io
     uses: ./.github/workflows/run_lib_publish_job.yml
     secrets: inherit
