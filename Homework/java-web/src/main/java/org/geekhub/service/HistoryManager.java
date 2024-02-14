@@ -1,6 +1,6 @@
 package org.geekhub.service;
 
-import cipherStorage.*;
+import cipherAlgorithm.*;
 import org.geekhub.consoleapi.HistoryPrinter;
 import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Algorithm;

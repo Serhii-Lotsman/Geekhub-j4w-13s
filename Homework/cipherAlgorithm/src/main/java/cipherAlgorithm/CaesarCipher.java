@@ -1,4 +1,4 @@
-package cipherStorage;
+package cipherAlgorithm;
 
 import java.util.stream.Collectors;
 

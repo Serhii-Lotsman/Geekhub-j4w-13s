@@ -3,8 +3,8 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.ciphers"
-version = "1.0.0"
+group = "com.cipherAlgorithm"
+version = "0.0.1"
 
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
@@ -17,10 +17,11 @@ tasks.test {
 
 publishing {
     publications {
-        register<MavenPublication>("MavenCipher") {
+        register<MavenPublication>("CipherAlgorithm") {
             from(components["java"])
             pom {
                 groupId = project.group.toString()
+                artifactId = "cipher"
                 version = project.version.toString()
                 licenses {
                     license {
@@ -33,10 +34,10 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("https://repsy.io/slotsman/maven/cipher-storage-repository")
+            url = uri("https://repsy.io/mvn/slotsman/cipher-storage-repository")
             credentials {
-                username = System.getenv("REPSY_LOGIN")
-                password = System.getenv("REPSY_PASSWORD")
+                username = System.getenv("REPSY_LOGIN") ?: providers.gradleProperty("username").get()
+                password = System.getenv("REPSY_PASSWORD") ?: providers.gradleProperty("password").get()
             }
         }
     }
