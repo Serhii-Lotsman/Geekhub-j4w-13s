@@ -1,11 +1,13 @@
 repositories {
     mavenCentral()
+    repositories {
     maven {
         url = uri("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")
         credentials {
-            username = providers.systemProperty("wrapperUser").get()
-            password = providers.systemProperty("wrapperPassword").get()
+            username = System.getenv("REPSY_LOGIN") ?: providers.gradleProperty("username").get()
+            password = System.getenv("REPSY_PASSWORD") ?: providers.gradleProperty("password").get()
         }
+    }
     }
 }
 

@@ -20,6 +20,8 @@ publishing {
         register<MavenPublication>("MavenCipher") {
             from(components["java"])
             pom {
+                groupId = project.group.toString()
+                version = project.version.toString()
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
@@ -31,7 +33,7 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("https://repsy.io/mvn/vrudas/slotsman-j4w-s13-repo")
+            url = uri("https://repsy.io/slotsman/maven/cipher-storage-repository")
             credentials {
                 username = System.getenv("REPSY_LOGIN")
                 password = System.getenv("REPSY_PASSWORD")

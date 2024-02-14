@@ -16,10 +16,10 @@ include("Homework:java-core:12-Gradle:open-api-generation")
 include("Homework:java-core:14-JDBC")
 include("Homework:java-core:14-JDBC:Homework-Example")
 include("Homework:java-core:15-CI-CD")
+include("Homework:cipher")
 
 
 include ("Homework:java-web")
 
 include ("Coursework")
-include("Homework:java-web:cipher")
-findProject(":Homework:java-web:cipher")?.name = "cipher"
+findProject(":Homework:cipher")?.name = "cipher"
