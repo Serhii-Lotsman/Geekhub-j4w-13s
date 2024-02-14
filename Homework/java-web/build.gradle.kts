@@ -1,3 +1,8 @@
+plugins {
+    id ("org.springframework.boot") version "3.2.2"
+    id ("io.spring.dependency-management") version "1.1.4"
+}
+
 repositories {
     mavenCentral()
     repositories {
@@ -12,8 +17,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework:spring-context:6.1.3")
     implementation("org.springframework:spring-jdbc:6.1.0")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("org.postgresql:postgresql:42.6.0")
     implementation("org.flywaydb:flyway-core:9.22.3")
