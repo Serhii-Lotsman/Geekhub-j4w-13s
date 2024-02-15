@@ -1,30 +1,27 @@
 package org.geekhub.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 
-@Configuration
-@PropertySource("classpath:application-${spring.profiles.active}.properties")
+@AutoConfiguration
 public class DatabaseConfig {
 
+    private final DataSourceProperties dataSourceProperties;
+
+    @Autowired
+    public DatabaseConfig(DataSourceProperties dataSourceProperties) {
+        this.dataSourceProperties = dataSourceProperties;
+    }
+
     @Bean
-    public DataSource dataSource(@Value("${spring.datasource.url}") String jdbcUrl,
-                                 @Value("${spring.datasource.username}") String username,
-                                 @Value("${spring.datasource.password}") String password,
-                                 @Value("${spring.datasource.driver-class-name}") String driverClassName) {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(jdbcUrl);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        dataSource.setDriverClassName(driverClassName);
-        return dataSource;
+    public DataSource dataSource() {
+        return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
     @Bean
@@ -36,8 +33,6 @@ public class DatabaseConfig {
     public Flyway flyway(DataSource dataSource) {
         return Flyway.configure()
             .dataSource(dataSource)
-            .locations("classpath:db/migration")
-            .createSchemas(true)
             .load();
     }
 }
