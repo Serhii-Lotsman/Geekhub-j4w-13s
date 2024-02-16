@@ -1,58 +1,15 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layouts/base_layout}">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cipher Algorithm</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}">
+    <title>Home</title>
 </head>
 
 <body>
-<div class="p-3 mb-2 bg-secondary-subtle text-emphasis-secondary">
-    <div class="container">
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="algorithms">Encrypt/Decrypt</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                   aria-expanded="false">History</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="history">All history</a></li>
-                    <li><a class="dropdown-item" href="history">By algorithm</a></li>
-                    <li><a class="dropdown-item" href="history">By date</a></li>
-                </ul>
-            </li>
-        </ul>
-
-    </div>
-</div>
-
+<section layout:fragment="content">
 <h1>Home page</h1>
-
-<footer id="footer">
-    <div class="p-3 mb-2 bg-secondary-subtle text-emphasis-secondary">
-        <nav aria-label="Page navigation example">
-            <div class="pagination justify-content-between">
-                <div>✆ do not disturb</div>
-                <h6>🍺 Cipher Algorithm Corporation</h6>
-                <div>Ⓒ all rights reserved</div>
-            </div>
-        </nav>
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-        crossorigin="anonymous"></script>
+</section>
 </body>
 
 </html>
