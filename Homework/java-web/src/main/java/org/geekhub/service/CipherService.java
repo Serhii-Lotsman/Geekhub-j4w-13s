@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class HistoryManager {
+public class CipherService {
 
     private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter GET_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -33,7 +33,7 @@ public class HistoryManager {
     private final long userId;
     private final Map<Map<Algorithm, CipherOperation>, Function<String, String>> ciphers;
 
-    public HistoryManager(
+    public CipherService(
             @Value("${user.id}") long userId,
             @Value("${cipher.caesar.key}") int caesarKey,
             @Value("${cipher.vigenere.key}") String vigenereKey,
@@ -55,7 +55,7 @@ public class HistoryManager {
     }
 
 
-    public void saveMessage(String originalMessage, Algorithm algorithm, CipherOperation operation) {
+    public Message saveMessage(String originalMessage, Algorithm algorithm, CipherOperation operation) {
         String status = originalMessage != null ? "successfully" : "failed";
         String encryptedMessage = ciphers.get(Map.of(algorithm, operation)).apply(originalMessage);
 
@@ -70,12 +70,11 @@ public class HistoryManager {
         );
 
         repository.saveMessage(message);
-        historyPrinter.printCurrentMessage(message);
+        return message;
     }
 
-    public void getAllHistory() {
-        List<Message> allHistory = repository.findAll();
-        historyPrinter.printMessages(allHistory);
+    public List<Message> getAllHistory() {
+        return repository.findAll();
     }
 
     public void getCountOfUsage() {

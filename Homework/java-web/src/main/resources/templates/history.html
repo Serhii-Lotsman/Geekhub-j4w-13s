@@ -7,7 +7,25 @@
 
 <body>
 <section layout:fragment="content">
-    <h1>History</h1>
+    <h1>All history</h1>
+    <table>
+        <tr>
+            <th>UserID</th>
+            <th>Original message</th>
+            <th>Modified message</th>
+            <th>Algorithm</th>
+            <th>Operation</th>
+            <th>Date</th>
+        </tr>
+        <tr th:each="message : ${messages}">
+            <td th:text="*{message.userId}"></td>
+            <td th:text="*{message.originalMessage}"></td>
+            <td th:text="*{message.encryptedMessage}"></td>
+            <td th:text="*{message.algorithm}"></td>
+            <td th:text="*{message.operation}"></td>
+            <td th:text="*{message.date}"></td>
+        </tr>
+    </table>
 </section>
 </body>
 

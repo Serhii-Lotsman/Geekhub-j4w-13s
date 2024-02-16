@@ -2,7 +2,7 @@ package org.geekhub.consoleapi;
 
 import org.geekhub.model.Algorithm;
 import org.geekhub.model.CipherOperation;
-import org.geekhub.service.HistoryManager;
+import org.geekhub.service.CipherService;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -23,11 +23,11 @@ public class Console {
     );
 
     private final Scanner scanner;
-    private final HistoryManager historyManager;
+    private final CipherService cipherService;
 
-    public Console(HistoryManager historyManager) {
+    public Console(CipherService cipherService) {
         this.scanner = new Scanner(System.in);
-        this.historyManager = historyManager;
+        this.cipherService = cipherService;
     }
 
     public void mainMenu() {
@@ -72,8 +72,8 @@ public class Console {
         System.out.println("Enter message:");
         scanner.nextLine();
         switch (subOption) {
-            case 1 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.CAESAR, operation);
-            case 2 -> historyManager.saveMessage(scanner.nextLine(), Algorithm.VIGENERE, operation);
+            case 1 -> cipherService.saveMessage(scanner.nextLine(), Algorithm.CAESAR, operation);
+            case 2 -> cipherService.saveMessage(scanner.nextLine(), Algorithm.VIGENERE, operation);
             default -> System.out.println("Main menu");
         }
     }
@@ -84,15 +84,15 @@ public class Console {
         subOption = scanner.nextInt();
         scanner.nextLine();
         switch (subOption) {
-            case 1 -> historyManager.getAllHistory();
-            case 2 -> historyManager.getCountOfUsage();
+            case 1 -> cipherService.getAllHistory();
+            case 2 -> cipherService.getCountOfUsage();
             case 3 -> {
                 System.out.println("Enter the date and time in the following pattern 'dd-MM-yyyy HH:mm:ss'");
-                historyManager.getMessageByDate(setDate("from"), setDate("to"));
+                cipherService.getMessageByDate(setDate("from"), setDate("to"));
             }
-            case 4 -> historyManager.getUniqueMessages();
+            case 4 -> cipherService.getUniqueMessages();
             case 5 -> setAlgorithm();
-            case 6 -> historyManager.getFailedMessage();
+            case 6 -> cipherService.getFailedMessage();
             default -> System.out.println("Main menu");
         }
     }
@@ -120,8 +120,8 @@ public class Console {
         subOption = scanner.nextInt();
         scanner.nextLine();
         switch (subOption) {
-            case 1 -> historyManager.getMessageByAlgorithm(Algorithm.CAESAR.name());
-            case 2 -> historyManager.getMessageByAlgorithm(Algorithm.VIGENERE.name());
+            case 1 -> cipherService.getMessageByAlgorithm(Algorithm.CAESAR.name());
+            case 2 -> cipherService.getMessageByAlgorithm(Algorithm.VIGENERE.name());
             default -> System.out.println("Main menu");
         }
     }

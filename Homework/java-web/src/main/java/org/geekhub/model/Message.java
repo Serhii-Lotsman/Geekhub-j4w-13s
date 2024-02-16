@@ -1,13 +1,13 @@
 package org.geekhub.model;
 
 public class Message {
-    private final long userId;
-    private final String originalMessage;
-    private final String encryptedMessage;
-    private final String algorithm;
-    private final String date;
-    private final String status;
-    private final String operation;
+    private long userId;
+    private String originalMessage;
+    private String encryptedMessage;
+    private String algorithm;
+    private String date;
+    private String status;
+    private String operation;
 
     public Message(long userId,
                    String originalMessage,
@@ -23,6 +23,9 @@ public class Message {
         this.operation = operation;
         this.date = date;
         this.status = status;
+    }
+
+    public Message(){
     }
 
     public long getUserId() {

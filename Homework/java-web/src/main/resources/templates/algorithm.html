@@ -7,7 +7,18 @@
 
 <body>
 <section layout:fragment="content">
-    <h1>Encrypt/decrypt</h1>
+    <form action="#" th:action="@{/algorithms}" th:object="${message}" method="post">
+        <label>Message:
+        <input type="text" th:field="*{originalMessage}"/>
+        </label>
+        <label>Algorithm:
+            <textarea th:field="*{algorithm}"></textarea>
+        </label>
+        <label>Cipher Operation:
+            <textarea th:field="*{operation}"></textarea>
+        </label>
+        <button type="submit">Submit</button>
+    </form>
 </section>
 </body>
 
