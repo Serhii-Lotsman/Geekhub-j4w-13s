@@ -3,6 +3,7 @@ package org.geekhub.repository;
 import org.geekhub.model.Message;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -106,5 +107,20 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
     public List<Message> findFailedEncoding() {
         String sql = "SELECT * FROM encryption_message WHERE status = 'failed' ORDER BY algorithm, date";
         return jdbcTemplate.query(sql, (rs, rowNum) -> getMessage(rs));
+    }
+
+    @Override
+    public List<Message> getPaginateHistory(int pageNum, int pageSize) {
+        String sql = "SELECT * FROM encryption_message ORDER BY date LIMIT :pageSize OFFSET :offset";
+
+        SqlParameterSource params = new MapSqlParameterSource()
+            .addValue("pageSize", pageSize)
+            .addValue("offset", getOffset(pageNum, pageSize));
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> getMessage(rs));
+    }
+
+    private static int getOffset(int pageNum, int pageSize) {
+        return pageNum * pageSize - 1;
     }
 }

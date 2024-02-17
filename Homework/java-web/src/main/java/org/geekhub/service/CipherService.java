@@ -1,7 +1,6 @@
 package org.geekhub.service;
 
 import cipherAlgorithm.*;
-import org.geekhub.consoleapi.HistoryPrinter;
 import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Algorithm;
 import org.geekhub.model.CipherOperation;
@@ -27,8 +26,6 @@ public class CipherService {
 
     private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter GET_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-    private final HistoryPrinter historyPrinter;
-    private final OffsetDateTime dateTime;
     private final EncryptedMessageRepository repository;
     private final long userId;
     private final Map<Map<Algorithm, CipherOperation>, Function<String, String>> ciphers;
@@ -37,12 +34,9 @@ public class CipherService {
             @Value("${user.id}") long userId,
             @Value("${cipher.caesar.key}") int caesarKey,
             @Value("${cipher.vigenere.key}") String vigenereKey,
-            HistoryPrinter historyPrinter,
             EncryptedMessageRepository repository
     ) {
         this.userId = userId;
-        this.historyPrinter = historyPrinter;
-        this.dateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         this.repository = repository;
         Cipher caesarCipher = new CaesarCipher(caesarKey);
         Cipher vigenereCipher = new VigenereCipher(vigenereKey);
@@ -56,6 +50,7 @@ public class CipherService {
 
 
     public Message saveMessage(String originalMessage, Algorithm algorithm, CipherOperation operation) {
+        OffsetDateTime offsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         String status = originalMessage != null ? "successfully" : "failed";
         String encryptedMessage = ciphers.get(Map.of(algorithm, operation)).apply(originalMessage);
 
@@ -65,7 +60,7 @@ public class CipherService {
             encryptedMessage,
             algorithm.name(),
             operation.name(),
-            dateTime.format(SAVE_FORMATTER),
+            offsetDateTime.format(SAVE_FORMATTER),
             status
         );
 
@@ -77,21 +72,25 @@ public class CipherService {
         return repository.findAll();
     }
 
-    public void getCountOfUsage() {
+    public List<Message> getAllHistory(int pageNum, int pageSize) {
+        if (pageNum < 1 || pageSize < 1) {
+            throw new IllegalArgumentException("Page number and page size must be greater than 0");
+        }
+        return repository.getPaginateHistory(pageNum, pageSize);
+    }
+
+    public Map<String, Integer> getCountOfUsage() {
         List<Message> messages = repository.findAll();
-        Map<String, Integer> statistic = messages.stream()
+
+        return messages.stream()
             .map(Message::getAlgorithm)
             .collect(HashMap::new, (map, algorithmName) ->
                 map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
-
-        historyPrinter.printCountOfUsage(statistic);
     }
 
-    public void getUniqueMessages() {
+    public Map<String,Long> getUniqueMessages() {
         List<Message> messages = repository.findAll();
-        Map<String, Long> uniqueMessages = getMapUniqueMessages(messages);
-
-        historyPrinter.printUniqueMessages(uniqueMessages);
+        return getMapUniqueMessages(messages);
     }
 
     private Map<String, Long> getMapUniqueMessages(List<Message> messages) {
@@ -106,13 +105,11 @@ public class CipherService {
                 message, Collectors.counting()));
     }
 
-    public void getMessageByAlgorithm(String algorithm) {
-        List<Message> messages = repository.findByAlgorithm(algorithm);
-
-        historyPrinter.printMessages(messages);
+    public List<Message> getMessageByAlgorithm(String algorithm) {
+        return repository.findByAlgorithm(algorithm);
     }
 
-    public void getMessageByDate(String inputDateFrom, String inputDateTo) {
+    public List<Message> getMessageByDate(String inputDateFrom, String inputDateTo) {
         OffsetDateTime dateFrom = parse(inputDateFrom);
         OffsetDateTime dateTo = parse(inputDateTo);
 
@@ -121,9 +118,7 @@ public class CipherService {
                 "Please indicate at least one of the dates"
             );
         }
-        List<Message> messages = repository.findByDate(dateFrom, dateTo);
-
-        historyPrinter.printMessages(messages);
+        return repository.findByDate(dateFrom, dateTo);
     }
 
     private OffsetDateTime parse(String date) {
@@ -135,6 +130,5 @@ public class CipherService {
     public void getFailedMessage() {
         List<Message> messages = repository.findFailedEncoding();
 
-        historyPrinter.printMessages(messages);
     }
 }

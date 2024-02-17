@@ -15,4 +15,6 @@ public interface EncryptedMessageRepository {
     List<Message> findByDate(OffsetDateTime dateFrom, OffsetDateTime dateTo);
 
     List<Message> findFailedEncoding();
+
+    List<Message> getPaginateHistory(int pageNum, int pageSize);
 }

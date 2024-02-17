@@ -8,6 +8,25 @@
 <body>
 <section layout:fragment="content">
     <h1>All history</h1>
+    <div id="buttons">
+
+        <form th:action="@{/history}" method="get">
+            <button class="btn btn-outline-primary" type="submit" name="param" value="caesar">Get Caesar Messages</button>
+        </form>
+        <form th:action="@{/history}" method="get">
+            <button class="btn btn-outline-primary" type="submit" name="param" value="vigenere">Get Vigenère Messages</button>
+        </form>
+
+        <form th:action="@{/history}" method="get">
+            <label for="dateFrom">From:</label>
+            <input type="datetime-local" id="dateFrom" name="dateFrom" required>
+
+            <label for="dateTo">To:</label>
+            <input type="datetime-local" id="dateTo" name="dateTo" required>
+
+            <button class="btn btn-outline-primary" type="submit">Get by Date</button>
+        </form>
+    </div>
     <table>
         <tr>
             <th>UserID</th>
