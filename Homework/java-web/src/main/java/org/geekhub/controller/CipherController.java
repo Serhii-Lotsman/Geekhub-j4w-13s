@@ -27,18 +27,30 @@ public class CipherController {
         return modelAndView;
     }
 
-    @GetMapping("/algorithms")
+    @GetMapping("/algorithm")
     public ModelAndView algorithm(ModelAndView modelAndView) {
         modelAndView.addObject("addMessage", new Message());
         return modelAndView;
     }
 
-    @PostMapping("/algorithms/${userId}")
+    @PostMapping("/algorithm")
     public ModelAndView postAlgorithm(@ModelAttribute("message") Message message, ModelAndView modelAndView) {
-        Message fullMessage = service.saveMessage("originalMessage", Algorithm.CAESAR, CipherOperation.ENCRYPT);
-        modelAndView.addObject("message", fullMessage);
+        modelAndView.addObject("message", message);
         modelAndView.setViewName("algorithm");
         return modelAndView;
+    }
+
+    @PostMapping("/submitCipher")
+    public String submitCipher(String inputMessage, String algorithm, String method) {
+        Algorithm messageAlgorithm = algorithm.equalsIgnoreCase(Algorithm.CAESAR.name())
+            ? Algorithm.CAESAR
+            : Algorithm.VIGENERE;
+        CipherOperation messageOperation = method.equalsIgnoreCase(CipherOperation.ENCRYPT.name())
+            ? CipherOperation.ENCRYPT
+            : CipherOperation.DECRYPT;
+        Message fullMessage = service.saveMessage(inputMessage, messageAlgorithm, messageOperation);
+        postAlgorithm(fullMessage, new ModelAndView());
+        return "redirect:/algorithm";
     }
 
 }
