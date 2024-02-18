@@ -52,4 +52,11 @@ th {
 
 #algorithm {
     margin-left: 2%;
+    display: flex;
+    justify-content: space-around;
+}
+
+#inputs {
+    margin-bottom: 20px;
+    margin-top: 20px;
 }

@@ -8,42 +8,45 @@
 <body>
 <section layout:fragment="content">
     <div id="algorithm">
-    <form th:action="@{/algorithms}" th:object="${message}" method="post">
-        <h3>Cipher Method:</h3>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="algorithm" id="caesar" value="caesar" checked>
-            <label class="form-check-label" for="caesar">
-                Caesar algorithm
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="algorithm" id="vigenere" value="vigenere" checked>
-            <label class="form-check-label" for="vigenere">
-                Vigenère algorithm
-            </label>
-        </div>
-        <h3>Mode:</h3>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="method" id="encrypt" value="encrypt" checked>
-            <label class="form-check-label" for="encrypt">
-                Encrypt
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="method" id="decrypt" value="decrypt" checked>
-            <label class="form-check-label" for="decrypt">
-                Decrypt
-            </label>
-        </div>
-
-        <label>Enter a message to encrypt or decrypt it:
-            <input type="text" name="inputMessage" placeholder="Enter message here">
-        </label>
-        <button class="btn btn-outline-primary" type="submit">Submit</button>
-    </form>
-    <section th:if="${message != null}">
-        <h2>Last Submitted Message</h2>
-        <p th:text="'\''
+        <div>
+            <form th:action="@{/algorithms}" th:object="${message}" method="post">
+                <h3>Select algorithm:</h3>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="algorithm" id="caesar" value="caesar" checked>
+                    <label class="form-check-label" for="caesar">
+                        Caesar algorithm
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="algorithm" id="vigenere" value="vigenere"
+                           checked>
+                    <label class="form-check-label" for="vigenere">
+                        Vigenère algorithm
+                    </label>
+                </div>
+                <h3>Select operation:</h3>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="method" id="encrypt" value="encrypt" checked>
+                    <label class="form-check-label" for="encrypt">
+                        Encrypt
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="method" id="decrypt" value="decrypt" checked>
+                    <label class="form-check-label" for="decrypt">
+                        Decrypt
+                    </label>
+                </div>
+                <div id="inputs">
+                    <label>Enter a message to encrypt or decrypt it:
+                        <input class="form-control" type="text" name="inputMessage" placeholder="Enter message here">
+                    </label>
+                </div>
+                <button class="btn btn-outline-primary" type="submit">Submit</button>
+            </form>
+            <section th:if="${message != null}">
+                <h3 th:text="'Your message ' + ${message.operation.toLowerCase()} + 'ed:'"></h3>
+                <p th:text="'\''
         + ${message.originalMessage}
         + '\' was '
         + ${message.operation.toLowerCase()}
@@ -52,8 +55,13 @@
         + ' into \''
         + ${message.encryptedMessage}
         + '\''">
-        </p>
-    </section>
+                </p>
+            </section>
+        </div>
+        <div>
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzhyYTRpOTkzM3l2Y3Z6bHlqNjBnNGdsZTZpdGZpaHNqeHI1eGo1NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OdHm8u1mSJp7d2tohB/giphy.gif"
+                 alt="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHl1ODUycDF2ZWE5OXYxZGpmaWp6aWRqa205ZnU3c2ZuM2NwOG01eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RxnFDVF18mXoNcC8Ff/giphy.gif">
+        </div>
     </div>
 </section>
 </body>

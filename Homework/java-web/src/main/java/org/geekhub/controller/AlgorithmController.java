@@ -18,8 +18,6 @@ public class AlgorithmController {
     @Autowired
     private CipherService service;
 
-    private Message fullMessage;
-
     @GetMapping
     public ModelAndView algorithm(ModelAndView modelAndView) {
         modelAndView.addObject("addMessage", new Message());
@@ -37,7 +35,7 @@ public class AlgorithmController {
         CipherOperation messageOperation = method.equalsIgnoreCase(CipherOperation.ENCRYPT.name())
             ? CipherOperation.ENCRYPT
             : CipherOperation.DECRYPT;
-        fullMessage = service.saveMessage(inputMessage, messageAlgorithm, messageOperation);
+        Message fullMessage = service.saveMessage(inputMessage, messageAlgorithm, messageOperation);
 
         modelAndView.setViewName("algorithms");
         modelAndView.addObject("message", fullMessage);

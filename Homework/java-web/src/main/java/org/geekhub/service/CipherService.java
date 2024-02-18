@@ -15,17 +15,14 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class CipherService {
 
-    private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final DateTimeFormatter GET_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EncryptedMessageRepository repository;
     private final long userId;
     private final Map<Map<Algorithm, CipherOperation>, Function<String, String>> ciphers;
@@ -48,7 +45,6 @@ public class CipherService {
         );
     }
 
-
     public Message saveMessage(String originalMessage, Algorithm algorithm, CipherOperation operation) {
         OffsetDateTime offsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         String status = originalMessage != null ? "successfully" : "failed";
@@ -60,7 +56,7 @@ public class CipherService {
             encryptedMessage,
             algorithm.name(),
             operation.name(),
-            offsetDateTime.format(SAVE_FORMATTER),
+            offsetDateTime.format(FORMATTER),
             status
         );
 
@@ -70,39 +66,6 @@ public class CipherService {
 
     public List<Message> getAllHistory() {
         return repository.findAll();
-    }
-
-    public List<Message> getAllHistory(int pageNum, int pageSize) {
-        if (pageNum < 1 || pageSize < 1) {
-            throw new IllegalArgumentException("Page number and page size must be greater than 0");
-        }
-        return repository.getPaginateHistory(pageNum, pageSize);
-    }
-
-    public Map<String, Integer> getCountOfUsage() {
-        List<Message> messages = repository.findAll();
-
-        return messages.stream()
-            .map(Message::getAlgorithm)
-            .collect(HashMap::new, (map, algorithmName) ->
-                map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
-    }
-
-    public Map<String,Long> getUniqueMessages() {
-        List<Message> messages = repository.findAll();
-        return getMapUniqueMessages(messages);
-    }
-
-    private Map<String, Long> getMapUniqueMessages(List<Message> messages) {
-        return messages.stream()
-            .map(message ->
-                String.format("'%s' was encrypted via %s into '%s'",
-                    message.getOriginalMessage(),
-                    message.getAlgorithm(),
-                    message.getEncryptedMessage()
-                ))
-            .collect(Collectors.groupingBy(message ->
-                message, Collectors.counting()));
     }
 
     public List<Message> getMessageByAlgorithm(String algorithm) {
@@ -122,13 +85,11 @@ public class CipherService {
     }
 
     private OffsetDateTime parse(String date) {
+        if (date.contains("T")) {
+            date = date.replace('T', ' ') + ":00";
+        }
         return date.isEmpty()
             ? null
-            : OffsetDateTime.of(LocalDateTime.parse(date, GET_FORMATTER), ZoneOffset.UTC);
-    }
-
-    public void getFailedMessage() {
-        List<Message> messages = repository.findFailedEncoding();
-
+            : OffsetDateTime.of(LocalDateTime.parse(date, FORMATTER), ZoneOffset.UTC);
     }
 }

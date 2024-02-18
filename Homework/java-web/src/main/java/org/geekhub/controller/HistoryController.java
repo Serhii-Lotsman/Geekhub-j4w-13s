@@ -23,16 +23,16 @@ public class HistoryController {
                                 @RequestParam(defaultValue = "") String param,
                                 String dateFrom,
                                 String dateTo) {
-        System.out.println(param);
-        System.out.println(dateFrom);
-        System.out.println(dateTo);
-        List<Message> messages =
-        switch (param) {
-            case "caesar" -> cipherService.getMessageByAlgorithm("CAESAR");
-            case "vigenere" -> cipherService.getMessageByAlgorithm("VIGENERE");
-            case "date" -> cipherService.getMessageByDate(dateFrom, dateTo);
-            default -> cipherService.getAllHistory();
-        };
+        List<Message> messages;
+        if (dateFrom != null && dateTo != null) {
+            messages = cipherService.getMessageByDate(dateFrom, dateTo);
+        } else {
+            switch (param) {
+                case "caesar" -> messages = cipherService.getMessageByAlgorithm("CAESAR");
+                case "vigenere" -> messages = cipherService.getMessageByAlgorithm("VIGENERE");
+                default -> messages = cipherService.getAllHistory();
+            }
+        }
         modelAndView.addObject("messages", messages);
         modelAndView.setViewName("history");
         return modelAndView;
