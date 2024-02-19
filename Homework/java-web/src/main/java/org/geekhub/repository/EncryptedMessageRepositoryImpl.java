@@ -92,8 +92,7 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
         String sql =
             """
                 SELECT * FROM encryption_message
-                        WHERE date AT TIME ZONE 'UTC' >= :dateFrom
-                        AND date AT TIME ZONE 'UTC' <= :dateTo
+                        WHERE date AT TIME ZONE 'UTC' BETWEEN :dateFrom AND :dateTo
                         ORDER BY date
                 """;
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()

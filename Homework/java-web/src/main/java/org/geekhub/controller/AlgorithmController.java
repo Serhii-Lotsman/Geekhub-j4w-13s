@@ -1,7 +1,5 @@
 package org.geekhub.controller;
 
-import org.geekhub.model.Algorithm;
-import org.geekhub.model.CipherOperation;
 import org.geekhub.model.Message;
 import org.geekhub.service.CipherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +25,9 @@ public class AlgorithmController {
     @PostMapping
     public ModelAndView submitCipher(String inputMessage,
                                      String algorithm,
-                                     String method,
+                                     String operation,
                                      ModelAndView modelAndView) {
-        Algorithm messageAlgorithm = algorithm.equalsIgnoreCase(Algorithm.CAESAR.name())
-            ? Algorithm.CAESAR
-            : Algorithm.VIGENERE;
-        CipherOperation messageOperation = method.equalsIgnoreCase(CipherOperation.ENCRYPT.name())
-            ? CipherOperation.ENCRYPT
-            : CipherOperation.DECRYPT;
-        Message fullMessage = service.saveMessage(inputMessage, messageAlgorithm, messageOperation);
-
+        Message fullMessage = service.saveMessage(inputMessage, algorithm, operation);
         modelAndView.setViewName("algorithms");
         modelAndView.addObject("message", fullMessage);
         return modelAndView;

@@ -23,6 +23,7 @@ import java.util.function.Function;
 public class CipherService {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final EncryptedMessageRepository repository;
     private final long userId;
     private final Map<Map<Algorithm, CipherOperation>, Function<String, String>> ciphers;
@@ -45,17 +46,23 @@ public class CipherService {
         );
     }
 
-    public Message saveMessage(String originalMessage, Algorithm algorithm, CipherOperation operation) {
+    public Message saveMessage(String originalMessage, String algorithm, String operation) {
+        Algorithm messageAlgorithm = algorithm.equalsIgnoreCase(Algorithm.CAESAR.name())
+            ? Algorithm.CAESAR
+            : Algorithm.VIGENERE;
+        CipherOperation messageOperation = operation.equalsIgnoreCase(CipherOperation.ENCRYPT.name())
+            ? CipherOperation.ENCRYPT
+            : CipherOperation.DECRYPT;
         OffsetDateTime offsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         String status = originalMessage != null ? "successfully" : "failed";
-        String encryptedMessage = ciphers.get(Map.of(algorithm, operation)).apply(originalMessage);
+        String encryptedMessage = ciphers.get(Map.of(messageAlgorithm, messageOperation)).apply(originalMessage);
 
         Message message = new Message(
             userId,
             originalMessage,
             encryptedMessage,
-            algorithm.name(),
-            operation.name(),
+            messageAlgorithm.name(),
+            messageOperation.name(),
             offsetDateTime.format(FORMATTER),
             status
         );
@@ -64,15 +71,29 @@ public class CipherService {
         return message;
     }
 
-    public List<Message> getAllHistory() {
+    public List<Message> getMessagesByDateAndAlgorithm(String param, String dateFrom, String dateTo) {
+        List<Message> messages;
+        if (dateFrom != null && dateTo != null) {
+            messages = getMessageByDate(dateFrom, dateTo);
+        } else {
+            switch (param) {
+                case "caesar" -> messages = getMessageByAlgorithm("CAESAR");
+                case "vigenere" -> messages = getMessageByAlgorithm("VIGENERE");
+                default -> messages = getAllHistory();
+            }
+        }
+        return messages;
+    }
+
+    private List<Message> getAllHistory() {
         return repository.findAll();
     }
 
-    public List<Message> getMessageByAlgorithm(String algorithm) {
+    private List<Message> getMessageByAlgorithm(String algorithm) {
         return repository.findByAlgorithm(algorithm);
     }
 
-    public List<Message> getMessageByDate(String inputDateFrom, String inputDateTo) {
+    private List<Message> getMessageByDate(String inputDateFrom, String inputDateTo) {
         OffsetDateTime dateFrom = parse(inputDateFrom);
         OffsetDateTime dateTo = parse(inputDateTo);
 
@@ -85,11 +106,10 @@ public class CipherService {
     }
 
     private OffsetDateTime parse(String date) {
-        if (date.contains("T")) {
-            date = date.replace('T', ' ') + ":00";
-        }
         return date.isEmpty()
             ? null
+            : date.contains("T")
+            ? OffsetDateTime.of(LocalDateTime.parse(date, TIME_FORMATTER), ZoneOffset.UTC)
             : OffsetDateTime.of(LocalDateTime.parse(date, FORMATTER), ZoneOffset.UTC);
     }
 }
