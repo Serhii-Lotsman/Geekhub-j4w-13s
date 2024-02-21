@@ -66,7 +66,6 @@ public class CipherService {
             offsetDateTime.format(FORMATTER),
             status
         );
-
         repository.saveMessage(message);
         return message;
     }
@@ -77,20 +76,12 @@ public class CipherService {
             messages = getMessageByDate(dateFrom, dateTo);
         } else {
             switch (param) {
-                case "caesar" -> messages = getMessageByAlgorithm("CAESAR");
-                case "vigenere" -> messages = getMessageByAlgorithm("VIGENERE");
-                default -> messages = getAllHistory();
+                case "caesar" -> messages = repository.findByAlgorithm("CAESAR");
+                case "vigenere" -> messages = repository.findByAlgorithm("VIGENERE");
+                default -> messages = repository.findAll();
             }
         }
         return messages;
-    }
-
-    private List<Message> getAllHistory() {
-        return repository.findAll();
-    }
-
-    private List<Message> getMessageByAlgorithm(String algorithm) {
-        return repository.findByAlgorithm(algorithm);
     }
 
     private List<Message> getMessageByDate(String inputDateFrom, String inputDateTo) {
