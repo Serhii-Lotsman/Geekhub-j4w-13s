@@ -24,43 +24,41 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
     @Override
     public void saveMessage(Message message) {
         String sql = """
-            INSERT INTO encryption_message (
+            INSERT INTO history (
             user_id,
             original_message,
             encrypted_message,
             algorithm,
-            date,
-            status,
-            operation)
+            operation,
+            date)
             VALUES (
             :userId,
             :originalMessage,
             :encryptedMessage,
             :algorithm,
-            :date,
-            :status,
-            :operation)
+            :operation,
+            :date)
             """;
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("userId", message.getUserId())
             .addValue("originalMessage", message.getOriginalMessage())
             .addValue("encryptedMessage", message.getEncryptedMessage())
             .addValue("algorithm", message.getAlgorithm())
-            .addValue("date", Timestamp.valueOf(message.getDate()))
-            .addValue("status", message.getStatus())
-            .addValue("operation", message.getOperation());
+            .addValue("operation", message.getOperation())
+            .addValue("date", Timestamp.valueOf(message.getDate()));
+
         jdbcTemplate.update(sql, parameterSource);
     }
 
     private Message getMessage(ResultSet rs) throws SQLException {
         return new Message(
+            rs.getInt("id"),
             rs.getInt("user_id"),
             rs.getString("original_message"),
             rs.getString("encrypted_message"),
             rs.getString("algorithm"),
             rs.getString("operation"),
-            formatDate(rs.getTimestamp("date")),
-            rs.getString("status")
+            formatDate(rs.getTimestamp("date"))
         );
     }
 
@@ -74,13 +72,13 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
 
     @Override
     public List<Message> findAll() {
-        String sql = "SELECT * FROM encryption_message ORDER BY date";
+        String sql = "SELECT * FROM history ORDER BY id";
         return jdbcTemplate.query(sql, (rs, rowNum) -> getMessage(rs));
     }
 
     @Override
     public List<Message> findByAlgorithm(String algorithmEncryption) {
-        String sql = "SELECT * FROM encryption_message WHERE algorithm = :algorithm ORDER BY date";
+        String sql = "SELECT * FROM history WHERE algorithm = :algorithm ORDER BY id";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("algorithm", algorithmEncryption);
 
@@ -91,9 +89,9 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
     public List<Message> findByDate(OffsetDateTime dateFrom, OffsetDateTime dateTo) {
         String sql =
             """
-                SELECT * FROM encryption_message
+                SELECT * FROM history
                         WHERE date AT TIME ZONE 'UTC' BETWEEN :dateFrom AND :dateTo
-                        ORDER BY date
+                        ORDER BY id
                 """;
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("dateFrom", dateFrom)
@@ -103,14 +101,8 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
     }
 
     @Override
-    public List<Message> findFailedEncoding() {
-        String sql = "SELECT * FROM encryption_message WHERE status = 'failed' ORDER BY algorithm, date";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> getMessage(rs));
-    }
-
-    @Override
     public List<Message> getPaginateHistory(int pageNum, int pageSize) {
-        String sql = "SELECT * FROM encryption_message ORDER BY date LIMIT :pageSize OFFSET :offset";
+        String sql = "SELECT * FROM history ORDER BY date LIMIT :pageSize OFFSET :offset";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("pageSize", pageSize)

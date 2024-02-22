@@ -3,7 +3,7 @@ package org.geekhub.service;
 import cipherAlgorithm.*;
 import org.geekhub.exception.EncryptException;
 import org.geekhub.model.Algorithm;
-import org.geekhub.model.CipherOperation;
+import org.geekhub.model.Operation;
 import org.geekhub.model.Message;
 import org.geekhub.repository.EncryptedMessageRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ public class CipherService {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final EncryptedMessageRepository repository;
     private final long userId;
-    private final Map<Map<Algorithm, CipherOperation>, Function<String, String>> ciphers;
+    private final Map<Map<Algorithm, Operation>, Function<String, String>> ciphers;
 
     public CipherService(
             @Value("${user.id}") long userId,
@@ -39,10 +39,10 @@ public class CipherService {
         Cipher caesarCipher = new CaesarCipher(caesarKey);
         Cipher vigenereCipher = new VigenereCipher(vigenereKey);
         this.ciphers = Map.of(
-            Map.of(Algorithm.CAESAR, CipherOperation.ENCRYPT), caesarCipher::encrypt,
-            Map.of(Algorithm.VIGENERE, CipherOperation.ENCRYPT), vigenereCipher::encrypt,
-            Map.of(Algorithm.CAESAR, CipherOperation.DECRYPT), caesarCipher::decrypt,
-            Map.of(Algorithm.VIGENERE, CipherOperation.DECRYPT), vigenereCipher::decrypt
+            Map.of(Algorithm.CAESAR, Operation.ENCRYPT), caesarCipher::encrypt,
+            Map.of(Algorithm.VIGENERE, Operation.ENCRYPT), vigenereCipher::encrypt,
+            Map.of(Algorithm.CAESAR, Operation.DECRYPT), caesarCipher::decrypt,
+            Map.of(Algorithm.VIGENERE, Operation.DECRYPT), vigenereCipher::decrypt
         );
     }
 
@@ -50,21 +50,20 @@ public class CipherService {
         Algorithm messageAlgorithm = algorithm.equalsIgnoreCase(Algorithm.CAESAR.name())
             ? Algorithm.CAESAR
             : Algorithm.VIGENERE;
-        CipherOperation messageOperation = operation.equalsIgnoreCase(CipherOperation.ENCRYPT.name())
-            ? CipherOperation.ENCRYPT
-            : CipherOperation.DECRYPT;
+        Operation messageOperation = operation.equalsIgnoreCase(Operation.ENCRYPT.name())
+            ? Operation.ENCRYPT
+            : Operation.DECRYPT;
         OffsetDateTime offsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
-        String status = originalMessage != null ? "successfully" : "failed";
         String encryptedMessage = ciphers.get(Map.of(messageAlgorithm, messageOperation)).apply(originalMessage);
 
         Message message = new Message(
+            null,
             userId,
             originalMessage,
             encryptedMessage,
             messageAlgorithm.name(),
             messageOperation.name(),
-            offsetDateTime.format(FORMATTER),
-            status
+            offsetDateTime.format(FORMATTER)
         );
         repository.saveMessage(message);
         return message;

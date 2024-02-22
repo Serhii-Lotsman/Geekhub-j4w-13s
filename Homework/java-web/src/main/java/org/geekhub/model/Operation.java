@@ -1,6 +1,6 @@
 package org.geekhub.model;
 
-public enum CipherOperation {
+public enum Operation {
     ENCRYPT,
     DECRYPT
 }

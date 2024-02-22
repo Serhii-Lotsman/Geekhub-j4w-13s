@@ -1,31 +1,39 @@
 package org.geekhub.model;
 
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+
+
 public class Message {
+    private Integer id;
     private long userId;
     private String originalMessage;
     private String encryptedMessage;
     private String algorithm;
-    private String date;
-    private String status;
     private String operation;
+    private String date;
 
-    public Message(long userId,
-                   String originalMessage,
-                   String encryptedMessage,
-                   String algorithm,
-                   String operation,
-                   String date,
-                   String status) {
+    public Message(@Nullable Integer id,
+                   long userId,
+                   @NonNull String originalMessage,
+                   @NonNull String encryptedMessage,
+                   @NonNull String algorithm,
+                   @NonNull String operation,
+                   @NonNull String date) {
+        this.id = id;
         this.userId = userId;
         this.originalMessage = originalMessage;
         this.encryptedMessage = encryptedMessage;
         this.algorithm = algorithm;
         this.operation = operation;
         this.date = date;
-        this.status = status;
     }
 
     public Message(){
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public long getUserId() {
@@ -44,15 +52,11 @@ public class Message {
         return algorithm;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
     public String getOperation() {
         return operation;
+    }
+
+    public String getDate() {
+        return date;
     }
 }
