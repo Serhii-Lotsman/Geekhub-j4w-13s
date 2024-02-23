@@ -1,5 +1,8 @@
-package org.geekhub.users;
+package org.geekhub.service;
 
+import org.geekhub.exception.UserException;
+import org.geekhub.model.User;
+import org.geekhub.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,12 +14,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUser(int userId) {
+    public User getUser(long userId) {
         return userRepository.getUser(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+            .orElseThrow(() -> new UserException("User with id " + userId + " not found"));
     }
 
-    public boolean isUserExist(int userId) {
+    public boolean isUserExist(long userId) {
         return userRepository.isUserExists(userId);
     }
 }

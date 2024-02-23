@@ -47,7 +47,10 @@ th {
 
 #buttons {
     margin-left: 2%;
-    margin-bottom: 1%;
+    margin-bottom: 2%;
+    margin-right: 2%;
+    display: flex;
+    justify-content: space-between;
 }
 
 #algorithm {
@@ -59,4 +62,20 @@ th {
 #inputs {
     margin-bottom: 20px;
     margin-top: 20px;
+}
+
+.textAlign {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.form {
+    margin-bottom: 2%;
+    border-color: dodgerblue;
+}
+
+.dateText {
+    margin-right: 2%;
 }

@@ -17,13 +17,12 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework:spring-jdbc:6.1.0")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0")
-    implementation("org.postgresql:postgresql:42.6.0")
+    implementation("org.postgresql:postgresql:42.7.2")
     implementation("org.flywaydb:flyway-core:10.8.1")
     implementation("com.cipherAlgorithm:cipher:0.0.1")
     implementation("com.jayway.jsonpath:json-path:2.9.0")

@@ -2,29 +2,45 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layouts/base_layout}">
 <head>
-    <title>History</title>
+    <title>Cipher-Maker | History</title>
 </head>
 
 <body>
 <section layout:fragment="content">
     <h1>All history</h1>
     <div id="buttons">
-        <form th:action="@{/history}" method="get">
-            <button class="btn btn-outline-primary" type="submit" name="param" value="caesar">Get Caesar Messages</button>
-        </form>
-        <form th:action="@{/history}" method="get">
-            <button class="btn btn-outline-primary" type="submit" name="param" value="vigenere">Get Vigenère Messages</button>
-        </form>
-
-        <form th:action="@{/history}" method="get">
-            <label for="dateFrom">From:</label>
-            <input class="border border-primary" type="datetime-local" id="dateFrom" name="dateFrom" required>
-
-            <label for="dateTo">To:</label>
-            <input class="border border-primary" type="datetime-local" id="dateTo" name="dateTo" required>
-
-            <button class="btn btn-outline-primary" type="submit">Get by date</button>
-        </form>
+        <div>
+            <form class="form" th:action="@{/history}" method="get">
+                <button class="btn btn-outline-primary" type="submit" name="param" value="vigenere">Get Vigenère
+                    Messages
+                </button>
+            </form>
+            <form class="form" th:action="@{/history}" method="get">
+                <button class="btn btn-outline-primary" type="submit" name="param" value="caesar">Get Caesar
+                    Messages
+                </button>
+            </form>
+            <form class="form" th:action="@{/history/statistics}" method="get">
+                <button class="btn btn-outline-primary" type="submit" name="statistics" value="statistics">Show
+                    statistics
+                </button>
+            </form>
+        </div>
+        <div>
+            <form class="form-inline" th:action="@{/history}" method="get">
+                <div class="textAlign form-group">
+                    <label class="dateText" for="dateFrom">From:</label>
+                    <input class="form-control form" type="datetime-local" id="dateFrom" name="dateFrom" required>
+                </div>
+                <div class="textAlign form-group">
+                    <label class="dateText" for="dateTo">To:</label>
+                    <input class="form-control form" type="datetime-local" id="dateTo" name="dateTo" required>
+                </div>
+                <div class="textAlign">
+                    <button class="btn btn-outline-primary" type="submit">Get by date</button>
+                </div>
+            </form>
+        </div>
     </div>
     <table>
         <tr>

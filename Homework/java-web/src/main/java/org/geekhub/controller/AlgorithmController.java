@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/algorithms")
 public class AlgorithmController {
@@ -18,7 +20,10 @@ public class AlgorithmController {
 
     @GetMapping
     public ModelAndView algorithm(ModelAndView modelAndView) {
-        modelAndView.addObject("addMessage", new Message());
+        modelAndView.addAllObjects(Map.of(
+            "addMessage", new Message(),
+            "activeButton", "algorithms"
+        ));
         return modelAndView;
     }
 
@@ -28,8 +33,8 @@ public class AlgorithmController {
                                      String operation,
                                      ModelAndView modelAndView) {
         Message fullMessage = service.saveMessage(inputMessage, algorithm, operation);
-        modelAndView.setViewName("algorithms");
         modelAndView.addObject("message", fullMessage);
+        modelAndView.setViewName("algorithms");
         return modelAndView;
     }
 }

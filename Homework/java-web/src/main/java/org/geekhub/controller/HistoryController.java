@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/history")
@@ -24,8 +25,17 @@ public class HistoryController {
                                 String dateFrom,
                                 String dateTo) {
         List<Message> messages = cipherService.getMessagesByDateAndAlgorithm(param, dateFrom, dateTo);
-        modelAndView.addObject("messages", messages);
+        modelAndView.addAllObjects(Map.of(
+            "messages", messages,
+            "activeButton", "history"
+        ));
         modelAndView.setViewName("history");
+        return modelAndView;
+    }
+
+    @GetMapping("/statistics")
+    public ModelAndView messageStatistic(ModelAndView modelAndView) {
+        var countOfUsage = cipherService.getCountOfUsage();
         return modelAndView;
     }
 

@@ -1,5 +1,6 @@
-package org.geekhub.users;
+package org.geekhub.repository;
 
+import org.geekhub.model.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -26,7 +27,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> getUser(int userId) {
+    public Optional<User> getUser(long userId) {
         String query = "SELECT * FROM users WHERE user_id = :userId";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
