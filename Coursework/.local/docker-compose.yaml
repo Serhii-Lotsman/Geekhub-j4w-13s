@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  crew-craft-default:
+    image: postgres
+    ports:
+      - 5435:5432
+    volumes:
+      - ./def:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD_DEF}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_DB=${DB_NAME}
+  crew-craft-prod:
+    image: postgres
+    ports:
+      - 5436:5432
+    volumes:
+      - ./prod:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD_PROD}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_DB=${DB_NAME}
