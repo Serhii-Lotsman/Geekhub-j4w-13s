@@ -19,7 +19,7 @@ public class Message {
                    @NonNull String encryptedMessage,
                    @NonNull String algorithm,
                    @NonNull String operation,
-                   @NonNull String date) {
+                   @Nullable String date) {
         this.id = id;
         this.userId = userId;
         this.originalMessage = originalMessage;

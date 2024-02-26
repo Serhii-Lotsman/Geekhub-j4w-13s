@@ -105,11 +105,12 @@ public class CipherService {
     }
 
     private OffsetDateTime parse(String date) {
-        return date.isEmpty()
-            ? null
-            : date.contains("T")
+        OffsetDateTime dateTime = date.contains("T")
             ? OffsetDateTime.of(LocalDateTime.parse(date, TIME_FORMATTER), ZoneOffset.UTC)
             : OffsetDateTime.of(LocalDateTime.parse(date, FORMATTER), ZoneOffset.UTC);
+        return date.isEmpty()
+            ? null
+            : dateTime;
     }
 
     public List<Message> getAllHistory(int pageNum, int pageSize) {
@@ -128,7 +129,7 @@ public class CipherService {
                 map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
     }
 
-    public Map<String,Long> getUniqueMessages() {
+    public Map<String, Long> getUniqueMessages() {
         List<Message> messages = repository.findAll();
         return getMapUniqueMessages(messages);
     }
