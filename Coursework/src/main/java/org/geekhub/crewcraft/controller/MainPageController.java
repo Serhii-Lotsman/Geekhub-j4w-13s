@@ -1,14 +1,13 @@
-package org.geekhub.controller;
+package org.geekhub.crewcraft.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class CipherController {
+public class MainPageController {
     @GetMapping({"/", "/home"})
     public ModelAndView index(ModelAndView modelAndView) {
-        modelAndView.addObject("activeButton", "home");
         modelAndView.setViewName("index");
         return modelAndView;
     }

@@ -36,6 +36,8 @@ public class HistoryController {
     @GetMapping("/statistics")
     public ModelAndView messageStatistic(ModelAndView modelAndView) {
         var countOfUsage = cipherService.getCountOfUsage();
+        modelAndView.setViewName("statistics");
+        modelAndView.addObject("countOfUsage", countOfUsage);
         return modelAndView;
     }
 

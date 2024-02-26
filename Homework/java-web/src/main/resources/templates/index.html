@@ -1,47 +1,44 @@
 <!doctype html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/layouts/base_layout}">
-
-<head>
-    <title>Cipher-Maker | Home</title>
+<html lang="en">
+<head th:replace="~{/fragments/fragments.html :: title}">
+    <title>Home</title>
 </head>
 
 <body>
-<section layout:fragment="content">
-    <h1>How to encrypt a message?</h1>
-    <div class="textInsert">
-        Here is a regular message encryptor, but with an interesting additional tool.<br>
-        You can not only encrypt your message, but also decrypt it. Brilliant, I know.<br>
-        <hr>
-        Briefly about the functionality:
-        <ul>
-            <li>
-                On the encrypt/decrypt tab, you can encrypt or decrypt messages with several (Caesar and Vigenere)
-                ciphers.
-            </li>
-            <li>
-                You can toggle between encrypt/decrypt and switch between encryptors for now.
-            </li>
-            <li>
-                On the history tab, you can view the message history
-            </li>
-            <li>
-                You can also access the history of all messages that have been used.
-            </li>
-            <li>
-                View the entire history of messages
-            <li>
-                View the number of messages encrypted/decrypted by this or that cipher
-            </li>
-            <li>
-                by date, by cipher and much more
-            </li>
-        </ul>
-        <hr>
-        So, encrypt as much as you want!
-
-    </div>
-</section>
+<div th:replace="~{/fragments/fragments.html :: header}"></div>
+<h1>How to encrypt a message?</h1>
+<div class="textInsert">
+    Here is a regular message encryptor, but with an interesting additional tool.<br>
+    You can not only encrypt your message, but also decrypt it. Brilliant, I know.<br>
+    <hr>
+    Briefly about the functionality:
+    <ul>
+        <li>
+            On the encrypt/decrypt tab, you can encrypt or decrypt messages with several (Caesar and Vigenere)
+            ciphers.
+        </li>
+        <li>
+            You can toggle between encrypt/decrypt and switch between encryptors for now.
+        </li>
+        <li>
+            On the history tab, you can view the message history
+        </li>
+        <li>
+            You can also access the history of all messages that have been used.
+        </li>
+        <li>
+            View the entire history of messages
+        <li>
+            View the number of messages encrypted/decrypted by this or that cipher
+        </li>
+        <li>
+            by date, by cipher and much more
+        </li>
+    </ul>
+    <hr>
+    So, encrypt as much as you want!
+</div>
+<div th:replace="~{/fragments/fragments.html :: footer}"></div>
 </body>
 
 </html>

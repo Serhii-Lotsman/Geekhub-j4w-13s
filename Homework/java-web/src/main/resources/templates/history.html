@@ -1,28 +1,27 @@
 <!doctype html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/layouts/base_layout}">
-<head>
-    <title>Cipher-Maker | History</title>
+<html lang="en">
+<head th:replace="~{/fragments/fragments.html :: title}">
+    <title></title>
 </head>
 
 <body>
-<section layout:fragment="content">
+<div th:replace="~{/fragments/fragments.html :: header}"></div>
     <h1>All history</h1>
     <div id="buttons">
         <div>
             <form class="form" th:action="@{/history}" method="get">
-                <button class="btn btn-outline-primary" type="submit" name="param" value="vigenere">Get Vigenère
-                    Messages
+                <button class="btn btn-outline-primary" type="submit" name="param" value="vigenere">
+                    Get Vigenère Messages
                 </button>
             </form>
             <form class="form" th:action="@{/history}" method="get">
-                <button class="btn btn-outline-primary" type="submit" name="param" value="caesar">Get Caesar
-                    Messages
+                <button class="btn btn-outline-primary" type="submit" name="param" value="caesar">
+                    Get Caesar Messages
                 </button>
             </form>
             <form class="form" th:action="@{/history/statistics}" method="get">
-                <button class="btn btn-outline-primary" type="submit" name="statistics" value="statistics">Show
-                    statistics
+                <button class="btn btn-outline-primary" type="submit" name="statistics" value="statistics">
+                    Show statistics
                 </button>
             </form>
         </div>
@@ -60,7 +59,7 @@
             <td th:text="*{message.date}"></td>
         </tr>
     </table>
-</section>
+<div th:replace="~{/fragments/fragments.html :: footer}"></div>
 </body>
 
 </html>
