@@ -12,9 +12,9 @@
 </head>
 
 <body>
-<header th:fragment="header">
-    <nav class="navbar bg-body-tertiary">
-        <form class="container-fluid justify-content-start">
+<header th:fragment="header" class="sticky-top">
+    <nav class="navbar">
+        <form class="nav-margin">
             <button class="btn btn-outline-success me-2" type="button">Main button</button>
             <button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>
         </form>
@@ -22,10 +22,10 @@
 </header>
 
 <footer th:fragment="footer">
-    <nav class="navbar bg-body-tertiary">
-        <form class="container-fluid justify-content-start">
+    <nav class="navbar">
+        <div class="nav-margin">
 
-        </form>
+        </div>
     </nav>
 </footer>
 

@@ -1,0 +1,15 @@
+.navbar {
+    display: flex;
+    justify-content: flex-start;
+    background-color: rgb(66, 62, 62);
+    width: 100%;
+}
+
+.main-body {
+    margin: 2% 2% 2% 2%;
+}
+
+.nav-margin {
+    margin-left: 2%;
+    margin-right: 2%;
+}
