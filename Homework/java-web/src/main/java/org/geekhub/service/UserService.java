@@ -5,6 +5,8 @@ import org.geekhub.model.User;
 import org.geekhub.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -21,5 +23,9 @@ public class UserService {
 
     public boolean isUserExist(long userId) {
         return userRepository.isUserExists(userId);
+    }
+
+    public List<User> getUsers() {
+        return userRepository.getUsers();
     }
 }

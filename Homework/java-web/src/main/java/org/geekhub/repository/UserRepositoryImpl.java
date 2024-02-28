@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,16 +29,22 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> getUser(long userId) {
-        String query = "SELECT * FROM users WHERE user_id = :userId";
+        String sql = "SELECT * FROM users WHERE user_id = :userId";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
             .addValue("userId", userId);
 
         try {
-            User user = jdbcTemplate.queryForObject(query, params, this::userMap);
+            User user = jdbcTemplate.queryForObject(sql, params, this::userMap);
             return Optional.ofNullable(user);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<User> getUsers() {
+        String sql = "SELECT * FROM users ORDER BY user_id";
+        return jdbcTemplate.query(sql, this::userMap);
     }
 }

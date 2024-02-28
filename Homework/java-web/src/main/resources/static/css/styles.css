@@ -79,3 +79,20 @@ th {
 .dateText {
     margin-right: 2%;
 }
+
+#users {
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.mainBody {
+    margin-left: 2%;
+    margin-right: 2%;
+    padding-top: 5px;
+}
+
+.messageStyle {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

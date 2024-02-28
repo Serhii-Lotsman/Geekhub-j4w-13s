@@ -126,7 +126,7 @@ public class CipherService {
         return messages.stream()
             .map(Message::getAlgorithm)
             .collect(HashMap::new, (map, algorithmName) ->
-                map.merge(algorithmName, 1, Integer::sum), HashMap::putAll);
+                map.merge(algorithmName.toLowerCase(), 1, Integer::sum), HashMap::putAll);
     }
 
     public Map<String, Long> getUniqueMessages() {
@@ -137,12 +137,15 @@ public class CipherService {
     private Map<String, Long> getMapUniqueMessages(List<Message> messages) {
         return messages.stream()
             .map(message ->
-                String.format("'%s' was encrypted via %s into '%s'",
+                String.format("'%s' was %sed via %s algorithm into '%s'",
                     message.getOriginalMessage(),
-                    message.getAlgorithm(),
+                    message.getOperation().toLowerCase(),
+                    message.getAlgorithm().toLowerCase(),
                     message.getEncryptedMessage()
                 ))
-            .collect(Collectors.groupingBy(message ->
-                message, Collectors.counting()));
+            .collect(Collectors.groupingBy(message -> message, Collectors.counting()))
+            .entrySet().stream()
+            .filter(entry -> entry.getValue() >= 2)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
