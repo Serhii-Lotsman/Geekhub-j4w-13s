@@ -35,38 +35,32 @@ class CipherServiceTest {
     @BeforeEach
     void setUp() {
         userService = new UserService(userRepository);
-        cipherService = new CipherService(USER_ID, 3, "key", repository, userService);
+        cipherService = new CipherService(3, "key", repository, userService);
     }
 
     @Test
     void saveMessage_shouldThrowIllegalStateException_whenUserIdNotExist() {
-        cipherService = new CipherService(12345, 3, "key", repository, userService);
+        cipherService = new CipherService(3, "key", repository, userService);
         assertThrows(UserException.class, () ->
-            cipherService.saveMessage(ORIGINAL_MESSAGE, ALGORITHM, OPERATION));
+            cipherService.saveMessage(USER_ID ,ORIGINAL_MESSAGE, ALGORITHM, OPERATION));
     }
 
     @Test
     void saveMessage_shouldSaveMessageAndReturnIt_always() {
         when(userService.isUserExist(USER_ID)).thenReturn(true);
-        Message savedMessage = cipherService.saveMessage(ORIGINAL_MESSAGE, ALGORITHM, OPERATION);
+        Message savedMessage = cipherService.saveMessage(USER_ID ,ORIGINAL_MESSAGE, ALGORITHM, OPERATION);
         assertNotNull(savedMessage);
         verify(repository, times(1)).saveMessage(savedMessage);
     }
 
     @Test
-    void getMessagesByDateAndAlgorithm_shouldReturnMessagesByAlgorithm_whenValidAlgorithm() {
-        cipherService.getMessagesByDateAndAlgorithm(ALGORITHM, null, null);
+    void getMessagesByAlgorithm_shouldReturnMessagesByAlgorithm_whenValidAlgorithm() {
+        cipherService.getMessagesByAlgorithm(ALGORITHM);
         verify(repository, times(1)).findByAlgorithm(ALGORITHM.toUpperCase());
     }
 
     @Test
-    void getMessagesByDateAndAlgorithm_shouldReturnAllMessages_whenDateRangeIsNull() {
-        cipherService.getMessagesByDateAndAlgorithm("", null, null);
-        verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    void getMessagesByDateAndAlgorithm_shouldReturnMessagesByDateRange_whenDateRangeIsSpecified() {
+    void getMessageByDate_shouldReturnMessagesByDateRange_whenDateRangeIsSpecified() {
         String dateFrom = "2024-02-10T12:00";
         String dateTo = "2024-02-15T12:00";
         String offset = "+00:00";
@@ -76,7 +70,7 @@ class CipherServiceTest {
         OffsetDateTime fromDateTime = OffsetDateTime.parse(dateFromWithOffset);
         OffsetDateTime toDateTime = OffsetDateTime.parse(dateToWithOffset);
 
-        cipherService.getMessagesByDateAndAlgorithm(ALGORITHM, dateFrom, dateTo);
+        cipherService.getMessageByDate(dateFrom, dateTo);
         verify(repository, times(1)).findByDate(fromDateTime, toDateTime);
     }
 }

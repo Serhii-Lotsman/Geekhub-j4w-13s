@@ -20,11 +20,8 @@ public class HistoryController {
     private CipherService cipherService;
 
     @GetMapping
-    public ModelAndView history(ModelAndView modelAndView,
-                                @RequestParam(defaultValue = "") String param,
-                                String dateFrom,
-                                String dateTo) {
-        List<Message> messages = cipherService.getMessagesByDateAndAlgorithm(param, dateFrom, dateTo);
+    public ModelAndView history(ModelAndView modelAndView, @RequestParam(defaultValue = "") String param) {
+        List<Message> messages = cipherService.getMessagesByAlgorithm(param);
         modelAndView.addAllObjects(Map.of(
             "messages", messages,
             "activeButton", "history"
@@ -33,13 +30,28 @@ public class HistoryController {
         return modelAndView;
     }
 
+    @GetMapping("/date-range")
+    public ModelAndView messagesByDate(ModelAndView modelAndView, String dateFrom, String dateTo) {
+        List<Message> messages = cipherService.getMessageByDate(dateFrom, dateTo);
+        modelAndView.setViewName("date-range");
+        modelAndView.addAllObjects(Map.of(
+            "messages", messages,
+            "activeButton", "history"
+            ));
+        modelAndView.addObject("messages", messages);
+        return modelAndView;
+    }
+
     @GetMapping("/statistics")
     public ModelAndView messageStatistic(ModelAndView modelAndView) {
         var countOfUsage = cipherService.getCountOfUsage();
         var uniqueMessages = cipherService.getUniqueMessages();
         modelAndView.setViewName("statistics");
-        modelAndView.addObject("countOfUsage", countOfUsage);
-        modelAndView.addObject("uniqueMessages", uniqueMessages);
+        modelAndView.addAllObjects(Map.of(
+            "countOfUsage", countOfUsage,
+            "uniqueMessages", uniqueMessages,
+            "activeButton", "history"
+        ));
         return modelAndView;
     }
 

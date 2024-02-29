@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{/fragments/fragments.html :: title}">
+    <title>User by id</title>
+</head>
+
+<body>
+<div th:replace="~{/fragments/fragments.html :: header}"></div>
+<h1>Users</h1>
+<div id="users">
+    <div th:each="element : ${user}">
+        <span>User with id '</span>
+        <strong th:text="*{element.userId}"></strong>
+        <span>' and name '</span>
+        <strong th:text="*{element.username}"></strong>
+        <span>'</span>
+    </div>
+</div>
+
+<div th:replace="~{/fragments/fragments.html :: footer}"></div>
+</body>
+
+</html>

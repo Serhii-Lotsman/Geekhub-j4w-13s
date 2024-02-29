@@ -28,18 +28,15 @@ public class CipherService {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final EncryptedMessageRepository repository;
-    private final long userId;
     private final UserService userService;
     private final Map<Map<Algorithm, Operation>, Function<String, String>> ciphers;
 
     public CipherService(
-            @Value("${user.id}") long userId,
             @Value("${cipher.caesar.key}") int caesarKey,
             @Value("${cipher.vigenere.key}") String vigenereKey,
             EncryptedMessageRepository repository,
             UserService userService
     ) {
-        this.userId = userId;
         this.repository = repository;
         this.userService = userService;
         Cipher caesarCipher = new CaesarCipher(caesarKey);
@@ -52,7 +49,7 @@ public class CipherService {
         );
     }
 
-    public Message saveMessage(String originalMessage, String algorithm, String operation) {
+    public Message saveMessage(long userId, String originalMessage, String algorithm, String operation) {
         if (!userService.isUserExist(userId)) {
             throw new UserException("User with id " + userId + " not exists");
         }
@@ -78,21 +75,17 @@ public class CipherService {
         return message;
     }
 
-    public List<Message> getMessagesByDateAndAlgorithm(String param, String dateFrom, String dateTo) {
+    public List<Message> getMessagesByAlgorithm(String param) {
         List<Message> messages;
-        if (dateFrom != null && dateTo != null) {
-            messages = getMessageByDate(dateFrom, dateTo);
-        } else {
-            switch (param) {
-                case "caesar" -> messages = repository.findByAlgorithm("CAESAR");
-                case "vigenere" -> messages = repository.findByAlgorithm("VIGENERE");
-                default -> messages = repository.findAll();
-            }
+        switch (param) {
+            case "caesar" -> messages = repository.findByAlgorithm("CAESAR");
+            case "vigenere" -> messages = repository.findByAlgorithm("VIGENERE");
+            default -> messages = repository.findAll();
         }
         return messages;
     }
 
-    private List<Message> getMessageByDate(String inputDateFrom, String inputDateTo) {
+    public List<Message> getMessageByDate(String inputDateFrom, String inputDateTo) {
         OffsetDateTime dateFrom = parse(inputDateFrom);
         OffsetDateTime dateTo = parse(inputDateTo);
 

@@ -28,11 +28,14 @@ public class AlgorithmController {
     }
 
     @PostMapping
-    public ModelAndView submitCipher(String inputMessage,
-                                     String algorithm,
-                                     String operation,
-                                     ModelAndView modelAndView) {
-        Message fullMessage = service.saveMessage(inputMessage, algorithm, operation);
+    public ModelAndView submitCipher(
+        long userId,
+        String inputMessage,
+        String algorithm,
+        String operation,
+        ModelAndView modelAndView
+    ) {
+        Message fullMessage = service.saveMessage(userId, inputMessage, algorithm, operation);
         modelAndView.addObject("message", fullMessage);
         modelAndView.setViewName("algorithms");
         return modelAndView;

@@ -59,11 +59,6 @@ th {
     justify-content: space-around;
 }
 
-#inputs {
-    margin-bottom: 20px;
-    margin-top: 20px;
-}
-
 .textAlign {
     text-align: right;
     display: flex;

@@ -5,23 +5,38 @@ import org.geekhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     UserService userService;
-    @GetMapping( "/users")
-    public ModelAndView index(ModelAndView modelAndView) {
+
+    @GetMapping
+    public ModelAndView getUsers(ModelAndView modelAndView) {
         List<User> users = userService.getUsers();
         modelAndView.addAllObjects(Map.of(
             "activeButton", "users",
             "users", users
         ));
         modelAndView.setViewName("users");
+        return modelAndView;
+    }
+
+    @GetMapping( "/{id}")
+    public ModelAndView getUserById(ModelAndView modelAndView, @PathVariable long id) {
+        User user = userService.getUser(id);
+        modelAndView.addAllObjects(Map.of(
+            "activeButton", "users",
+            "user", user
+        ));
+        modelAndView.setViewName("userById");
         return modelAndView;
     }
 
