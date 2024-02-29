@@ -10,7 +10,8 @@
         <div>
             <form th:action="@{/algorithms}" th:object="${message}" method="post">
                 <div style="margin-bottom: 10px">
-                    <label>Choose user id:
+                    <h3>Choose user id:</h3>
+                    <label>
                         <input class="form-control form" type="text" name="userId" placeholder="Enter id" required>
                     </label>
                 </div>
@@ -42,7 +43,8 @@
                     </label>
                 </div>
                 <div style="margin-top: 10px">
-                    <label>Enter a message to encrypt or decrypt it:
+                    <h3>Enter a message to encrypt or decrypt it:</h3>
+                    <label>
                         <input class="form-control form" type="text" name="inputMessage" placeholder="Enter message here" required>
                     </label>
                 </div>

@@ -1,5 +1,8 @@
 package org.geekhub.controller.api;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.model.User;
 import org.geekhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("api/v3/users")
+@Tag(name="get-users-controller", description = "Get users or user by id")
 public class GetUsersRequest {
     @Autowired
     UserService userService;
@@ -22,6 +26,10 @@ public class GetUsersRequest {
     }
 
     @GetMapping( "/{id}")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User with id successfully found"),
+        @ApiResponse(responseCode = "500", description = "This user's id doesn't exist")
+    })
     public User getUserById(@PathVariable long id) {
         return userService.getUser(id);
     }
