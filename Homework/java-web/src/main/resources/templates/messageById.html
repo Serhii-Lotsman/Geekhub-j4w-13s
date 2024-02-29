@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{/fragments/fragments.html :: title}">
+    <title></title>
+</head>
+
+<body>
+<div th:replace="~{/fragments/fragments.html :: header}"></div>
+<h1>Message by id <span th:text="${message.id}"></span></h1>
+    <div id="buttons">
+        <div>
+            <form class="form" th:action="@{/history}" method="get">
+                <button class="btn btn-outline-primary" type="submit" name="param" value="vigenere">
+                    Get Vigenère Messages
+                </button>
+            </form>
+            <form class="form" th:action="@{/history}" method="get">
+                <button class="btn btn-outline-primary" type="submit" name="param" value="caesar">
+                    Get Caesar Messages
+                </button>
+            </form>
+            <form class="form" th:action="@{/history/statistics}" method="get">
+                <button class="btn btn-outline-primary" type="submit" name="statistics" value="statistics">
+                    Show statistics
+                </button>
+            </form>
+        </div>
+        <div>
+            <form class="form-inline" th:action="@{/history/date-range}" method="get">
+                <div class="textAlign form-group">
+                    <label class="dateText" for="dateFrom">From:</label>
+                    <input class="form-control form" type="datetime-local" id="dateFrom" name="dateFrom" required>
+                </div>
+                <div class="textAlign form-group">
+                    <label class="dateText" for="dateTo">To:</label>
+                    <input class="form-control form" type="datetime-local" id="dateTo" name="dateTo" required>
+                </div>
+                <div class="textAlign">
+                    <button class="btn btn-outline-primary" type="submit">Get by date</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table>
+        <tr>
+            <th>UserID</th>
+            <th>Original message</th>
+            <th>Modified message</th>
+            <th>Algorithm</th>
+            <th>Operation</th>
+            <th>Date</th>
+        </tr>
+        <tr th:each="element : ${message}">
+            <td th:text="*{element.userId}"></td>
+            <td th:text="*{element.originalMessage}"></td>
+            <td th:text="*{element.encryptedMessage}"></td>
+            <td th:text="*{element.algorithm}"></td>
+            <td th:text="*{element.operation}"></td>
+            <td th:text="*{element.date}"></td>
+        </tr>
+    </table>
+<div th:replace="~{/fragments/fragments.html :: footer}"></div>
+</body>
+
+</html>

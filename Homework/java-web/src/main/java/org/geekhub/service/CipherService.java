@@ -80,9 +80,18 @@ public class CipherService {
         switch (param) {
             case "caesar" -> messages = repository.findByAlgorithm("CAESAR");
             case "vigenere" -> messages = repository.findByAlgorithm("VIGENERE");
-            default -> messages = repository.findAll();
+            default -> messages = getAllMessages();
         }
         return messages;
+    }
+
+    public List<Message> getAllMessages() {
+        return repository.findAll();
+    }
+
+    public Message getMessageById(long id) {
+        return repository.findMessageById(id)
+            .orElseThrow(() -> new EncryptException("User with id " + id + " not found"));
     }
 
     public List<Message> getMessageByDate(String inputDateFrom, String inputDateTo) {
@@ -113,13 +122,13 @@ public class CipherService {
         return repository.getPaginateHistory(pageNum, pageSize);
     }
 
-    public Map<String, Integer> getCountOfUsage() {
+    public Map<String, Long> getCountOfUsage() {
         List<Message> messages = repository.findAll();
 
         return messages.stream()
             .map(Message::getAlgorithm)
             .collect(HashMap::new, (map, algorithmName) ->
-                map.merge(algorithmName.toLowerCase(), 1, Integer::sum), HashMap::putAll);
+                map.merge(algorithmName.toLowerCase(), 1L, Long::sum), HashMap::putAll);
     }
 
     public Map<String, Long> getUniqueMessages() {

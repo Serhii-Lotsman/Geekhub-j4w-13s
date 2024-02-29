@@ -1,6 +1,7 @@
 package org.geekhub.repository;
 
 import org.geekhub.model.Message;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepository {
@@ -98,6 +100,19 @@ public class EncryptedMessageRepositoryImpl implements EncryptedMessageRepositor
             .addValue("dateTo", dateTo);
 
         return jdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> getMessage(rs));
+    }
+
+    @Override
+    public Optional<Message> findMessageById(long id) {
+        String sql = "SELECT * FROM history WHERE id = :id";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("id", id);
+        try {
+            Message message = jdbcTemplate.queryForObject(sql, parameterSource, (rs, num) -> getMessage(rs));
+            return Optional.ofNullable(message);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
