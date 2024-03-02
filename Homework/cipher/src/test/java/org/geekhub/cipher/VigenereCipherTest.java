@@ -1,4 +1,4 @@
-package cipherAlgorithm;
+package org.geekhub.cipher;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

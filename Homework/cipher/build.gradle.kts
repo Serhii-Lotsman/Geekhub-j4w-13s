@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.cipherAlgorithm"
+group = "com.cipher"
 version = "0.0.1"
 
 dependencies {

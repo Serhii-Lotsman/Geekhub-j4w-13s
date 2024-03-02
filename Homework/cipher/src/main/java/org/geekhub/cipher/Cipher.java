@@ -1,4 +1,4 @@
-package cipherAlgorithm;
+package org.geekhub.cipher;
 
 public interface Cipher {
     String encrypt(String message);

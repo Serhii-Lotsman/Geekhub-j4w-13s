@@ -1,4 +1,4 @@
-package cipherAlgorithm;
+package org.geekhub.cipher;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
