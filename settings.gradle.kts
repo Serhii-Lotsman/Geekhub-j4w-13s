@@ -21,4 +21,3 @@ include("Homework:cipher")
 include ("Homework:java-web")
 
 include ("Coursework")
-findProject(":Homework:cipher")?.name = "cipher"
