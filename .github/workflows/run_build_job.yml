@@ -22,3 +22,6 @@ jobs:
 
       - name: Execute gradle assemble
         run: ./gradlew assemble
+        env:
+          LOGIN_REPSY: ${{ secrets.LOGIN_REPSY }}
+          PASSWORD_REPSY: ${{ secrets.PASSWORD_REPSY }}

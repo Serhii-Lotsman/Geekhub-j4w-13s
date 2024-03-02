@@ -18,9 +18,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Publish with build to repsy.io
-        run: |
-          echo $LOGIN_REPSY ${{ secrets.LOGIN_REPSY }} TEST
-          ./gradlew :Homework:cipher:publish
+        run: ./gradlew :Homework:cipher:publish
         env:
           LOGIN_REPSY: ${{ secrets.LOGIN_REPSY }}
           PASSWORD_REPSY: ${{ secrets.PASSWORD_REPSY }}
