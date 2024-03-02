@@ -19,3 +19,6 @@ jobs:
 
       - name: Collect test report
         run: ./gradlew jacocoTestReport
+        env:
+          LOGIN_REPSY: ${{ secrets.LOGIN_REPSY }}
+          PASSWORD_REPSY: ${{ secrets.PASSWORD_REPSY }}

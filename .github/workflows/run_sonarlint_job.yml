@@ -19,3 +19,6 @@ jobs:
 
       - name: SonarLint for main with Gradle
         run: ./gradlew sonarlintMain
+        env:
+          LOGIN_REPSY: ${{ secrets.LOGIN_REPSY }}
+          PASSWORD_REPSY: ${{ secrets.PASSWORD_REPSY }}

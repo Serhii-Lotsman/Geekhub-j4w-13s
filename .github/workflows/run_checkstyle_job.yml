@@ -19,3 +19,6 @@ jobs:
 
       - name: Checkstyle for main with Gradle
         run: ./gradlew checkstyleMain
+        env:
+          LOGIN_REPSY: ${{ secrets.LOGIN_REPSY }}
+          PASSWORD_REPSY: ${{ secrets.PASSWORD_REPSY }}

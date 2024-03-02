@@ -22,3 +22,6 @@ jobs:
 
       - name: Execute gradle test
         run: ./gradlew test
+        env:
+          LOGIN_REPSY: ${{ secrets.LOGIN_REPSY }}
+          PASSWORD_REPSY: ${{ secrets.PASSWORD_REPSY }}
