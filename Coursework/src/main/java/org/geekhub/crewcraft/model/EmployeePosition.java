@@ -1,6 +1,6 @@
 package org.geekhub.crewcraft.model;
 
-public enum PositionEnum {
+public enum EmployeePosition {
     CLEANER,
     CONSULTANT,
     SALES_SPECIALIST,

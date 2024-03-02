@@ -1,8 +1,8 @@
 package org.geekhub.crewcraft.repository;
 
-import org.geekhub.crewcraft.EmployeeRecord;
-import org.geekhub.crewcraft.model.GenderEnum;
-import org.geekhub.crewcraft.model.PositionEnum;
+import org.geekhub.crewcraft.model.EmployeeRecord;
+import org.geekhub.crewcraft.model.EmployeeGender;
+import org.geekhub.crewcraft.model.EmployeePosition;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -26,10 +26,10 @@ public interface EmployeesRepository {
     List<EmployeeRecord> getRecords(String city);
 
     @NonNull
-    List<EmployeeRecord> getRecords(PositionEnum positionEnum);
+    List<EmployeeRecord> getRecords(EmployeePosition employeePosition);
 
     @NonNull
-    List<EmployeeRecord> getRecords(GenderEnum genderEnum);
+    List<EmployeeRecord> getRecords(EmployeeGender employeeGender);
 
     @NonNull
     List<EmployeeRecord> getRecords(int pageNum, int pageSize);

@@ -1,7 +1,5 @@
-package org.geekhub.crewcraft;
+package org.geekhub.crewcraft.model;
 
-import org.geekhub.crewcraft.model.GenderEnum;
-import org.geekhub.crewcraft.model.PositionEnum;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -12,24 +10,24 @@ public record EmployeeRecord(
     @NonNull String fullName,
     @NonNull Date birthday,
     @NonNull String email,
-    @NonNull PositionEnum positionEnum,
+    @NonNull EmployeePosition employeePosition,
     @NonNull String password,
     @Nullable String city,
     @NonNull Boolean isMarried,
-    @NonNull GenderEnum genderEnum
+    @NonNull EmployeeGender employeeGender
 ) {
 
     public EmployeeRecord(
         @NonNull String fullName,
         @NonNull Date birthday,
         @NonNull String email,
-        @NonNull PositionEnum positionEnum,
+        @NonNull EmployeePosition employeePosition,
         @NonNull String password,
         @Nullable String city,
         @NonNull Boolean isMarried,
-        @NonNull GenderEnum genderEnum
+        @NonNull EmployeeGender employeeGender
     ) {
-        this(null, fullName, birthday, email, positionEnum, password, city, isMarried, genderEnum);
+        this(null, fullName, birthday, email, employeePosition, password, city, isMarried, employeeGender);
     }
 
     public static EmployeeRecordBuilder builder() {
@@ -37,15 +35,14 @@ public record EmployeeRecord(
     }
 
     public static class EmployeeRecordBuilder {
-        private Long id;
         private String fullName;
         private Date birthday;
         private String email;
-        private PositionEnum positionEnum;
+        private EmployeePosition employeePosition;
         private String password;
         private String city;
         private Boolean isMarried;
-        private GenderEnum genderEnum;
+        private EmployeeGender employeeGender;
 
         public EmployeeRecordBuilder fullName(String fullName) {
             this.fullName = fullName;
@@ -62,8 +59,8 @@ public record EmployeeRecord(
             return this;
         }
 
-        public EmployeeRecordBuilder position(PositionEnum positionEnum) {
-            this.positionEnum = positionEnum;
+        public EmployeeRecordBuilder position(EmployeePosition employeePosition) {
+            this.employeePosition = employeePosition;
             return this;
         }
 
@@ -82,13 +79,13 @@ public record EmployeeRecord(
             return this;
         }
 
-        public EmployeeRecordBuilder gender(GenderEnum genderEnum) {
-            this.genderEnum = genderEnum;
+        public EmployeeRecordBuilder gender(EmployeeGender employeeGender) {
+            this.employeeGender = employeeGender;
             return this;
         }
 
         public EmployeeRecord build() {
-            return new EmployeeRecord(fullName, birthday, email, positionEnum, password, city, isMarried, genderEnum);
+            return new EmployeeRecord(fullName, birthday, email, employeePosition, password, city, isMarried, employeeGender);
         }
     }
 }

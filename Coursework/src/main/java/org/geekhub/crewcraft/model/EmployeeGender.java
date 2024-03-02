@@ -1,6 +1,6 @@
 package org.geekhub.crewcraft.model;
 
-public enum GenderEnum {
+public enum EmployeeGender {
     MALE,
     FEMALE,
     OTHER
