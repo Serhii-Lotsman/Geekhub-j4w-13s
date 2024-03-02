@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.model.User;
 import org.geekhub.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,12 @@ import java.util.List;
 @RequestMapping("api/v3/users")
 @Tag(name="get-users-controller", description = "Get users or user by id")
 public class GetUsersRequest {
-    @Autowired
-    UserService userService;
+
+    private final UserService userService;
+
+    public GetUsersRequest(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<User> getUsers() {

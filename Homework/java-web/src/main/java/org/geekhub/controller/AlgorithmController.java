@@ -2,7 +2,6 @@ package org.geekhub.controller;
 
 import org.geekhub.model.Message;
 import org.geekhub.service.CipherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +14,11 @@ import java.util.Map;
 @RequestMapping("/algorithms")
 public class AlgorithmController {
 
-    @Autowired
-    private CipherService service;
+    private final CipherService service;
+
+    public AlgorithmController(CipherService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ModelAndView algorithm(ModelAndView modelAndView) {

@@ -8,13 +8,10 @@
 <div th:replace="~{/fragments/fragments.html :: header}"></div>
 <h1>Some statistic</h1>
 <div class="mainBody">
-    <div th:each="message : ${countOfUsage}">
-        <span>The number of messages with algorithm </span>
-        <span class="messageStyle" th:text="*{message}"></span>
-    </div>
-    <hr>
-    <div th:each="message : ${uniqueMessages}">
-        <span class="messageStyle" th:text="*{message}"></span>
+    <div th:each="message : ${statistics}">
+        <div th:each="element : ${message}">
+            <span class="messageStyle" th:text="*{element}"></span>
+        </div>
     </div>
 </div>
 <div th:replace="~{/fragments/fragments.html :: footer}"></div>

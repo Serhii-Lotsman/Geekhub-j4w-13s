@@ -2,7 +2,6 @@ package org.geekhub.controller;
 
 import org.geekhub.model.Message;
 import org.geekhub.service.CipherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +16,11 @@ import java.util.Map;
 @RequestMapping("/history")
 public class HistoryController {
 
-    @Autowired
-    private CipherService cipherService;
+    private final CipherService cipherService;
+
+    public HistoryController(CipherService cipherService) {
+        this.cipherService = cipherService;
+    }
 
     @GetMapping
     public ModelAndView history(ModelAndView modelAndView, @RequestParam(defaultValue = "") String param) {
@@ -56,12 +58,10 @@ public class HistoryController {
 
     @GetMapping("/statistics")
     public ModelAndView messageStatistic(ModelAndView modelAndView) {
-        var countOfUsage = cipherService.getCountOfUsage();
-        var uniqueMessages = cipherService.getUniqueMessages();
+        var statistics = cipherService.getStatistics();
         modelAndView.setViewName("statistics");
         modelAndView.addAllObjects(Map.of(
-            "countOfUsage", countOfUsage,
-            "uniqueMessages", uniqueMessages,
+            "statistics", statistics,
             "activeButton", "history"
         ));
         return modelAndView;

@@ -2,7 +2,6 @@ package org.geekhub.controller;
 
 import org.geekhub.model.User;
 import org.geekhub.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +14,12 @@ import java.util.Map;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public ModelAndView getUsers(ModelAndView modelAndView) {

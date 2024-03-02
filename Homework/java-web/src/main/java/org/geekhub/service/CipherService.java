@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -32,10 +32,10 @@ public class CipherService {
     private final Map<Map<Algorithm, Operation>, Function<String, String>> ciphers;
 
     public CipherService(
-            @Value("${cipher.caesar.key}") int caesarKey,
-            @Value("${cipher.vigenere.key}") String vigenereKey,
-            EncryptedMessageRepository repository,
-            UserService userService
+        @Value("${cipher.caesar.key}") int caesarKey,
+        @Value("${cipher.vigenere.key}") String vigenereKey,
+        EncryptedMessageRepository repository,
+        UserService userService
     ) {
         this.repository = repository;
         this.userService = userService;
@@ -122,16 +122,28 @@ public class CipherService {
         return repository.getPaginateHistory(pageNum, pageSize);
     }
 
-    public Map<String, Long> getCountOfUsage() {
+    public List<Map<String, Long>> getStatistics() {
+        List<Map<String, Long>> statisticList = new ArrayList<>();
+        statisticList.add(getCountOfUsage());
+        statisticList.add(getUniqueMessages());
+        return statisticList;
+    }
+
+    private Map<String, Long> getCountOfUsage() {
         List<Message> messages = repository.findAll();
 
         return messages.stream()
             .map(Message::getAlgorithm)
-            .collect(HashMap::new, (map, algorithmName) ->
-                map.merge(algorithmName.toLowerCase(), 1L, Long::sum), HashMap::putAll);
+            .map(String::toLowerCase)
+            .collect(Collectors.groupingBy(algorithmName -> algorithmName, Collectors.counting()))
+            .entrySet().stream()
+            .collect(Collectors.toMap(
+                entry -> String.format("Usage of %s algorithm", entry.getKey()),
+                Map.Entry::getValue
+            ));
     }
 
-    public Map<String, Long> getUniqueMessages() {
+    private Map<String, Long> getUniqueMessages() {
         List<Message> messages = repository.findAll();
         return getMapUniqueMessages(messages);
     }

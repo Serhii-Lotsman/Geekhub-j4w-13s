@@ -5,15 +5,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.model.Message;
 import org.geekhub.service.CipherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,13 +19,17 @@ import java.util.Map;
 @Tag(name="get-history-controller", description = "Get all history,by message id, by algorithm, by date or statistics. By default get all history")
 public class GetMessagesRequest {
 
-    @Autowired
-    private CipherService cipherService;
+    private final CipherService cipherService;
+
+    public GetMessagesRequest(CipherService cipherService) {
+        this.cipherService = cipherService;
+    }
 
     @GetMapping
     public List<Message> allHistory() {
         return cipherService.getAllMessages();
     }
+
     @GetMapping("/algorithms")
     public List<Message> history(@RequestParam(defaultValue = "") String param) {
         return cipherService.getMessagesByAlgorithm(param);
@@ -54,10 +55,7 @@ public class GetMessagesRequest {
 
     @GetMapping("/statistics")
     public List<Map<String, Long>> messageStatistic() {
-        List<Map<String, Long>> statisticList = new ArrayList<>();
-        statisticList.add(new HashMap<>(cipherService.getCountOfUsage()));
-        statisticList.add(new HashMap<>(cipherService.getUniqueMessages()));
-        return statisticList;
+        return cipherService.getStatistics();
     }
 
 }
