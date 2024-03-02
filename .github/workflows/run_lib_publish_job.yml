@@ -20,5 +20,5 @@ jobs:
       - name: Publish with build to repsy.io
         run: ./gradlew :Homework:cipher:publish
         env:
-          REPSY_LOGIN: ${{ secrets.REPSY_LOGIN }}
-          REPSY_PASSWORD: ${{ secrets.REPSY_PASSWORD }}
+          LOGIN_REPSY: ${{ secrets.LOGIN_REPSY }}
+          PASSWORD_REPSY: ${{ secrets.PASSWORD_REPSY }}

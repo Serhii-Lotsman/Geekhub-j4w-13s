@@ -11,19 +11,23 @@ jobs:
   build:
     name: Build application
     uses: ./.github/workflows/run_build_job.yml
+    secrets: inherit
 
   test:
     needs: build
     name: Test application
     uses: ./.github/workflows/run_tests_job.yml
+    secrets: inherit
 
   sonarlint:
     name: Check application style via sonarlint
     uses: ./.github/workflows/run_sonarlint_job.yml
+    secrets: inherit
 
   checkstype:
     name: Check application style via checkstyle
     uses: ./.github/workflows/run_checkstyle_job.yml
+    secrets: inherit
 
   cipher-build:
     needs: [build, test, sonarlint, checkstype]

@@ -36,8 +36,8 @@ publishing {
         maven {
             url = uri("https://repsy.io/mvn/slotsman/cipher-storage-repository")
             credentials {
-                username = System.getenv("REPSY_LOGIN") ?: providers.gradleProperty("username").get()
-                password = System.getenv("REPSY_PASSWORD") ?: providers.gradleProperty("password").get()
+                username = System.getenv("LOGIN_REPSY") ?: providers.gradleProperty("username").get()
+                password = System.getenv("PASSWORD_REPSY") ?: providers.gradleProperty("password").get()
             }
         }
     }
