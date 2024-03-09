@@ -32,7 +32,7 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping( "/{id}")
+    @GetMapping("/{id}")
     public ModelAndView getUserById(ModelAndView modelAndView, @PathVariable long id) {
         User user = userService.getUser(id);
         modelAndView.addAllObjects(Map.of(

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
     )
 )
 @RestController
-@RequestMapping("/api/v3/algorithms")
+@RequestMapping("/api/v1/algorithms")
 @Tag(name="create-message-controller", description = "Create message with available algorithms: caesar/vigenere, operations: encrypt/decrypt")
 public class CreateMessageController {
 

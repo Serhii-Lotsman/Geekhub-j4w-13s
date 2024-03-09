@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v3/history")
+@RequestMapping("/api/v1/history")
 @Tag(name="get-history-controller", description = "Get all history,by message id, by algorithm, by date or statistics. By default get all history")
 public class GetMessagesController {
 

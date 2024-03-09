@@ -26,6 +26,7 @@ public class AlgorithmController {
             "addMessage", new Message(),
             "activeButton", "algorithms"
         ));
+        modelAndView.setViewName("algorithms");
         return modelAndView;
     }
 

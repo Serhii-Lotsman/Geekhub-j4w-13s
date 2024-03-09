@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v3/users")
+@RequestMapping("api/v1/users")
 @Tag(name="get-users-controller", description = "Get users or user by id")
 public class GetUsersController {
 
@@ -28,7 +28,7 @@ public class GetUsersController {
         return userService.getUsers();
     }
 
-    @GetMapping( "/{id}")
+    @GetMapping("/{id}")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User with id successfully found"),
         @ApiResponse(responseCode = "500", description = "This user's id doesn't exist")
