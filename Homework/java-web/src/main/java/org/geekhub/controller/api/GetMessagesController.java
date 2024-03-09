@@ -17,11 +17,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v3/history")
 @Tag(name="get-history-controller", description = "Get all history,by message id, by algorithm, by date or statistics. By default get all history")
-public class GetMessagesRequest {
+public class GetMessagesController {
 
     private final CipherService cipherService;
 
-    public GetMessagesRequest(CipherService cipherService) {
+    public GetMessagesController(CipherService cipherService) {
         this.cipherService = cipherService;
     }
 

@@ -15,11 +15,11 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v3/users")
 @Tag(name="get-users-controller", description = "Get users or user by id")
-public class GetUsersRequest {
+public class GetUsersController {
 
     private final UserService userService;
 
-    public GetUsersRequest(UserService userService) {
+    public GetUsersController(UserService userService) {
         this.userService = userService;
     }
 
