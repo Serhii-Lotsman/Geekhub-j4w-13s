@@ -8,8 +8,8 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmployeesRepository {
-    void saveRecord(EmployeeEntity employeeEntity);
+public interface EmployeeRepository {
+    void saveEmployee(EmployeeEntity employeeEntity);
 
     void deleteRecord(int id);
 

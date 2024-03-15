@@ -11,17 +11,19 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneOffset;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class EmployeesRepositoryImpl implements EmployeesRepository {
+public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public EmployeesRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public EmployeeRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -31,21 +33,48 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
             rs.getString("full_name"),
             rs.getDate("birthday").toLocalDate(),
             rs.getString("email"),
-            EmployeePosition.valueOf(rs.getString("position")),
+            EmployeePosition.valueOf(rs.getString("position").toUpperCase()),
             rs.getString("password"),
             rs.getString("city"),
             rs.getBoolean("is_married"),
-            EmployeeGender.valueOf(rs.getString("gender")),
-            rs.getDate("hire_date").toInstant().atOffset(ZoneOffset.UTC)
+            EmployeeGender.valueOf(rs.getString("gender").toUpperCase()),
+            formatDate(rs.getTimestamp("hire_date"))
         );
     }
 
+    private OffsetDateTime formatDate(Timestamp timestamp) {
+        if (timestamp != null) {
+            return timestamp.toInstant().atOffset(OffsetDateTime.now().getOffset());
+        }
+        return null;
+    }
+
     @Override
-    public void saveRecord(@NonNull EmployeeEntity employeeEntity) {
+    public void saveEmployee(@NonNull EmployeeEntity employeeEntity) {
         String query = """
-                INSERT INTO employees (full_name, birthday, email, position, password, city, is_married, gender, hire_date)
-                VALUES (:fullName, :birthday, :email, :position, :password, :city, :isMarried, :gender, :hireDate)
-            """;
+                    INSERT INTO employees (
+                    full_name,
+                    birthday,
+                    email,
+                    position,
+                    password,
+                    city,
+                    is_married,
+                    gender,
+                    hire_date
+                    )
+                    VALUES (
+                    :fullName,
+                    :birthday,
+                    :email,
+                    :position,
+                    :password,
+                    :city,
+                    :isMarried,
+                    :gender,
+                    :hireDate
+                    )
+                """;
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValues(Map.of(
@@ -57,7 +86,7 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
                 "city", employeeEntity.city() != null ? employeeEntity.city() : "Unknown",
                 "isMarried", employeeEntity.isMarried(),
                 "gender", employeeEntity.employeeGender().name().toLowerCase(),
-                "hireDate", employeeEntity.hireDate()
+                "hireDate", Timestamp.valueOf(employeeEntity.hireDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
             ));
 
         jdbcTemplate.update(query, parameterSource);
@@ -116,14 +145,14 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
     @Override
     public List<EmployeeEntity> getRecords(EmployeePosition employeePosition) {
         String query = "SELECT * FROM employees WHERE position = :column ORDER BY id";
-        return getRecordsWithParams(query, employeePosition);
+        return getRecordsWithParams(query, employeePosition.name().toLowerCase());
     }
 
     @NonNull
     @Override
     public List<EmployeeEntity> getRecords(EmployeeGender employeeGender) {
         String query = "SELECT * FROM employees WHERE gender = :column ORDER BY id";
-        return getRecordsWithParams(query, employeeGender);
+        return getRecordsWithParams(query, employeeGender.name().toLowerCase());
     }
 
     @NonNull

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 public record EmployeeEntity(
-    @NonNull Long id,
+    Long id,
     @NonNull String fullName,
     @NonNull LocalDate birthday,
     @NonNull String email,
@@ -19,7 +19,7 @@ public record EmployeeEntity(
     boolean isMarried,
     @NonNull EmployeeGender employeeGender,
     @NonNull OffsetDateTime hireDate
-    ) {
+) {
 
     public EmployeeEntity(
         @NonNull String fullName,
@@ -29,9 +29,19 @@ public record EmployeeEntity(
         @NonNull String password,
         @Nullable String city,
         boolean isMarried,
-        @NonNull EmployeeGender employeeGender,
-        @NonNull OffsetDateTime hireDate
+        @NonNull EmployeeGender employeeGender
     ) {
-        this(null, fullName, birthday, email, employeePosition, password, city, isMarried, employeeGender, hireDate);
+        this(
+            null,
+            fullName,
+            birthday,
+            email,
+            employeePosition,
+            password,
+            city,
+            isMarried,
+            employeeGender,
+            OffsetDateTime.now()
+        );
     }
 }

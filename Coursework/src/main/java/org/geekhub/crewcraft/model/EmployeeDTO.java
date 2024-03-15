@@ -9,15 +9,39 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 public record EmployeeDTO(
-    @NonNull Long id,
+    Long id,
     @NonNull String fullName,
     @NonNull LocalDate birthday,
     @NonNull String email,
     @NonNull EmployeePosition employeePosition,
-    @NonNull String password,
+    String password,
     @Nullable String city,
     boolean isMarried,
     @NonNull EmployeeGender employeeGender,
-    @NonNull OffsetDateTime hireDate
+    OffsetDateTime hireDate
 ) {
+    public EmployeeDTO(
+        Long id,
+        @NonNull String fullName,
+        @NonNull LocalDate birthday,
+        @NonNull String email,
+        @NonNull EmployeePosition employeePosition,
+        @Nullable String city,
+        boolean isMarried,
+        @NonNull EmployeeGender employeeGender,
+        OffsetDateTime hireDate
+    ) {
+        this(
+            id,
+            fullName,
+            birthday,
+            email,
+            employeePosition,
+            null,
+            city,
+            isMarried,
+            employeeGender,
+            hireDate
+        );
+    }
 }

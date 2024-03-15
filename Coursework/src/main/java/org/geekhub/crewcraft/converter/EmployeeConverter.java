@@ -11,7 +11,6 @@ public class EmployeeConverter {
 
     public static EmployeeEntity toEntity(@NonNull EmployeeDTO employeeDTO) {
         return new EmployeeEntity(
-            employeeDTO.id(),
             employeeDTO.fullName(),
             employeeDTO.birthday(),
             employeeDTO.email(),
@@ -19,8 +18,7 @@ public class EmployeeConverter {
             employeeDTO.password(),
             employeeDTO.city(),
             employeeDTO.isMarried(),
-            employeeDTO.employeeGender(),
-            employeeDTO.hireDate()
+            employeeDTO.employeeGender()
         );
     }
 
@@ -31,7 +29,6 @@ public class EmployeeConverter {
             employeeEntity.birthday(),
             employeeEntity.email(),
             employeeEntity.employeePosition(),
-            employeeEntity.password(),
             employeeEntity.city(),
             employeeEntity.isMarried(),
             employeeEntity.employeeGender(),
