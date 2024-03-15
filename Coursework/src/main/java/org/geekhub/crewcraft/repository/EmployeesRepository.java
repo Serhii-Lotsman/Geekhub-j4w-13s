@@ -1,36 +1,36 @@
 package org.geekhub.crewcraft.repository;
 
-import org.geekhub.crewcraft.model.EmployeeRecord;
-import org.geekhub.crewcraft.model.EmployeeGender;
-import org.geekhub.crewcraft.model.EmployeePosition;
+import org.geekhub.crewcraft.model.EmployeeEntity;
+import org.geekhub.crewcraft.enums.EmployeeGender;
+import org.geekhub.crewcraft.enums.EmployeePosition;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface EmployeesRepository {
-    void saveRecord(EmployeeRecord employeeRecord);
+    void saveRecord(EmployeeEntity employeeEntity);
 
     void deleteRecord(int id);
 
     @NonNull
-    Optional<EmployeeRecord> getRecord(int id);
+    Optional<EmployeeEntity> getRecord(int id);
 
     @NonNull
-    Optional<EmployeeRecord> getRecord(String email);
+    Optional<EmployeeEntity> getRecord(String email);
 
     @NonNull
-    List<EmployeeRecord> getRecords();
+    List<EmployeeEntity> getRecords();
 
     @NonNull
-    List<EmployeeRecord> getRecords(String city);
+    List<EmployeeEntity> getRecords(String city);
 
     @NonNull
-    List<EmployeeRecord> getRecords(EmployeePosition employeePosition);
+    List<EmployeeEntity> getRecords(EmployeePosition employeePosition);
 
     @NonNull
-    List<EmployeeRecord> getRecords(EmployeeGender employeeGender);
+    List<EmployeeEntity> getRecords(EmployeeGender employeeGender);
 
     @NonNull
-    List<EmployeeRecord> getRecords(int pageNum, int pageSize);
+    List<EmployeeEntity> getRecords(int pageNum, int pageSize);
 }
