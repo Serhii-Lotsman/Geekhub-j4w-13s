@@ -9,7 +9,6 @@ import org.geekhub.crewcraft.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -61,7 +60,7 @@ public class EmployeeService {
     private List<EmployeeDTO> getEmployeeDTOList(List<EmployeeEntity> employees) {
         return employees.stream()
             .map(EmployeeConverter::toDTO)
-            .collect(Collectors.toList());
+            .toList();
     }
 }
 

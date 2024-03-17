@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -86,7 +85,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 "city", employeeEntity.city() != null ? employeeEntity.city() : "Unknown",
                 "isMarried", employeeEntity.isMarried(),
                 "gender", employeeEntity.employeeGender().name().toLowerCase(),
-                "hireDate", Timestamp.valueOf(employeeEntity.hireDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                "hireDate", Timestamp.valueOf(employeeEntity.hireDate().toLocalDateTime())
             ));
 
         jdbcTemplate.update(query, parameterSource);

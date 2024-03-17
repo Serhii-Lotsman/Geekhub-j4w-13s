@@ -18,7 +18,7 @@ public record EmployeeEntity(
     @Nullable String city,
     boolean isMarried,
     @NonNull EmployeeGender employeeGender,
-    @NonNull OffsetDateTime hireDate
+    OffsetDateTime hireDate
 ) {
 
     public EmployeeEntity(
