@@ -15,10 +15,11 @@ public class EmployeeConverter {
             employeeDTO.birthday(),
             employeeDTO.email(),
             employeeDTO.employeePosition(),
-            employeeDTO.password(),
+            null,
             employeeDTO.city(),
             employeeDTO.isMarried(),
-            employeeDTO.employeeGender()
+            employeeDTO.employeeGender(),
+            employeeDTO.hireDate()
         );
     }
 

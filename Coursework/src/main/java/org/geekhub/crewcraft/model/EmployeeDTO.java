@@ -14,34 +14,9 @@ public record EmployeeDTO(
     @NonNull LocalDate birthday,
     @NonNull String email,
     @NonNull EmployeePosition employeePosition,
-    String password,
     @Nullable String city,
     boolean isMarried,
     @NonNull EmployeeGender employeeGender,
     OffsetDateTime hireDate
 ) {
-    public EmployeeDTO(
-        Long id,
-        @NonNull String fullName,
-        @NonNull LocalDate birthday,
-        @NonNull String email,
-        @NonNull EmployeePosition employeePosition,
-        @Nullable String city,
-        boolean isMarried,
-        @NonNull EmployeeGender employeeGender,
-        OffsetDateTime hireDate
-    ) {
-        this(
-            id,
-            fullName,
-            birthday,
-            email,
-            employeePosition,
-            null,
-            city,
-            isMarried,
-            employeeGender,
-            hireDate
-        );
-    }
 }

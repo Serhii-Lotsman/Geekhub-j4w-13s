@@ -14,7 +14,7 @@ public record EmployeeEntity(
     @NonNull LocalDate birthday,
     @NonNull String email,
     @NonNull EmployeePosition employeePosition,
-    @NonNull String password,
+    String password,
     @Nullable String city,
     boolean isMarried,
     @NonNull EmployeeGender employeeGender,
@@ -26,10 +26,11 @@ public record EmployeeEntity(
         @NonNull LocalDate birthday,
         @NonNull String email,
         @NonNull EmployeePosition employeePosition,
-        @NonNull String password,
+        String password,
         @Nullable String city,
         boolean isMarried,
-        @NonNull EmployeeGender employeeGender
+        @NonNull EmployeeGender employeeGender,
+        @NonNull OffsetDateTime hireDate
     ) {
         this(
             null,
@@ -41,7 +42,7 @@ public record EmployeeEntity(
             city,
             isMarried,
             employeeGender,
-            OffsetDateTime.now()
+            hireDate
         );
     }
 }
