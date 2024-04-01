@@ -1,4 +1,4 @@
-package org.geekhub.api.controller.viewController;
+package org.geekhub.api.controller.view;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

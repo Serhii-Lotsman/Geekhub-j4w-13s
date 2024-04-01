@@ -10,9 +10,7 @@ allprojects {
     repositories {
         mavenCentral()
     }
-}
 
-subprojects {
     apply(plugin = "java")
     apply(plugin = "idea")
     apply(plugin = "org.springframework.boot")
@@ -23,15 +21,17 @@ subprojects {
     }
 
     dependencies {
-        implementation("org.springframework.boot:spring-boot-starter")
-
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.springframework.security:spring-security-test")
     }
 }
 
-springBoot {
-    mainClass.set("org.geekhub.application.CrewCraftStarter")
+tasks.bootJar {
+    enabled = false
+}
+
+tasks.jar {
+    enabled = true
 }
 
 tasks.test {

@@ -1,4 +1,4 @@
-package org.geekhub.api.controller.restController;
+package org.geekhub.api.controller.rest;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -7,7 +7,6 @@ import org.geekhub.crewcraft.EmployeeService;
 import org.geekhub.crewcraft.model.EmployeeDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,10 +40,6 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
-    @PostMapping
-    @Tag(name = "create-employee")
-    public void createEmployee() {
-        //employeeService.saveEmployee();
-    }
+
 
 }
