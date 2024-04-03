@@ -1,8 +1,8 @@
-package org.geekhub.repository;
+package org.geekhub.repository.employee;
 
-import org.geekhub.repository.enums.EmployeeGender;
-import org.geekhub.repository.model.EmployeeEntity;
-import org.geekhub.repository.enums.EmployeePosition;
+import org.geekhub.repository.employee.enums.EmployeeGender;
+import org.geekhub.repository.employee.enums.EmployeePosition;
+import org.geekhub.repository.employee.model.EmployeeEntity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;

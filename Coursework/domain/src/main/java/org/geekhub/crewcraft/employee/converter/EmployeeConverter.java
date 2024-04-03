@@ -1,7 +1,7 @@
-package org.geekhub.crewcraft.converter;
+package org.geekhub.crewcraft.employee.converter;
 
-import org.geekhub.crewcraft.model.EmployeeDTO;
-import org.geekhub.repository.model.EmployeeEntity;
+import org.geekhub.crewcraft.employee.model.EmployeeDTO;
+import org.geekhub.repository.employee.model.EmployeeEntity;
 import org.springframework.lang.NonNull;
 
 public class EmployeeConverter {

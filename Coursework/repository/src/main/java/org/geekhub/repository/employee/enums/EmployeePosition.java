@@ -1,4 +1,4 @@
-package org.geekhub.repository.enums;
+package org.geekhub.repository.employee.enums;
 
 public enum EmployeePosition {
     CLEANER,

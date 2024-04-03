@@ -1,7 +1,7 @@
-package org.geekhub.repository.model;
+package org.geekhub.repository.employee.model;
 
-import org.geekhub.repository.enums.EmployeeGender;
-import org.geekhub.repository.enums.EmployeePosition;
+import org.geekhub.repository.employee.enums.EmployeeGender;
+import org.geekhub.repository.employee.enums.EmployeePosition;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

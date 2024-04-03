@@ -1,11 +1,11 @@
-package org.geekhub.crewcraft;
+package org.geekhub.crewcraft.employee;
 
-import org.geekhub.crewcraft.converter.EmployeeConverter;
-import org.geekhub.repository.enums.EmployeeGender;
-import org.geekhub.repository.enums.EmployeePosition;
-import org.geekhub.crewcraft.model.EmployeeDTO;
-import org.geekhub.repository.model.EmployeeEntity;
-import org.geekhub.repository.EmployeeRepository;
+import org.geekhub.crewcraft.employee.converter.EmployeeConverter;
+import org.geekhub.repository.employee.enums.EmployeeGender;
+import org.geekhub.repository.employee.enums.EmployeePosition;
+import org.geekhub.crewcraft.employee.model.EmployeeDTO;
+import org.geekhub.repository.employee.model.EmployeeEntity;
+import org.geekhub.repository.employee.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
