@@ -33,11 +33,10 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             rs.getDate("birthday").toLocalDate(),
             rs.getString("email"),
             EmployeePosition.valueOf(rs.getString("position").toUpperCase()),
-            rs.getString("password"),
             rs.getString("city"),
             rs.getBoolean("is_married"),
             EmployeeGender.valueOf(rs.getString("gender").toUpperCase()),
-            formatDate(rs.getTimestamp("hire_date"))
+            rs.getDate("hire_date").toLocalDate()
         );
     }
 
@@ -51,12 +50,11 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     @Override
     public void saveEmployee(@NonNull EmployeeEntity employeeEntity) {
         String query = """
-                    INSERT INTO employees (
+                    INSERT INTO employee_card (
                     full_name,
                     birthday,
                     email,
                     position,
-                    password,
                     city,
                     is_married,
                     gender,
@@ -67,7 +65,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                     :birthday,
                     :email,
                     :position,
-                    :password,
                     :city,
                     :isMarried,
                     :gender,
@@ -81,11 +78,10 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 "birthday", employeeEntity.birthday(),
                 "email", employeeEntity.email(),
                 "position", employeeEntity.employeePosition().name().toLowerCase(),
-                "password", employeeEntity.password(),
                 "city", employeeEntity.city() != null ? employeeEntity.city() : "Unknown",
                 "isMarried", employeeEntity.isMarried(),
                 "gender", employeeEntity.employeeGender().name().toLowerCase(),
-                "hireDate", Timestamp.valueOf(employeeEntity.hireDate().toLocalDateTime())
+                "hireDate", employeeEntity.hireDate()
             ));
 
         jdbcTemplate.update(query, parameterSource);
@@ -93,7 +89,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public void deleteRecord(int id) {
-        String query = "DELETE FROM employees WHERE id = :id";
+        String query = "DELETE FROM employee_card WHERE id = :id";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("id", id);
@@ -104,7 +100,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     @NonNull
     @Override
     public Optional<EmployeeEntity> getRecord(int id) {
-        String query = "SELECT * FROM employees WHERE id = :id";
+        String query = "SELECT * FROM employee_card WHERE id = :id";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("id", id);
@@ -116,7 +112,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     @NonNull
     @Override
     public Optional<EmployeeEntity> getRecord(String email) {
-        String query = "SELECT * FROM employees WHERE email = :email";
+        String query = "SELECT * FROM employee_card WHERE email = :email";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("email", email);
@@ -128,7 +124,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     @NonNull
     @Override
     public List<EmployeeEntity> getRecords() {
-        String query = "SELECT * FROM employees ORDER BY id";
+        String query = "SELECT * FROM employee_card ORDER BY id";
 
         return jdbcTemplate.query(query, this::mapResultSetToEmployeeRecord);
     }
@@ -136,28 +132,28 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     @NonNull
     @Override
     public List<EmployeeEntity> getRecords(String city) {
-        String query = "SELECT * FROM employees WHERE city = :column ORDER BY id";
+        String query = "SELECT * FROM employee_card WHERE city = :column ORDER BY id";
         return getRecordsWithParams(query, city);
     }
 
     @NonNull
     @Override
     public List<EmployeeEntity> getRecords(EmployeePosition employeePosition) {
-        String query = "SELECT * FROM employees WHERE position = :column ORDER BY id";
+        String query = "SELECT * FROM employee_card WHERE position = :column ORDER BY id";
         return getRecordsWithParams(query, employeePosition.name().toLowerCase());
     }
 
     @NonNull
     @Override
     public List<EmployeeEntity> getRecords(EmployeeGender employeeGender) {
-        String query = "SELECT * FROM employees WHERE gender = :column ORDER BY id";
+        String query = "SELECT * FROM employee_card WHERE gender = :column ORDER BY id";
         return getRecordsWithParams(query, employeeGender.name().toLowerCase());
     }
 
     @NonNull
     @Override
     public List<EmployeeEntity> getRecords(int pageNum, int pageSize) {
-        String query = "SELECT * FROM employees ORDER BY id LIMIT :pageSize OFFSET :offset";
+        String query = "SELECT * FROM employee_card ORDER BY id LIMIT :pageSize OFFSET :offset";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("pageSize", pageSize)

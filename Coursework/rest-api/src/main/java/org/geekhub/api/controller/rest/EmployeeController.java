@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.crewcraft.employee.EmployeeService;
-import org.geekhub.crewcraft.employee.model.EmployeeDTO;
-import org.springframework.http.ResponseEntity;
+import org.geekhub.crewcraft.employee.converter.EmployeeConverter;
+import org.geekhub.crewcraft.employee.dto.EmployeeDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,8 +36,10 @@ public class EmployeeController {
 
     @GetMapping
     @Tag(name = "get-all-employees")
-    public ResponseEntity<List<EmployeeDTO>> getEmployees() {
-        return ResponseEntity.ok(employeeService.getAllEmployees());
+    public List<EmployeeDto> getEmployees() {
+        return employeeService.getAllEmployees().stream()
+            .map(EmployeeConverter::toDTO)
+            .toList();
     }
 
 

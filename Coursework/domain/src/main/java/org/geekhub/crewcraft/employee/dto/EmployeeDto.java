@@ -1,4 +1,4 @@
-package org.geekhub.crewcraft.employee.model;
+package org.geekhub.crewcraft.employee.dto;
 
 import org.geekhub.repository.employee.enums.EmployeeGender;
 import org.geekhub.repository.employee.enums.EmployeePosition;
@@ -6,9 +6,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
-public record EmployeeDTO(
+public record EmployeeDto(
     Long id,
     @NonNull String fullName,
     @NonNull LocalDate birthday,
@@ -17,6 +16,6 @@ public record EmployeeDTO(
     @Nullable String city,
     boolean isMarried,
     @NonNull EmployeeGender employeeGender,
-    OffsetDateTime hireDate
+    @NonNull LocalDate hireDate
 ) {
 }

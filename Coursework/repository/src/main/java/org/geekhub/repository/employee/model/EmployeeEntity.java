@@ -6,7 +6,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 public record EmployeeEntity(
     Long id,
@@ -14,11 +13,10 @@ public record EmployeeEntity(
     @NonNull LocalDate birthday,
     @NonNull String email,
     @NonNull EmployeePosition employeePosition,
-    String password,
     @Nullable String city,
     boolean isMarried,
     @NonNull EmployeeGender employeeGender,
-    OffsetDateTime hireDate
+    @NonNull LocalDate hireDate
 ) {
 
     public EmployeeEntity(
@@ -26,11 +24,10 @@ public record EmployeeEntity(
         @NonNull LocalDate birthday,
         @NonNull String email,
         @NonNull EmployeePosition employeePosition,
-        String password,
         @Nullable String city,
         boolean isMarried,
         @NonNull EmployeeGender employeeGender,
-        @NonNull OffsetDateTime hireDate
+        @NonNull LocalDate hireDate
     ) {
         this(
             null,
@@ -38,7 +35,6 @@ public record EmployeeEntity(
             birthday,
             email,
             employeePosition,
-            password,
             city,
             isMarried,
             employeeGender,
