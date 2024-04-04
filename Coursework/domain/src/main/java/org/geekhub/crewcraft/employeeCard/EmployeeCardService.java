@@ -1,12 +1,12 @@
 package org.geekhub.crewcraft.employeeCard;
 
+import org.geekhub.crewcraft.exception.EmployeeCardException;
 import org.geekhub.repository.employeeCard.enums.EmployeeGender;
 import org.geekhub.repository.employeeCard.enums.EmployeePosition;
 import org.geekhub.repository.employeeCard.model.EmployeeCardEntity;
 import org.geekhub.repository.employeeCard.EmployeeCardRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeCardService {
@@ -25,12 +25,14 @@ public class EmployeeCardService {
         employeeCardRepository.deleteRecord(id);
     }
 
-    public Optional<EmployeeCardEntity> getEmployeeById(int id) {
-        return employeeCardRepository.getRecord(id);
+    public EmployeeCardEntity getEmployeeById(int id) {
+        return employeeCardRepository.getRecord(id)
+            .orElseThrow(() -> new EmployeeCardException("EmployeeCard with id " + id + " not found"));
     }
 
-    public Optional<EmployeeCardEntity> getEmployeeByEmail(String email) {
-        return employeeCardRepository.getRecord(email);
+    public EmployeeCardEntity getEmployeeByEmail(String email) {
+        return employeeCardRepository.getRecord(email)
+            .orElseThrow(() -> new EmployeeCardException("EmployeeCard with email " + email + " not found"));
     }
 
     public List<EmployeeCardEntity> getAllEmployees() {

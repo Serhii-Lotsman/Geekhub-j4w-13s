@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public class WorkSessionRepository {
         namedParameterJdbcTemplate.update(sql, parameterSource);
     }
 
-    public void updateWorkSessionEndTime(Long id, LocalDateTime endTime, Duration totalTime) {
+    public void updateWorkSessionEndTime(Long id, LocalDateTime endTime, LocalDateTime totalTime) {
         String sql = """
             UPDATE work_sessions SET end_time = :endTime, total_time = :totalTime WHERE id = :id
             """;

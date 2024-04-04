@@ -11,6 +11,7 @@ public class EmployeeCardConverter {
 
     public static EmployeeCardEntity toEntity(@NonNull EmployeeCardDto employeeCardDto) {
         return new EmployeeCardEntity(
+            employeeCardDto.id(),
             employeeCardDto.fullName(),
             employeeCardDto.birthday(),
             employeeCardDto.email(),
@@ -24,15 +25,15 @@ public class EmployeeCardConverter {
 
     public static EmployeeCardDto toDTO(@NonNull EmployeeCardEntity employeeCardEntity) {
         return new EmployeeCardDto(
-            employeeCardEntity.id(),
-            employeeCardEntity.fullName(),
-            employeeCardEntity.birthday(),
-            employeeCardEntity.email(),
-            employeeCardEntity.employeePosition(),
-            employeeCardEntity.city(),
+            employeeCardEntity.getId(),
+            employeeCardEntity.getFullName(),
+            employeeCardEntity.getBirthday(),
+            employeeCardEntity.getEmail(),
+            employeeCardEntity.getEmployeePosition(),
+            employeeCardEntity.getCity(),
             employeeCardEntity.isMarried(),
-            employeeCardEntity.employeeGender(),
-            employeeCardEntity.hireDate()
+            employeeCardEntity.getEmployeeGender(),
+            employeeCardEntity.getHireDate()
         );
     }
 }

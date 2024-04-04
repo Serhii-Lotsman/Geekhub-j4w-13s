@@ -6,7 +6,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.crewcraft.employeeCard.EmployeeCardService;
 import org.geekhub.api.controller.employeeCard.converter.EmployeeCardConverter;
 import org.geekhub.api.controller.employeeCard.dto.EmployeeCardDto;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,13 +39,30 @@ public class EmployeeCardController {
 
 
     @GetMapping
-    @Tag(name = "get-all-employees")
-    public List<EmployeeCardDto> getEmployees() {
+    @Tag(name = "get-all-employee-cards")
+    public List<EmployeeCardDto> getEmployeeCards() {
         return employeeCardService.getAllEmployees().stream()
             .map(EmployeeCardConverter::toDTO)
             .toList();
     }
 
+    @GetMapping("/{id}")
+    @Tag(name = "get-employee-card")
+    public EmployeeCardDto getEmployeeCard(@PathVariable int id) {
+        return EmployeeCardConverter.toDTO(employeeCardService.getEmployeeById(id));
+    }
+
+    @PostMapping
+    @Tag(name = "create-employee-card")
+    public void createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
+        employeeCardService.saveEmployee(EmployeeCardConverter.toEntity(employeeCardDto));
+    }
+
+    @DeleteMapping("/{id}")
+    @Tag(name = "delete-employee-card")
+    public void deleteEmployeeCard(@PathVariable int id) {
+        employeeCardService.deleteEmployee(id);
+    }
 
 
 }

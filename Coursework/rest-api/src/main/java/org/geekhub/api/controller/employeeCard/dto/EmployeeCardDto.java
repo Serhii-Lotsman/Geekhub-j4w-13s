@@ -8,7 +8,7 @@ import org.springframework.lang.Nullable;
 import java.time.LocalDate;
 
 public record EmployeeCardDto(
-    Long id,
+    Integer id,
     @NonNull String fullName,
     @NonNull LocalDate birthday,
     @NonNull String email,

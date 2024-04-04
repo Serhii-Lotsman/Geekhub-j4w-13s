@@ -2,7 +2,6 @@ package org.geekhub.crewcraft.session;
 
 import org.geekhub.repository.session.WorkSessionRepository;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class WorkSessionService {
@@ -13,10 +12,8 @@ public class WorkSessionService {
         this.workSessionRepository = workSessionRepository;
     }
 
-    /*public void endWorkSession(Long workSessionId) {
-        LocalDateTime endTime = LocalDateTime.now();
-        Duration totalTime = calculateTotalTime(workSessionId, endTime);
+    public void endWorkSession(Long workSessionId, LocalDateTime endTime, LocalDateTime totalTime) {
         workSessionRepository.updateWorkSessionEndTime(workSessionId, endTime, totalTime);
-    }*/
+    }
 
 }
