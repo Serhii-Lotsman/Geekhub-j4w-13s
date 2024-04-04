@@ -1,13 +1,13 @@
-package org.geekhub.crewcraft.employee.dto;
+package org.geekhub.api.controller.employeeCard.dto;
 
-import org.geekhub.repository.employee.enums.EmployeeGender;
-import org.geekhub.repository.employee.enums.EmployeePosition;
+import org.geekhub.repository.employeeCard.enums.EmployeeGender;
+import org.geekhub.repository.employeeCard.enums.EmployeePosition;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 
-public record EmployeeDto(
+public record EmployeeCardDto(
     Long id,
     @NonNull String fullName,
     @NonNull LocalDate birthday,

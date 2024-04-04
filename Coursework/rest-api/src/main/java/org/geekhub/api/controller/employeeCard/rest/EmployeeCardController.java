@@ -1,11 +1,11 @@
-package org.geekhub.api.controller.rest;
+package org.geekhub.api.controller.employeeCard.rest;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.geekhub.crewcraft.employee.EmployeeService;
-import org.geekhub.crewcraft.employee.converter.EmployeeConverter;
-import org.geekhub.crewcraft.employee.dto.EmployeeDto;
+import org.geekhub.crewcraft.employeeCard.EmployeeCardService;
+import org.geekhub.api.controller.employeeCard.converter.EmployeeCardConverter;
+import org.geekhub.api.controller.employeeCard.dto.EmployeeCardDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,20 +25,20 @@ import java.util.List;
 )
 @RestController
 @RequestMapping("/api/v1/employees")
-public class EmployeeController {
+public class EmployeeCardController {
 
-    private final EmployeeService employeeService;
+    private final EmployeeCardService employeeCardService;
 
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    public EmployeeCardController(EmployeeCardService employeeCardService) {
+        this.employeeCardService = employeeCardService;
     }
 
 
     @GetMapping
     @Tag(name = "get-all-employees")
-    public List<EmployeeDto> getEmployees() {
-        return employeeService.getAllEmployees().stream()
-            .map(EmployeeConverter::toDTO)
+    public List<EmployeeCardDto> getEmployees() {
+        return employeeCardService.getAllEmployees().stream()
+            .map(EmployeeCardConverter::toDTO)
             .toList();
     }
 

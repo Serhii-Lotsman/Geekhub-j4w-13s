@@ -1,13 +1,13 @@
-package org.geekhub.repository.employee.model;
+package org.geekhub.repository.employeeCard.model;
 
-import org.geekhub.repository.employee.enums.EmployeeGender;
-import org.geekhub.repository.employee.enums.EmployeePosition;
+import org.geekhub.repository.employeeCard.enums.EmployeeGender;
+import org.geekhub.repository.employeeCard.enums.EmployeePosition;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 
-public record EmployeeEntity(
+public record EmployeeCardEntity(
     Long id,
     @NonNull String fullName,
     @NonNull LocalDate birthday,
@@ -19,7 +19,7 @@ public record EmployeeEntity(
     @NonNull LocalDate hireDate
 ) {
 
-    public EmployeeEntity(
+    public EmployeeCardEntity(
         @NonNull String fullName,
         @NonNull LocalDate birthday,
         @NonNull String email,
