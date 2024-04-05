@@ -36,7 +36,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
             rs.getInt("id"),
             rs.getString("full_name"),
             rs.getDate("birthday").toLocalDate(),
-            rs.getString("email"),
+            rs.getString("user_email"),
             EmployeePosition.valueOf(rs.getString("position").toUpperCase()),
             rs.getString("city"),
             rs.getBoolean("is_married"),
@@ -51,7 +51,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
                 INSERT INTO employee_card (
                 full_name,
                 birthday,
-                email,
+                user_email,
                 position,
                 city,
                 is_married,
@@ -124,7 +124,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     @NonNull
     @Override
     public Optional<EmployeeCardEntity> getRecord(String email) {
-        String query = "SELECT * FROM employee_card WHERE email = :email";
+        String query = "SELECT * FROM employee_card WHERE user_email = :email";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("email", email);
