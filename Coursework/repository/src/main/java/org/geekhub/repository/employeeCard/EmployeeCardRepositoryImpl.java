@@ -1,7 +1,7 @@
 package org.geekhub.repository.employeeCard;
 
-import org.geekhub.repository.employeeCard.enums.EmployeeGender;
-import org.geekhub.repository.employeeCard.enums.EmployeePosition;
+import org.geekhub.repository.enums.EmployeeGender;
+import org.geekhub.repository.enums.EmployeePosition;
 import org.geekhub.repository.employeeCard.model.EmployeeCardEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @Repository
 public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
-    private final Logger logger = LoggerFactory.getLogger(EmployeeCardRepositoryImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeCardRepositoryImpl.class);
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 

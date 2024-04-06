@@ -1,4 +1,4 @@
-package org.geekhub.repository.employeeCard.enums;
+package org.geekhub.repository.enums;
 
 public enum EmployeeGender {
     MALE,

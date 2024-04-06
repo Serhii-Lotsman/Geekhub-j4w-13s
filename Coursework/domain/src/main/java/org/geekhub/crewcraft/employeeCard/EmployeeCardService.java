@@ -1,8 +1,8 @@
 package org.geekhub.crewcraft.employeeCard;
 
 import org.geekhub.crewcraft.exception.EmployeeCardException;
-import org.geekhub.repository.employeeCard.enums.EmployeeGender;
-import org.geekhub.repository.employeeCard.enums.EmployeePosition;
+import org.geekhub.repository.enums.EmployeeGender;
+import org.geekhub.repository.enums.EmployeePosition;
 import org.geekhub.repository.employeeCard.model.EmployeeCardEntity;
 import org.geekhub.repository.employeeCard.EmployeeCardRepository;
 import org.springframework.stereotype.Service;

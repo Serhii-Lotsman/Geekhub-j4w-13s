@@ -1,7 +1,7 @@
 package org.geekhub.api.controller.employeeCard.dto;
 
-import org.geekhub.repository.employeeCard.enums.EmployeeGender;
-import org.geekhub.repository.employeeCard.enums.EmployeePosition;
+import org.geekhub.repository.enums.EmployeeGender;
+import org.geekhub.repository.enums.EmployeePosition;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
