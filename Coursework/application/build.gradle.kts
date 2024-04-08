@@ -6,6 +6,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 
+tasks.bootJar {
+    enabled = true
+}
+
 tasks.test {
     useJUnitPlatform()
 }
