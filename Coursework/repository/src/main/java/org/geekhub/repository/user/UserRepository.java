@@ -6,10 +6,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
 
@@ -42,18 +44,18 @@ public class UserRepository {
         }
     }
 
-    public UserEntity findUserById(Long id) {
+    public UserEntity findUserByEmail(String email) {
         UserEntity userEntity = new UserEntity();
-        String query = "SELECT * FROM users WHERE id = :id";
+        String query = "SELECT email, password FROM users WHERE email = :email";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("id", id);
+            .addValue("email", email);
 
         try {
             userEntity = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserEntity);
-            logger.info("User found with ID: {}", id);
+            logger.info("User found with email: {}", email);
         } catch (DataAccessException e) {
-            logger.error("Error finding user with ID: {}. Error: {}", id, e.getMessage());
+            logger.error("Error finding user with email: {}. Error: {}", email, e.getMessage());
         }
         return userEntity;
     }

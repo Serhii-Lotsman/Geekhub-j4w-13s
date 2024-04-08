@@ -3,10 +3,12 @@ package org.geekhub.repository.session;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
+@Repository
 public class WorkSessionRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

@@ -21,13 +21,14 @@ allprojects {
     }
 
     dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-security")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.springframework.security:spring-security-test")
     }
 }
 
 tasks.bootJar {
-    enabled = false
+    mainClass.set("org.geekhub.application.CrewCraftStarter")
 }
 
 tasks.jar {

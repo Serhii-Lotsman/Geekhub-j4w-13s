@@ -45,4 +45,11 @@ public class UserEntity {
     public List<UserRole> getRoles() {
         return roles;
     }
+
+    public void setRoles(List<UserRole> roles) {
+        this.roles.clear();
+        if (roles != null) {
+            this.roles.addAll(roles);
+        }
+    }
 }
