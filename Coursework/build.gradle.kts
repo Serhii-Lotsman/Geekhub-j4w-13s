@@ -26,12 +26,8 @@ allprojects {
     }
 }
 
-tasks.bootJar {
-    enabled = false
-}
-
-tasks.jar {
-    enabled = true
+springBoot {
+    mainClass.set("org.geekhub.application.CrewCraftStarter")
 }
 
 tasks.test {
