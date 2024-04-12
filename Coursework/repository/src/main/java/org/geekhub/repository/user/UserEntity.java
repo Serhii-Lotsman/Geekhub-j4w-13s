@@ -1,29 +1,22 @@
 package org.geekhub.repository.user;
 
-import java.util.ArrayList;
+import org.geekhub.repository.enums.Role;
+
 import java.util.List;
 
 public class UserEntity {
-    private Long id;
     private String email;
     private String password;
-    private final List<UserRole> roles = new ArrayList<>();
+    private boolean enabled;
+    private List<Role> roles;
 
     public UserEntity() {
     }
 
-    public UserEntity(Long id, String email, String password) {
-        this.id = id;
+    public UserEntity(String email, String password, boolean enabled) {
         this.email = email;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.enabled = enabled;
     }
 
     public String getEmail() {
@@ -42,14 +35,19 @@ public class UserEntity {
         this.password = password;
     }
 
-    public List<UserRole> getRoles() {
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<UserRole> roles) {
-        this.roles.clear();
-        if (roles != null) {
-            this.roles.addAll(roles);
-        }
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

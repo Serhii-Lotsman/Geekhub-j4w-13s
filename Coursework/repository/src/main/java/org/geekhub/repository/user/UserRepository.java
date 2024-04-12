@@ -1,5 +1,6 @@
 package org.geekhub.repository.user;
 
+import org.geekhub.repository.enums.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Repository
 public class UserRepository {
@@ -21,20 +25,31 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private UserEntity mapUserEntity(ResultSet resultSet, int rowNum) throws SQLException {
-        return new UserEntity(
-            resultSet.getLong("id"),
-            resultSet.getString("email"),
-            resultSet.getString("password")
+    private UserRole mapUserRole(ResultSet resultSet, int rowNum) throws SQLException {
+        return new UserRole(
+            resultSet.getString("username"),
+            Role.valueOf(resultSet.getString("authority").toUpperCase())
         );
     }
 
+    private UserEntity mapUserEntity(ResultSet resultSet, int rowNum) throws SQLException {
+        UserEntity userEntity = new UserEntity();
+            userEntity.setEmail(resultSet.getString("email"));
+            userEntity.setPassword(resultSet.getString("password"));
+            userEntity.setEnabled(resultSet.getBoolean("enabled"));
+            userEntity.setRoles(getRoleList(userEntity.getEmail()));
+            return userEntity;
+    }
+
     public void saveUser(UserEntity userEntity) {
-        String query = "INSERT INTO users (email, password) VALUES (:email, :password)";
+        String query = """
+        INSERT INTO users (username, password, enabled) VALUES (:email, :password, :enabled)
+        """;
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("email", userEntity.getEmail())
-            .addValue("password", userEntity.getPassword());
+            .addValue("password", userEntity.getPassword())
+            .addValue("enabled", userEntity.isEnabled());
 
         try {
             jdbcTemplate.update(query, parameterSource);
@@ -44,9 +59,29 @@ public class UserRepository {
         }
     }
 
+    private List<Role> getRoleList(String email) {
+        List<Role> roleList = new ArrayList<>();
+        String query = "SELECT authority FROM authorities WHERE username = :email";
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("email", email);
+
+        try {
+            roleList =
+                Collections.singletonList(jdbcTemplate.queryForObject(
+                    query,
+                    parameterSource,
+                    (rs, rowNum) -> mapUserRole(rs, rowNum).getRole()));
+            logger.info("User found with email: {}", email);
+        } catch (DataAccessException e) {
+            logger.error("Error finding user with email: {}. Error: {}", email, e.getMessage());
+        }
+        return roleList;
+    }
+
     public UserEntity findUserByEmail(String email) {
         UserEntity userEntity = new UserEntity();
-        String query = "SELECT email, password FROM users WHERE email = :email";
+        String query = "SELECT username FROM users WHERE username = :email";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("email", email);
@@ -61,7 +96,7 @@ public class UserRepository {
     }
 
     public void updateUser(UserEntity userEntity) {
-        String query = "UPDATE users SET email = :email, password = :password WHERE id = :id";
+        String query = "UPDATE users SET username = :email, password = :password WHERE username = :email";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("email", userEntity.getEmail())
@@ -69,24 +104,24 @@ public class UserRepository {
 
         try {
             jdbcTemplate.update(query, parameterSource);
-            logger.info("User updated successfully with ID: {}", userEntity.getId());
+            logger.info("User updated successfully with new email: {}", userEntity.getEmail());
         } catch (Exception e) {
-            logger.error("Failed to update user with ID: {}. Error: {}",
-                userEntity.getId(), e.getMessage());
+            logger.error("Failed to update user with email: {}. Error: {}",
+                userEntity.getEmail(), e.getMessage());
         }
     }
 
-    public void deleteUser(Long id) {
-        String query = "DELETE FROM users WHERE id = :id";
+    public void deleteUser(String email) {
+        String query = "DELETE FROM users WHERE username = :email";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("id", id);
+            .addValue("email", email);
 
         try {
             jdbcTemplate.update(query, parameterSource);
-            logger.info("User deleted successfully with ID: {}", id);
+            logger.info("User deleted successfully with email: {}", email);
         } catch (DataAccessException e) {
-            logger.error("Failed to delete user with ID: {}. Error: {}", id, e.getMessage());
+            logger.error("Failed to delete user with email: {}. Error: {}", email, e.getMessage());
         }
     }
 }

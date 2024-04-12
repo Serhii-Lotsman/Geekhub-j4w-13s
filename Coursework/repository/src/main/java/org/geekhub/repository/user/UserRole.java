@@ -3,23 +3,23 @@ package org.geekhub.repository.user;
 import org.geekhub.repository.enums.Role;
 
 public class UserRole {
-    private Integer id;
+    private String email;
     private Role role;
 
     public UserRole() {
     }
 
-    public UserRole(Integer id, Role role) {
-        this.id = id;
+    public UserRole(String email, Role role) {
+        this.email = email;
         this.role = role;
     }
 
-    public Integer getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Role getRole() {

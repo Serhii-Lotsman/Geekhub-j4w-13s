@@ -1,44 +1,47 @@
 package org.geekhub.api.controller.user.rest;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.api.controller.user.RegisterDto;
+import org.geekhub.crewcraft.user.UserDetailsManager;
+import org.geekhub.crewcraft.user.UserDetailsManagerImpl;
 import org.geekhub.repository.user.UserEntity;
-import org.geekhub.repository.user.UserRepository;
-import org.geekhub.repository.user.UserRole;
-import org.geekhub.repository.user.UserRoleRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
-    private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final UserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(
-        UserRepository userRepository,
-        UserRoleRepository userRoleRepository,
-        PasswordEncoder passwordEncoder
-    ) {
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+    public AuthController(UserDetailsManagerImpl userDetailsManager, PasswordEncoder passwordEncoder) {
+        this.userDetailsManager = userDetailsManager;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
+    @Tag(name = "register-new-user")
     public void register(@RequestBody RegisterDto registerDto) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(registerDto.email());
-        userEntity.setPassword(passwordEncoder.encode((registerDto.password())));
+        UserEntity userEntity = fromDto(registerDto);
+        userDetailsManager.createUser(userEntity);
+    }
 
-        UserRole role = userRoleRepository.findRoleByName("USER");
-        userEntity.setRoles(Collections.singletonList(role));
-        userRepository.saveUser(userEntity);
+    private UserEntity fromDto(RegisterDto registerDto) {
+        return new UserEntity(
+            registerDto.email(),
+            passwordEncoder.encode(registerDto.password()),
+            registerDto.enabled()
+        );
+    }
+
+    private RegisterDto toDto(UserEntity userEntity) {
+        return new RegisterDto(
+            userEntity.getEmail(),
+            passwordEncoder.encode(userEntity.getPassword()),
+            userEntity.isEnabled()
+        );
     }
 }

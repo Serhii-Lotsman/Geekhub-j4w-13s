@@ -25,8 +25,8 @@ public class UserRoleRepository {
 
     private UserRole mapUserRole(ResultSet resultSet, int rowNum) throws SQLException {
      return new UserRole(
-         resultSet.getInt("id"),
-         Role.valueOf(resultSet.getString("name").toUpperCase())
+         resultSet.getString("username"),
+         Role.valueOf(resultSet.getString("authority").toUpperCase())
      );
 }
 
