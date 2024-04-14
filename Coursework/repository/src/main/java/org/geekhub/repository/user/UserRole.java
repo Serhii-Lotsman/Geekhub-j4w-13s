@@ -1,32 +1,30 @@
 package org.geekhub.repository.user;
 
-import org.geekhub.repository.enums.Role;
-
 public class UserRole {
-    private String email;
-    private Role role;
+    private Integer id;
+    private String role;
 
     public UserRole() {
     }
 
-    public UserRole(String email, Role role) {
-        this.email = email;
+    public UserRole(Integer id, String role) {
+        this.id = id;
         this.role = role;
     }
 
-    public String getEmail() {
-        return email;
+    public int getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

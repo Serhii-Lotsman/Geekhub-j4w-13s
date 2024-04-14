@@ -1,22 +1,36 @@
 package org.geekhub.repository.user;
 
-import org.geekhub.repository.enums.Role;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
 public class UserEntity {
+    @Nullable
+    private Integer id;
     private String email;
     private String password;
-    private boolean enabled;
-    private List<Role> roles;
+    private List<UserRole> roles;
 
     public UserEntity() {
     }
 
-    public UserEntity(String email, String password, boolean enabled) {
+    public UserEntity(@NonNull String email,
+                      @NonNull String password,
+                      @NonNull List<UserRole> roles) {
+        this.id = null;
         this.email = email;
         this.password = password;
-        this.enabled = enabled;
+        this.roles = roles;
+    }
+
+    @Nullable
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(@Nullable Integer id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -35,19 +49,11 @@ public class UserEntity {
         this.password = password;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public List<Role> getRoles() {
+    public List<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<UserRole> roles) {
         this.roles = roles;
     }
 }

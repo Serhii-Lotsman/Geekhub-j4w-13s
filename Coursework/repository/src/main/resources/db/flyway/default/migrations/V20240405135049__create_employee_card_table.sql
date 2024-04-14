@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS employee_card
     is_married BOOLEAN,
     gender     VARCHAR(10),
     hire_date  DATE         NOT NULL,
-    CONSTRAINT fk_user_email FOREIGN KEY (user_email) REFERENCES users (username) ON DELETE CASCADE
+    CONSTRAINT fk_user_email FOREIGN KEY (user_email) REFERENCES users (email) ON DELETE CASCADE
 );
