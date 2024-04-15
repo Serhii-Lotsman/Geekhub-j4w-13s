@@ -31,7 +31,6 @@ public class EmployeeCardEntity {
     }
 
     public EmployeeCardEntity(
-        @NonNull Integer id,
         @NonNull String fullName,
         @NonNull LocalDate birthday,
         @NonNull String email,
@@ -41,7 +40,7 @@ public class EmployeeCardEntity {
         @NonNull EmployeeGender employeeGender,
         @NonNull LocalDate hireDate
     ) {
-        this.id = id;
+        this.id = null;
         this.fullName = fullName;
         this.birthday = birthday;
         this.email = email;

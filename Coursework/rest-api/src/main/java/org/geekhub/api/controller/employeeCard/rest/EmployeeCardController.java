@@ -3,6 +3,7 @@ package org.geekhub.api.controller.employeeCard.rest;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.geekhub.api.controller.user.dto.RegisterDto;
 import org.geekhub.crewcraft.employeeCard.EmployeeCardService;
 import org.geekhub.api.controller.employeeCard.converter.EmployeeCardConverter;
 import org.geekhub.api.controller.employeeCard.dto.EmployeeCardDto;
@@ -54,8 +55,8 @@ public class EmployeeCardController {
 
     @PostMapping
     @Tag(name = "create-employee-card")
-    public void createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
-        employeeCardService.saveEmployee(EmployeeCardConverter.fromDto(employeeCardDto));
+    public void createEmployeeCard(@RequestBody RegisterDto registerDto) {
+        employeeCardService.saveEmployee(EmployeeCardConverter.employeeFromDto(registerDto));
     }
 
     @DeleteMapping("/{id}")

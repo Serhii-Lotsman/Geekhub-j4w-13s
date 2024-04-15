@@ -2,12 +2,13 @@ package org.geekhub.api.controller.user.rest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.geekhub.api.controller.employeeCard.converter.EmployeeCardConverter;
 import org.geekhub.api.controller.user.dto.LoginDto;
 import org.geekhub.api.controller.user.dto.RegisterDto;
+import org.geekhub.crewcraft.employeeCard.EmployeeCardService;
+import org.geekhub.crewcraft.user.UserService;
 import org.geekhub.repository.user.UserEntity;
-import org.geekhub.repository.user.UserRepository;
 import org.geekhub.repository.user.UserRole;
-import org.geekhub.repository.user.UserRoleRepository;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +29,21 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final EmployeeCardService employeeCardService;
 
     public AuthController(
-        UserRepository userRepository,
-        UserRoleRepository userRoleRepository,
         PasswordEncoder passwordEncoder,
-        AuthenticationManager authenticationManager
+        AuthenticationManager authenticationManager,
+        UserService userService,
+        EmployeeCardService employeeCardService
     ) {
-        this.userRoleRepository = userRoleRepository;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.employeeCardService = employeeCardService;
     }
 
     @PostMapping("/login")
@@ -58,8 +59,12 @@ public class AuthController {
 
     @PostMapping("/register")
     @Tag(name = "register-new-user")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) {
-        if (userRepository.existsByEmail(registerDto.email())) {
+    public ResponseEntity<String> register(
+        @Valid
+        @RequestBody RegisterDto registerDto,
+        BindingResult bindingResult
+    ) {
+        if (userService.isEmailExist(registerDto.email())) {
             return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
         }
         if (bindingResult.hasErrors()) {
@@ -69,18 +74,19 @@ public class AuthController {
         }
 
         UserEntity userEntity = fromDto(registerDto);
-        int userId = userRepository.saveUser(userEntity);
-        userRoleRepository.assignRole(userId, userEntity.getRoles().get(0).getId());
+        int userId = userService.createUser(userEntity);
+        userService.setUserRole(userId, userEntity.getRoles().get(0).getId());
+        employeeCardService.saveEmployee(EmployeeCardConverter.employeeFromDto(registerDto));
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
     private UserEntity fromDto(RegisterDto registerDto) {
         return new UserEntity(
-            registerDto.email(),
-            passwordEncoder.encode(registerDto.password()),
+            registerDto.email().trim(),
+            passwordEncoder.encode(registerDto.password().trim()),
             List.of(new UserRole(
-                userRoleRepository.findRole("USER").getId(),
-                userRoleRepository.findRole("USER").getRole()
+                userService.getRoleByName("USER").getId(),
+                userService.getRoleByName("USER").getRole()
             ))
         );
     }

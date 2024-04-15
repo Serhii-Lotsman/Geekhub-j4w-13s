@@ -32,17 +32,17 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     }
 
     private EmployeeCardEntity mapResultSetToEmployeeRecord(ResultSet rs, int rowNum) throws SQLException {
-        return new EmployeeCardEntity(
-            rs.getInt("id"),
-            rs.getString("full_name"),
-            rs.getDate("birthday").toLocalDate(),
-            rs.getString("user_email"),
-            EmployeePosition.valueOf(rs.getString("position").toUpperCase()),
-            rs.getString("city"),
-            rs.getBoolean("is_married"),
-            EmployeeGender.valueOf(rs.getString("gender").toUpperCase()),
-            rs.getDate("hire_date").toLocalDate()
-        );
+        EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity();
+        employeeCardEntity.setId(rs.getInt("id"));
+        employeeCardEntity.setFullName(rs.getString("full_name"));
+        employeeCardEntity.setBirthday(rs.getDate("birthday").toLocalDate());
+        employeeCardEntity.setEmail(rs.getString("user_email"));
+        employeeCardEntity.setEmployeePosition(EmployeePosition.valueOf(rs.getString("position").toUpperCase()));
+        employeeCardEntity.setCity(rs.getString("city"));
+        employeeCardEntity.setMarried(rs.getBoolean("is_married"));
+        employeeCardEntity.setEmployeeGender(EmployeeGender.valueOf(rs.getString("gender").toUpperCase()));
+        employeeCardEntity.setHireDate(rs.getDate("hire_date").toLocalDate());
+        return employeeCardEntity;
     }
 
     @Override

@@ -1,24 +1,46 @@
 package org.geekhub.crewcraft.employeeCard;
 
+import org.geekhub.crewcraft.exception.AuthException;
 import org.geekhub.crewcraft.exception.EmployeeCardException;
+import org.geekhub.crewcraft.validation.UserValidation;
 import org.geekhub.repository.enums.EmployeeGender;
 import org.geekhub.repository.enums.EmployeePosition;
 import org.geekhub.repository.employeeCard.model.EmployeeCardEntity;
 import org.geekhub.repository.employeeCard.EmployeeCardRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class EmployeeCardService {
 
     private final EmployeeCardRepository employeeCardRepository;
+    private final UserValidation userValidation;
 
-    public EmployeeCardService(EmployeeCardRepository employeeCardRepository) {
+    public EmployeeCardService(EmployeeCardRepository employeeCardRepository, UserValidation userValidation) {
         this.employeeCardRepository = employeeCardRepository;
+        this.userValidation = userValidation;
     }
 
     public void saveEmployee(EmployeeCardEntity employeeCardEntity) {
+        if (!Arrays.asList(EmployeePosition.values()).contains(employeeCardEntity.getEmployeePosition())) {
+            throw new AuthException("Invalid employee position");
+        }
+        if (!Arrays.asList(EmployeeGender.values()).contains(employeeCardEntity.getEmployeeGender())) {
+            throw new AuthException("Invalid employee gender");
+        }
+        if (!userValidation.isValidFullName(employeeCardEntity.getFullName()) ||
+            employeeCardEntity.getFullName().trim().length() <= 3 &&
+            employeeCardEntity.getFullName().trim().length() >= 30) {
+            throw new AuthException("Invalid full name. Example: 'First Last'");
+        }
+        if (employeeCardEntity.getCity() == null ||
+            employeeCardEntity.getCity().trim().isBlank()) {
+            employeeCardEntity.setCity("Unknown");
+        } else if (employeeCardEntity.getCity().trim().length() >= 30) {
+            throw new AuthException("Invalid city name. Maximum character equals 30");
+        }
         employeeCardRepository.saveEmployee(employeeCardEntity);
     }
 
