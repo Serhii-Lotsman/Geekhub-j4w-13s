@@ -1,6 +1,6 @@
 package org.geekhub.repository.user;
 
-import org.geekhub.repository.employeeCard.exception.UserException;
+import org.geekhub.repository.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;

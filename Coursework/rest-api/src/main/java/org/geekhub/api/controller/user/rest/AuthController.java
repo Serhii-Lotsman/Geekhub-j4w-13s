@@ -58,6 +58,15 @@ public class AuthController {
         if (userRepository.existsByEmail(registerDto.email())) {
             return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
         }
+        String password = registerDto.password();
+        if (password.length() < 6 ||
+            !password.matches(".*[A-Z].*") ||
+            !password.matches(".*\\d.*") ||
+            password.matches(".*[^A-Za-z0-9].*")) {
+            return new ResponseEntity<>("Password does not meet requirements!",
+                HttpStatus.BAD_REQUEST);
+        }
+
         UserEntity userEntity = fromDto(registerDto);
         int userId = userRepository.saveUser(userEntity);
         userRoleRepository.assignRole(userId, userEntity.getRoles().get(0).getId());
@@ -72,13 +81,6 @@ public class AuthController {
                 userRoleRepository.findRole("USER").getId(),
                 userRoleRepository.findRole("USER").getRole()
             ))
-        );
-    }
-
-    private RegisterDto toDto(UserEntity userEntity) {
-        return new RegisterDto(
-            userEntity.getEmail(),
-            passwordEncoder.encode(userEntity.getPassword())
         );
     }
 }

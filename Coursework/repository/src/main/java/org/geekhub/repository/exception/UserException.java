@@ -1,4 +1,4 @@
-package org.geekhub.repository.employeeCard.exception;
+package org.geekhub.repository.exception;
 
 public class UserException extends RuntimeException {
     public UserException(String message) {
