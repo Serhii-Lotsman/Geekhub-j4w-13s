@@ -1,12 +1,14 @@
 package org.geekhub.api.controller.user.rest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.geekhub.api.controller.user.dto.LoginDto;
 import org.geekhub.api.controller.user.dto.RegisterDto;
 import org.geekhub.repository.user.UserEntity;
 import org.geekhub.repository.user.UserRepository;
 import org.geekhub.repository.user.UserRole;
 import org.geekhub.repository.user.UserRoleRepository;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,12 +16,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -54,17 +58,14 @@ public class AuthController {
 
     @PostMapping("/register")
     @Tag(name = "register-new-user")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) {
         if (userRepository.existsByEmail(registerDto.email())) {
             return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
         }
-        String password = registerDto.password();
-        if (password.length() < 6 ||
-            !password.matches(".*[A-Z].*") ||
-            !password.matches(".*\\d.*") ||
-            password.matches(".*[^A-Za-z0-9].*")) {
-            return new ResponseEntity<>("Password does not meet requirements!",
-                HttpStatus.BAD_REQUEST);
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResult.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(", ")), HttpStatus.BAD_REQUEST);
         }
 
         UserEntity userEntity = fromDto(registerDto);
