@@ -30,16 +30,15 @@ public class EmployeeCardService {
         if (!Arrays.asList(EmployeeGender.values()).contains(employeeCardEntity.getEmployeeGender())) {
             throw new AuthException("Invalid employee gender");
         }
-        if (!userValidation.isValidFullName(employeeCardEntity.getFullName()) ||
-            employeeCardEntity.getFullName().trim().length() <= 3 &&
-            employeeCardEntity.getFullName().trim().length() >= 30) {
+        if (!userValidation.isValidFullName(employeeCardEntity.getFullName())
+            || employeeCardEntity.getFullName().trim().length() <= 3
+               && employeeCardEntity.getFullName().trim().length() >= 30) {
             throw new AuthException("Invalid full name. Example: 'First Last'");
         }
-        if (employeeCardEntity.getCity() == null ||
-            employeeCardEntity.getCity() != null &&
-            employeeCardEntity.getCity().trim().isBlank()) {
+        if (employeeCardEntity.getCity() != null
+                && employeeCardEntity.getCity().trim().isBlank()) {
             employeeCardEntity.setCity("Unknown");
-        } else if (employeeCardEntity.getCity().trim().length() >= 30) {
+        } else if (employeeCardEntity.getCity().length() >= 30) {
             throw new AuthException("Invalid city name. Maximum character equals 30");
         }
         employeeCardRepository.saveEmployee(employeeCardEntity);

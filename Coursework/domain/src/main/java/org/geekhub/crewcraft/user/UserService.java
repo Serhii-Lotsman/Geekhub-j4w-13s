@@ -25,9 +25,9 @@ public class UserService {
     }
 
     public int createUser(UserEntity userEntity) {
-        if (!userValidation.isValidEmail(userEntity.getEmail()) ||
-            isEmailExist(userEntity.getEmail()) ||
-            userEntity.getEmail().trim().length() > 30) {
+        if (!userValidation.isValidEmail(userEntity.getEmail())
+            || isEmailExist(userEntity.getEmail())
+            || userEntity.getEmail().trim().length() > 30) {
             throw new AuthException("Invalid email! Must be at range 3 - 30");
         }
         return userRepository.saveUser(userEntity);
