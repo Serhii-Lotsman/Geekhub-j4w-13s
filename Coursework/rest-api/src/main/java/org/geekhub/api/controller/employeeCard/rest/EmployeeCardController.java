@@ -42,20 +42,20 @@ public class EmployeeCardController {
     @Tag(name = "get-all-employee-cards")
     public List<EmployeeCardDto> getEmployeeCards() {
         return employeeCardService.getAllEmployees().stream()
-            .map(EmployeeCardConverter::toDTO)
+            .map(EmployeeCardConverter::toDto)
             .toList();
     }
 
     @GetMapping("/{id}")
     @Tag(name = "get-employee-card")
     public EmployeeCardDto getEmployeeCard(@PathVariable int id) {
-        return EmployeeCardConverter.toDTO(employeeCardService.getEmployeeById(id));
+        return EmployeeCardConverter.toDto(employeeCardService.getEmployeeById(id));
     }
 
     @PostMapping
     @Tag(name = "create-employee-card")
     public void createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
-        employeeCardService.saveEmployee(EmployeeCardConverter.toEntity(employeeCardDto));
+        employeeCardService.saveEmployee(EmployeeCardConverter.fromDto(employeeCardDto));
     }
 
     @DeleteMapping("/{id}")

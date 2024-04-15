@@ -3,7 +3,6 @@ package org.geekhub.crewcraft.user;
 import org.geekhub.repository.user.UserEntity;
 import org.geekhub.repository.user.UserRepository;
 import org.geekhub.repository.user.UserRole;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -35,9 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(List<UserRole> roles) {
+    private List<SimpleGrantedAuthority> mapRolesToAuthorities(List<UserRole> roles) {
         return roles.stream()
             .map(role ->
-                new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
+                new SimpleGrantedAuthority(role.getRole())).toList();
     }
 }

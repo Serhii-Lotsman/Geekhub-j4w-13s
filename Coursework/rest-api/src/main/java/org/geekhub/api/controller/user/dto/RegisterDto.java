@@ -14,25 +14,9 @@ public record RegisterDto(
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters long")
-    @Pattern.List({
-        @Pattern(regexp = ".*[A-Z].*", message = "Password must contain at least one uppercase letter"),
-        @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one number"),
-        @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Password cannot contain special characters")
-    })
+    @Pattern(regexp = ".*[A-Z].*", message = "Password must contain at least one uppercase letter")
+    @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one number")
+    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Password cannot contain special characters")
     String password
 ) {
-    public RegisterDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    @Override
-    public String email() {
-        return email;
-    }
-
-    @Override
-    public String password() {
-        return password;
-    }
 }

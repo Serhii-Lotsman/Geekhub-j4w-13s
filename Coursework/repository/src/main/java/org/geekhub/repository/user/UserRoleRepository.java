@@ -25,11 +25,11 @@ public class UserRoleRepository {
     }
 
     private UserRole mapUserRole(ResultSet resultSet, int rowNum) throws SQLException {
-     return new UserRole(
-         resultSet.getInt("id"),
-         resultSet.getString("name")
-     );
-}
+        return new UserRole(
+            resultSet.getInt("id"),
+            resultSet.getString("name")
+        );
+    }
 
     public void assignRole(int userId, int roleId) {
         String query = "INSERT INTO user_roles (user_id, role_id) VALUES (:userId, :roleId)";

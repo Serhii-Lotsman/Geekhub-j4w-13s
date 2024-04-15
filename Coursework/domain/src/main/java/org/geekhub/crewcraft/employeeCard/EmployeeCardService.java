@@ -6,6 +6,7 @@ import org.geekhub.repository.enums.EmployeePosition;
 import org.geekhub.repository.employeeCard.model.EmployeeCardEntity;
 import org.geekhub.repository.employeeCard.EmployeeCardRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class EmployeeCardService {
     }
 
     public List<EmployeeCardEntity> getAllEmployees() {
-       return employeeCardRepository.getRecords();
+        return employeeCardRepository.getRecords();
     }
 
     public List<EmployeeCardEntity> getEmployeesByCity(String city) {
