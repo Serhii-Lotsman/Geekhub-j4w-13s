@@ -36,6 +36,7 @@ public class EmployeeCardService {
             throw new AuthException("Invalid full name. Example: 'First Last'");
         }
         if (employeeCardEntity.getCity() == null ||
+            employeeCardEntity.getCity() != null &&
             employeeCardEntity.getCity().trim().isBlank()) {
             employeeCardEntity.setCity("Unknown");
         } else if (employeeCardEntity.getCity().trim().length() >= 30) {
