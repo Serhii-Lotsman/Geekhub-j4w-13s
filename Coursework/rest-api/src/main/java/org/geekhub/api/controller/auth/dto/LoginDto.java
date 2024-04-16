@@ -1,4 +1,4 @@
-package org.geekhub.api.controller.user.dto;
+package org.geekhub.api.controller.auth.dto;
 
 import org.springframework.lang.NonNull;
 

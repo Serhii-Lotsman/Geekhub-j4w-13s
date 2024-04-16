@@ -1,7 +1,7 @@
 package org.geekhub.api.controller.employeeCard.converter;
 
 import org.geekhub.api.controller.employeeCard.dto.EmployeeCardDto;
-import org.geekhub.api.controller.user.dto.RegisterDto;
+import org.geekhub.api.controller.auth.dto.RegisterDto;
 import org.geekhub.repository.employeeCard.model.EmployeeCardEntity;
 import org.springframework.lang.NonNull;
 

@@ -1,10 +1,10 @@
-package org.geekhub.api.controller.user.rest;
+package org.geekhub.api.controller.auth.rest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.geekhub.api.controller.employeeCard.converter.EmployeeCardConverter;
-import org.geekhub.api.controller.user.dto.LoginDto;
-import org.geekhub.api.controller.user.dto.RegisterDto;
+import org.geekhub.api.controller.auth.dto.LoginDto;
+import org.geekhub.api.controller.auth.dto.RegisterDto;
 import org.geekhub.crewcraft.employeeCard.EmployeeCardService;
 import org.geekhub.crewcraft.user.UserService;
 import org.geekhub.repository.user.UserEntity;

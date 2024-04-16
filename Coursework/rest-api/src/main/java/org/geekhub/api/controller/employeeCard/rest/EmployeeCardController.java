@@ -3,7 +3,7 @@ package org.geekhub.api.controller.employeeCard.rest;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.geekhub.api.controller.user.dto.RegisterDto;
+import org.geekhub.api.controller.auth.dto.RegisterDto;
 import org.geekhub.crewcraft.employeeCard.EmployeeCardService;
 import org.geekhub.api.controller.employeeCard.converter.EmployeeCardConverter;
 import org.geekhub.api.controller.employeeCard.dto.EmployeeCardDto;

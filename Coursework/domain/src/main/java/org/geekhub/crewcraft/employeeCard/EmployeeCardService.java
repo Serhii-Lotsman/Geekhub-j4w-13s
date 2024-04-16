@@ -35,10 +35,15 @@ public class EmployeeCardService {
                && employeeCardEntity.getFullName().trim().length() >= 30) {
             throw new AuthException("Invalid full name. Example: 'First Last'");
         }
-        if (employeeCardEntity.getCity() == null || employeeCardEntity.getCity().isBlank()) {
-            employeeCardEntity.setCity("Unknown");
-        } else if (employeeCardEntity.getCity().length() >= 30) {
-            throw new AuthException("Invalid city name. Maximum character equals 30");
+        if (employeeCardEntity.getCity() != null) {
+            String city = employeeCardEntity.getCity();
+            if (city == null || city.trim().isEmpty()) {
+                employeeCardEntity.setCity("Unknown");
+            } else if (city.length() >= 30) {
+                throw new AuthException("Invalid city name. Maximum character equals 30");
+            }
+        } else {
+            throw new AuthException("Employee card entity is null");
         }
         employeeCardRepository.saveEmployee(employeeCardEntity);
     }
