@@ -97,7 +97,7 @@ public class EmployeeCardEntity {
 
     @Nullable
     public String getCity() {
-        return city;
+        return city == null ? "Unknown" : city;
     }
 
     public void setCity(@Nullable String city) {
