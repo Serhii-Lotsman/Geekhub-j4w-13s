@@ -1,12 +1,78 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{/fragments/fragments.html :: title}">
-    <title></title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
 </head>
 <body>
-<header th:replace="~{/fragments/fragments.html :: header}"></header>
-<p>Logged user: <span sec:authentication="name">Bob</span></p>
-<p>Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span></p>
-<footer th:replace="~{/fragments/fragments.html :: footer}"></footer>
+<h1>User Registration</h1>
+<form th:action="@{/register}" th:object="${registerDto}" method="post">
+    <div>
+        <label>Email:</label>
+        <label>
+            <input type="email" th:field="*{email}" required>
+        </label>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+    </div>
+    <div>
+        <label>Password:</label>
+        <label>
+            <input type="password" th:field="*{password}" required>
+        </label>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    </div>
+    <div>
+        <label>Full Name:</label>
+        <label>
+            <input type="text" th:field="*{fullName}" required>
+        </label>
+        <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+    </div>
+    <div>
+        <label>Birthday:</label>
+        <label>
+            <input type="date" th:field="*{birthday}" required>
+        </label>
+        <span th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}"></span>
+    </div>
+    <div>
+        <label>Employee Position:</label>
+        <label>
+            <select th:field="*{employeePosition}" required>
+                <option th:each="position : ${T(org.geekhub.application.enums.EmployeePosition).values()}"
+                        th:value="${position}"
+                        th:text="${position}">
+                </option>
+            </select>
+        </label>
+        <span th:if="${#fields.hasErrors('employeePosition')}" th:errors="*{employeePosition}"></span>
+    </div>
+    <div>
+        <label>City:</label>
+        <label>
+            <input type="text" th:field="*{city}">
+        </label>
+        <span th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></span>
+    </div>
+    <div>
+        <label>Marital Status:</label>
+        <label>
+            <input type="checkbox" th:default="false" th:field="*{isMarried}">
+        </label>
+    </div>
+    <div>
+        <label>Employee Gender:</label>
+        <label>
+            <select name="gender" required>
+                <option th:each="gender : ${T(org.geekhub.application.enums.EmployeeGender).values()}"
+                        th:value="${gender}"
+                        th:text="${gender}">
+                </option>
+            </select>
+        </label>
+        <span th:if="${#fields.hasErrors('employeeGender')}" th:errors="*{employeeGender}"></span>
+    </div>
+    <button type="submit">Register</button>
+</form>
 </body>
 </html>

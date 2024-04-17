@@ -1,6 +1,6 @@
 package org.geekhub.application.config;
 
-import org.geekhub.crewcraft.user.CustomUserDetailsService;
+import org.geekhub.application.user.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -60,6 +60,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(4);
+        int bcryptStrength = Integer.parseInt(System.getenv("BCRYPT_STRENGTH"));
+        return new BCryptPasswordEncoder(bcryptStrength);
     }
 }

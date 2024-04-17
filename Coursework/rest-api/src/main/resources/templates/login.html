@@ -13,6 +13,7 @@
     <input type="password" id="password" name="password" required><br>
     <button type="submit">Login</button>
 </form>
+<a th:href="@{/register}" class="btn btn-primary">Register</a>
 <p th:text="${param.logout} ? 'Logged out successfully.' : ''"></p>
 </body>
 </html>
