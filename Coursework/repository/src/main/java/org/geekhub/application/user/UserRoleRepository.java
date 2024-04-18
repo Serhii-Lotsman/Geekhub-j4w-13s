@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserRoleRepository {
@@ -57,51 +58,50 @@ public class UserRoleRepository {
         }
     }
 
-    public UserRole findRole(String name) {
-        UserRole userRole = new UserRole();
+    public Optional<UserRole> findRole(String name) {
         String query = "SELECT * FROM roles WHERE name = :name";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("name", name);
 
         try {
-            userRole = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserRole);
+            UserRole userRole = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserRole);
             logger.info("Role found with name: {}", name);
+            return Optional.ofNullable(userRole);
         } catch (DataAccessException e) {
-            logger.error("Error finding role with name: {}. Error: {}", name, e.getMessage());
+            logger.error("Failed to find role with name: {}. Error: {}", name, e.getMessage());
+            return Optional.empty();
         }
-        return userRole;
     }
 
-    private UserRole findRole(int id) {
-        UserRole userRole = new UserRole();
+    private Optional<UserRole> findRole(int id) {
         String query = "SELECT * FROM roles WHERE id = :id";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("id", id);
 
         try {
-            userRole = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserRole);
+            UserRole userRole = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserRole);
             logger.info("Role found with id: {}", id);
+            return Optional.ofNullable(userRole);
         } catch (DataAccessException e) {
-            logger.error("Error finding role with id: {}. Error: {}", id, e.getMessage());
+            logger.error("Failed to find role with id: {}. Error: {}", id, e.getMessage());
+            return Optional.empty();
         }
-        return userRole;
     }
 
-    public List<UserRole> getRole(UserEntity userEntity) {
+    public List<UserRole> getRoles(Long id) {
         String roleQuery = "SELECT role_id FROM user_roles WHERE user_id = :userId";
 
         SqlParameterSource roleParameterSource = new MapSqlParameterSource()
-            .addValue("userId", userEntity.getId());
+            .addValue("userId", id);
 
         Integer roleId = jdbcTemplate.queryForObject(
             roleQuery,
             roleParameterSource,
             (rs, rowNum) -> rs.getInt("role_id"));
 
-        UserRole userRole = roleId != null ? findRole(roleId) : new UserRole();
-
+        UserRole userRole = roleId != null ? findRole(roleId).orElseThrow() : new UserRole();
         return List.of(userRole);
     }
 

@@ -9,30 +9,17 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
 @Repository
 public class UserRepository {
+
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
-
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final UserRoleRepository userRoleRepository;
 
-    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate, UserRoleRepository userRoleRepository) {
+    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userRoleRepository = userRoleRepository;
-    }
-
-    private UserEntity mapUserEntity(ResultSet resultSet, int rowNum) throws SQLException {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(resultSet.getInt("id"));
-        userEntity.setEmail(resultSet.getString("email"));
-        userEntity.setPassword(resultSet.getString("password"));
-        userEntity.setRoles(userRoleRepository.getRole(userEntity));
-        return userEntity;
     }
 
     public int saveUser(UserEntity userEntity) {
@@ -55,21 +42,20 @@ public class UserRepository {
     }
 
     public Optional<UserEntity> findUserByEmail(String email) {
-        UserEntity userEntity = new UserEntity();
         String query = "SELECT * FROM users WHERE email = :email";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource("email", email);
 
         try {
-            userEntity = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserEntity);
+            UserEntity userEntity = jdbcTemplate.queryForObject(query, parameterSource, UserMapper::mapUserEntity);
             logger.info("User found with email: {}", email);
+            return Optional.ofNullable(userEntity);
         } catch (DataAccessException e) {
             logger.error("Error finding user with email: {}. Error: {}", email, e.getMessage());
+            return Optional.empty();
         }
-        return Optional.ofNullable(userEntity);
     }
 
-//TODO select exist
     public boolean existsByEmail(String email) {
         String query = "SELECT COUNT(*) FROM users WHERE email = :email";
 

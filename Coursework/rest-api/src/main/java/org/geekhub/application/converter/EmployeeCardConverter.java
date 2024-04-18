@@ -1,7 +1,6 @@
 package org.geekhub.application.converter;
 
 import org.geekhub.application.employeeCard.dto.EmployeeCardDto;
-import org.geekhub.application.auth.dto.RegisterDto;
 import org.geekhub.application.employeeCard.model.EmployeeCardEntity;
 import org.springframework.lang.NonNull;
 
@@ -10,23 +9,27 @@ public class EmployeeCardConverter {
     private EmployeeCardConverter() {
     }
 
-    public static EmployeeCardEntity employeeFromDto(@NonNull RegisterDto registerDto) {
+    public static EmployeeCardEntity employeeFromDto(@NonNull EmployeeCardDto employeeCardDto) {
         EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity();
-        employeeCardEntity.setFullName(registerDto.fullName().trim());
-        employeeCardEntity.setBirthday(registerDto.birthday());
-        employeeCardEntity.setEmail(registerDto.email().trim());
-        employeeCardEntity.setEmployeePosition(registerDto.employeePosition());
-        employeeCardEntity.setCity(registerDto.city());
-        employeeCardEntity.setMarried(registerDto.isMarried());
-        employeeCardEntity.setEmployeeGender(registerDto.employeeGender());
-        employeeCardEntity.setHireDate(registerDto.hireDate());
+        employeeCardEntity.setFirstName(employeeCardDto.firstName().trim());
+        employeeCardEntity.setLastName(employeeCardDto.lastName().trim());
+        employeeCardEntity.setBirthday(employeeCardDto.birthday());
+        employeeCardEntity.setEmail(employeeCardDto.email().trim());
+        employeeCardEntity.setEmployeePosition(employeeCardDto.employeePosition());
+        employeeCardEntity.setCity(employeeCardDto.city());
+        employeeCardEntity.setMarried(employeeCardDto.isMarried());
+        employeeCardEntity.setEmployeeGender(employeeCardDto.employeeGender());
+        employeeCardEntity.setHireDate(employeeCardDto.hireDate());
         return employeeCardEntity;
     }
 
     public static EmployeeCardDto toDto(@NonNull EmployeeCardEntity employeeCardEntity) {
         return new EmployeeCardDto(
-            employeeCardEntity.getFullName(),
+            employeeCardEntity.getId(),
+            employeeCardEntity.getFirstName(),
+            employeeCardEntity.getLastName(),
             employeeCardEntity.getBirthday(),
+            employeeCardEntity.getEmail(),
             employeeCardEntity.getEmployeePosition(),
             employeeCardEntity.getCity(),
             employeeCardEntity.isMarried(),

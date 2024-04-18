@@ -13,8 +13,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,52 +29,41 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private EmployeeCardEntity mapResultSetToEmployeeRecord(ResultSet rs, int rowNum) throws SQLException {
-        EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity();
-        employeeCardEntity.setId(rs.getInt("id"));
-        employeeCardEntity.setFullName(rs.getString("full_name"));
-        employeeCardEntity.setBirthday(rs.getDate("birthday").toLocalDate());
-        employeeCardEntity.setEmail(rs.getString("user_email"));
-        employeeCardEntity.setEmployeePosition(EmployeePosition.valueOf(rs.getString("position").toUpperCase()));
-        employeeCardEntity.setCity(rs.getString("city"));
-        employeeCardEntity.setMarried(rs.getBoolean("is_married"));
-        employeeCardEntity.setEmployeeGender(EmployeeGender.valueOf(rs.getString("gender").toUpperCase()));
-        employeeCardEntity.setHireDate(rs.getDate("hire_date").toLocalDate());
-        return employeeCardEntity;
-    }
-
     @Override
-    public void saveEmployee(@NonNull EmployeeCardEntity employeeCardEntity) {
+    public void saveEmployeeCard(@NonNull EmployeeCardEntity employeeCardEntity) {
         String query = """
-                INSERT INTO employee_card (
-                full_name,
-                birthday,
-                user_email,
-                position,
-                city,
-                is_married,
-                gender,
-                hire_date
-                )
-                VALUES (
-                :fullName,
-                :birthday,
-                :email,
-                :position,
-                :city,
-                :isMarried,
-                :gender,
-                :hireDate
-                )
-            """;
+                    INSERT INTO employee_card (
+                    first_name,
+                    last_name,
+                    birthday,
+                    user_email,
+                    position,
+                    city,
+                    is_married,
+                    gender,
+                    hire_date
+                    )
+                    VALUES (
+                    :firstName,
+                    :lastName,
+                    :birthday,
+                    :email,
+                    :position,
+                    :city,
+                    :isMarried,
+                    :gender,
+                    :hireDate
+                    )
+                """;
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValues(Map.of(
-                "fullName", employeeCardEntity.getFullName(),
+                "firstName", employeeCardEntity.getFirstName(),
+                "lastName", employeeCardEntity.getLastName(),
                 "birthday", employeeCardEntity.getBirthday(),
                 "email", employeeCardEntity.getEmail(),
                 "position", employeeCardEntity.getEmployeePosition().name().toLowerCase(),
-                "city", employeeCardEntity.getCity() != null ? employeeCardEntity.getCity() : "Unknown",
+                "city", employeeCardEntity.getCity() == null ? "Unknown" : employeeCardEntity.getCity(),
                 "isMarried", employeeCardEntity.isMarried(),
                 "gender", employeeCardEntity.getEmployeeGender().name().toLowerCase(),
                 "hireDate", employeeCardEntity.getHireDate()
@@ -84,14 +71,14 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
         try {
             jdbcTemplate.update(query, parameterSource);
-            logger.info("Employee created");
+            logger.info("Employee card updated");
         } catch (DataAccessException e) {
-            logger.error("Error creating employee: {}", e.getMessage());
+            logger.error("Error updating employee card: {}", e.getMessage());
         }
     }
 
     @Override
-    public void deleteRecord(int id) {
+    public void deleteEmployeeCard(Long id) {
         String query = "DELETE FROM employee_card WHERE id = :id";
 
         SqlParameterSource params = new MapSqlParameterSource()
@@ -99,22 +86,25 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
         try {
             jdbcTemplate.update(query, params);
-            logger.info("Employee with {} was deleted", id);
+            logger.info("Employee card with {} was deleted", id);
         } catch (DataAccessException e) {
-            logger.error("Error deleting employee: {}", e.getMessage());
+            logger.error("Error deleting employee card: {}", e.getMessage());
         }
     }
 
     @NonNull
     @Override
-    public Optional<EmployeeCardEntity> getRecord(int id) {
+    public Optional<EmployeeCardEntity> getEmployeeCard(Long id) {
         String query = "SELECT * FROM employee_card WHERE id = :id";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("id", id);
 
         try {
-            EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(query, params, this::mapResultSetToEmployeeRecord);
+            EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(
+                query,
+                params,
+                EmployeeCardMapper::mapResultSetToEmployeeRecord);
             return Optional.ofNullable(employeeCardEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -123,13 +113,13 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
     @NonNull
     @Override
-    public Optional<EmployeeCardEntity> getRecord(String email) {
+    public Optional<EmployeeCardEntity> getEmployeeCard(String email) {
         String query = "SELECT * FROM employee_card WHERE user_email = :email";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("email", email);
         try {
-            EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(query, params, this::mapResultSetToEmployeeRecord);
+            EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
             return Optional.ofNullable(employeeCardEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -138,13 +128,13 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
     @NonNull
     @Override
-    public List<EmployeeCardEntity> getRecords() {
+    public List<EmployeeCardEntity> getEmployeeCards() {
         List<EmployeeCardEntity> employeeCardList = new ArrayList<>();
 
         String query = "SELECT * FROM employee_card ORDER BY id";
 
         try {
-            employeeCardList = jdbcTemplate.query(query, this::mapResultSetToEmployeeRecord);
+            employeeCardList = jdbcTemplate.query(query, EmployeeCardMapper::mapResultSetToEmployeeRecord);
         } catch (DataAccessException e) {
             logger.error("Error get employees: {}", e.getMessage());
         }
@@ -153,35 +143,35 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
     @NonNull
     @Override
-    public List<EmployeeCardEntity> getRecords(String city) {
+    public List<EmployeeCardEntity> getEmployeeCards(String city) {
         String query = "SELECT * FROM employee_card WHERE city = :column ORDER BY id";
         return getRecordsWithParams(query, city);
     }
 
     @NonNull
     @Override
-    public List<EmployeeCardEntity> getRecords(EmployeePosition employeePosition) {
+    public List<EmployeeCardEntity> getEmployeeCards(EmployeePosition employeePosition) {
         String query = "SELECT * FROM employee_card WHERE position = :column ORDER BY id";
         return getRecordsWithParams(query, employeePosition.name().toLowerCase());
     }
 
     @NonNull
     @Override
-    public List<EmployeeCardEntity> getRecords(EmployeeGender employeeGender) {
+    public List<EmployeeCardEntity> getEmployeeCards(EmployeeGender employeeGender) {
         String query = "SELECT * FROM employee_card WHERE gender = :column ORDER BY id";
         return getRecordsWithParams(query, employeeGender.name().toLowerCase());
     }
 
     @NonNull
     @Override
-    public List<EmployeeCardEntity> getRecords(int pageNum, int pageSize) {
+    public List<EmployeeCardEntity> getEmployeeCards(int pageNum, int pageSize) {
         String query = "SELECT * FROM employee_card ORDER BY id LIMIT :pageSize OFFSET :offset";
 
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("pageSize", pageSize)
             .addValue("offset", getOffset(pageNum, pageSize));
 
-        return jdbcTemplate.query(query, params, this::mapResultSetToEmployeeRecord);
+        return jdbcTemplate.query(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
     }
 
     private List<EmployeeCardEntity> getRecordsWithParams(String query, Object columnValue) {
@@ -191,7 +181,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
             .addValue("column", columnValue);
 
         try {
-            employeeCardList = jdbcTemplate.query(query, params, this::mapResultSetToEmployeeRecord);
+            employeeCardList = jdbcTemplate.query(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
         } catch (DataAccessException e) {
             logger.error("Error get employees: {}", e.getMessage());
         }

@@ -2,13 +2,11 @@ package org.geekhub.application.auth.rest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.geekhub.application.converter.EmployeeCardConverter;
 import org.geekhub.application.auth.dto.LoginDto;
 import org.geekhub.application.auth.dto.RegisterDto;
-import org.geekhub.application.converter.RegisterDtoConverter;
-import org.geekhub.application.employeeCard.EmployeeCardService;
-import org.geekhub.application.user.UserService;
+import org.geekhub.application.user.CustomUserDetailsService;
 import org.geekhub.application.user.UserEntity;
+import org.geekhub.application.user.UserRole;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,65 +14,80 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    public static final int SINGLE_LIST = 0;
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final EmployeeCardService employeeCardService;
-    private final RegisterDtoConverter registerDtoConverter;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthController(
-            AuthenticationManager authenticationManager,
-            UserService userService,
-            EmployeeCardService employeeCardService,
-            RegisterDtoConverter registerDtoConverter
+        AuthenticationManager authenticationManager,
+        CustomUserDetailsService customUserDetailsService,
+        PasswordEncoder passwordEncoder
     ) {
         this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.employeeCardService = employeeCardService;
-        this.registerDtoConverter = registerDtoConverter;
+        this.customUserDetailsService = customUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     @Tag(name = "login-user")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public String login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginDto.email(),
                 loginDto.password()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed success!", HttpStatus.OK);
+        return "User signed success!";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/signup")
     @Tag(name = "register-new-user")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> register(
         @Valid
         @RequestBody RegisterDto registerDto,
         BindingResult bindingResult
     ) {
-        if (userService.isEmailExist(registerDto.email())) {
-            return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
+        if (customUserDetailsService.isEmailExist(registerDto.email())) {
+            return new ResponseEntity<>("Email is taken!", HttpStatus.CONFLICT);
         }
+
+        if (!registerDto.password().equals(registerDto.confirmPassword())) {
+            return new ResponseEntity<>("Failed to confirm password", HttpStatus.BAD_REQUEST);
+        }
+
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", ")), HttpStatus.BAD_REQUEST);
         }
 
-        UserEntity userEntity = registerDtoConverter.registerFromDto(registerDto);
-        int userId = userService.createUser(userEntity);
-        userService.setUserRole(userId, userEntity.getRoles().get(0).getId());
-        employeeCardService.saveEmployee(EmployeeCardConverter.employeeFromDto(registerDto));
-        return new ResponseEntity<>("User registered success!", HttpStatus.OK);
+        UserRole userRole = customUserDetailsService.getRoleByName("USER");
+        UserEntity userEntity = new UserEntity(
+            registerDto.email().trim(),
+            passwordEncoder.encode(registerDto.password().trim()),
+            Stream.of(userRole)
+                .map(role -> new UserRole(role.getId(), role.getRole()))
+                .toList());
+
+        int userId = customUserDetailsService.createUser(userEntity);
+        customUserDetailsService.setUserRole(userId, userEntity.getRoles().get(SINGLE_LIST).getId());
+        return new ResponseEntity<>("User registered success!", HttpStatus.CREATED);
     }
 }

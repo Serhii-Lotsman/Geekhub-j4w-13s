@@ -13,5 +13,4 @@ public class WorkSessionService {
     public void endWorkSession(Long workSessionId, LocalDateTime endTime, LocalDateTime totalTime) {
         workSessionRepository.updateWorkSessionEndTime(workSessionId, endTime, totalTime);
     }
-
 }

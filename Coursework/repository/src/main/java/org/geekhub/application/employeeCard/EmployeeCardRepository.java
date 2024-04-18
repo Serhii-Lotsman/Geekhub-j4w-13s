@@ -9,28 +9,29 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeCardRepository {
-    void saveEmployee(EmployeeCardEntity employeeCardEntity);
 
-    void deleteRecord(int id);
+    void saveEmployeeCard(EmployeeCardEntity employeeCardEntity);
 
-    @NonNull
-    Optional<EmployeeCardEntity> getRecord(int id);
+    void deleteEmployeeCard(Long id);
 
     @NonNull
-    Optional<EmployeeCardEntity> getRecord(String email);
+    Optional<EmployeeCardEntity> getEmployeeCard(Long id);
 
     @NonNull
-    List<EmployeeCardEntity> getRecords();
+    Optional<EmployeeCardEntity> getEmployeeCard(String email);
 
     @NonNull
-    List<EmployeeCardEntity> getRecords(String city);
+    List<EmployeeCardEntity> getEmployeeCards();
 
     @NonNull
-    List<EmployeeCardEntity> getRecords(EmployeePosition employeePosition);
+    List<EmployeeCardEntity> getEmployeeCards(String city);
 
     @NonNull
-    List<EmployeeCardEntity> getRecords(EmployeeGender employeeGender);
+    List<EmployeeCardEntity> getEmployeeCards(EmployeePosition employeePosition);
 
     @NonNull
-    List<EmployeeCardEntity> getRecords(int pageNum, int pageSize);
+    List<EmployeeCardEntity> getEmployeeCards(EmployeeGender employeeGender);
+
+    @NonNull
+    List<EmployeeCardEntity> getEmployeeCards(int pageNum, int pageSize);
 }

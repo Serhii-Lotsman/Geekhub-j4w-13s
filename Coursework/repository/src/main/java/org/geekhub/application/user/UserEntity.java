@@ -6,8 +6,9 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 
 public class UserEntity {
+
     @Nullable
-    private Integer id;
+    private Long id;
     private String email;
     private String password;
     private List<UserRole> roles;
@@ -15,9 +16,10 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(@NonNull String email,
-                      @NonNull String password,
-                      @NonNull List<UserRole> roles) {
+    public UserEntity(
+        @NonNull String email,
+        @NonNull String password,
+        @NonNull List<UserRole> roles) {
         this.id = null;
         this.email = email;
         this.password = password;
@@ -25,11 +27,11 @@ public class UserEntity {
     }
 
     @Nullable
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(@Nullable Integer id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 

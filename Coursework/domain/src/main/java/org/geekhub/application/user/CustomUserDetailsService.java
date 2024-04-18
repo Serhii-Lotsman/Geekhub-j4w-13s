@@ -1,5 +1,8 @@
 package org.geekhub.application.user;
 
+import org.geekhub.application.exception.UserException;
+import org.geekhub.application.exception.ValidationException;
+import org.geekhub.application.validation.UserValidation;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,9 +16,36 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(
+        UserRepository userRepository,
+        UserRoleRepository userRoleRepository
+    ) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+    }
+
+    public int createUser(UserEntity userEntity) {
+        if (!UserValidation.isValidEmail(userEntity.getEmail())
+            || isEmailExist(userEntity.getEmail())
+            || userEntity.getEmail().trim().length() > 30) {
+            throw new ValidationException("Invalid email! Must be at range 6 - 30");
+        }
+        return userRepository.saveUser(userEntity);
+    }
+
+    public boolean isEmailExist(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public void setUserRole(int userId, int roleId) {
+        userRoleRepository.assignRole(userId, roleId);
+    }
+
+    public UserRole getRoleByName(String roleName) {
+        return userRoleRepository.findRole(roleName)
+            .orElseThrow(() -> new UserException("Role not found"));
     }
 
     @Override
@@ -25,8 +55,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(
             userEntity.getEmail(),
             userEntity.getPassword(),
-            mapRolesToAuthorities(userEntity.getRoles())
-        );
+            mapRolesToAuthorities(
+                userRoleRepository.getRoles(
+                    userEntity.getId()
+                )));
     }
 
     private List<SimpleGrantedAuthority> mapRolesToAuthorities(List<UserRole> roles) {

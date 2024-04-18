@@ -8,30 +8,25 @@ import org.springframework.lang.Nullable;
 import java.time.LocalDate;
 
 public class EmployeeCardEntity {
-    private Integer id;
 
-    private String fullName;
-
+    private Long id;
+    private String firstName;
+    private String lastName;
     private LocalDate birthday;
-
     private String email;
-
     private EmployeePosition employeePosition;
-
     @Nullable
     private String city;
-
     private boolean isMarried;
-
     private EmployeeGender employeeGender;
-
     private LocalDate hireDate;
 
     public EmployeeCardEntity() {
     }
 
     public EmployeeCardEntity(
-        @NonNull String fullName,
+        @NonNull String firstName,
+        @NonNull String lastName,
         @NonNull LocalDate birthday,
         @NonNull String email,
         @NonNull EmployeePosition employeePosition,
@@ -41,7 +36,8 @@ public class EmployeeCardEntity {
         @NonNull LocalDate hireDate
     ) {
         this.id = null;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.birthday = birthday;
         this.email = email;
         this.employeePosition = employeePosition;
@@ -51,21 +47,31 @@ public class EmployeeCardEntity {
         this.hireDate = hireDate;
     }
 
-    public Integer getId() {
+    @NonNull
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@NonNull Long id) {
         this.id = id;
     }
 
     @NonNull
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(@NonNull String fullName) {
-        this.fullName = fullName;
+    public void setFirstName(@NonNull String firstName) {
+        this.firstName = firstName;
+    }
+
+    @NonNull
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(@NonNull String lastName) {
+        this.lastName = lastName;
     }
 
     @NonNull
