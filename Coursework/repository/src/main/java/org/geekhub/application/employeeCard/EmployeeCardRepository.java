@@ -34,4 +34,7 @@ public interface EmployeeCardRepository {
 
     @NonNull
     List<EmployeeCardEntity> getEmployeeCards(int pageNum, int pageSize);
+
+    @NonNull
+    boolean employeeEmailExist(String email);
 }

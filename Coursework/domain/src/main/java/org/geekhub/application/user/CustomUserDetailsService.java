@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public boolean isEmailExist(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsByUserEmail(email);
     }
 
     public void setUserRole(int userId, int roleId) {

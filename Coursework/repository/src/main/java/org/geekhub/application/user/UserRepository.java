@@ -3,7 +3,6 @@ package org.geekhub.application.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -56,17 +55,12 @@ public class UserRepository {
         }
     }
 
-    public boolean existsByEmail(String email) {
-        String query = "SELECT COUNT(*) FROM users WHERE email = :email";
+    public boolean existsByUserEmail(String email) {
+        String query = "SELECT EXISTS(SELECT 1 FROM users WHERE email = :email)";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource("email", email);
 
-        try {
-            Integer count = jdbcTemplate.queryForObject(query, parameterSource, Integer.class);
-            return count != null && count > 0;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameterSource, Boolean.class));
     }
 
     public void updateUser(UserEntity userEntity) {

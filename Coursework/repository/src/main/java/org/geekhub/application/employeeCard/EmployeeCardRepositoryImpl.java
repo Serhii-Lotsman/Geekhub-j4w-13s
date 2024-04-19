@@ -71,9 +71,9 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
         try {
             jdbcTemplate.update(query, parameterSource);
-            logger.info("Employee card updated");
+            logger.info("Employee card created");
         } catch (DataAccessException e) {
-            logger.error("Error updating employee card: {}", e.getMessage());
+            logger.error("Error creating employee card: {}", e.getMessage());
         }
     }
 
@@ -81,14 +81,14 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     public void deleteEmployeeCard(Long id) {
         String query = "DELETE FROM employee_card WHERE id = :id";
 
-        SqlParameterSource params = new MapSqlParameterSource()
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("id", id);
 
         try {
-            jdbcTemplate.update(query, params);
-            logger.info("Employee card with {} was deleted", id);
+            jdbcTemplate.update(query, parameterSource);
+            logger.info("Employee card with id {} was deleted", id);
         } catch (DataAccessException e) {
-            logger.error("Error deleting employee card: {}", e.getMessage());
+            logger.error("Failed to delete employee card with id {}. Error: {}", id, e.getMessage());
         }
     }
 
@@ -97,14 +97,15 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     public Optional<EmployeeCardEntity> getEmployeeCard(Long id) {
         String query = "SELECT * FROM employee_card WHERE id = :id";
 
-        SqlParameterSource params = new MapSqlParameterSource()
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("id", id);
 
         try {
             EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(
                 query,
-                params,
-                EmployeeCardMapper::mapResultSetToEmployeeRecord);
+                parameterSource,
+                EmployeeCardMapper::mapResultSetToEmployeeRecord
+            );
             return Optional.ofNullable(employeeCardEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -116,10 +117,14 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     public Optional<EmployeeCardEntity> getEmployeeCard(String email) {
         String query = "SELECT * FROM employee_card WHERE user_email = :email";
 
-        SqlParameterSource params = new MapSqlParameterSource()
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("email", email);
         try {
-            EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
+            EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(
+                query,
+                parameterSource,
+                EmployeeCardMapper::mapResultSetToEmployeeRecord
+            );
             return Optional.ofNullable(employeeCardEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -129,14 +134,15 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     @NonNull
     @Override
     public List<EmployeeCardEntity> getEmployeeCards() {
-        List<EmployeeCardEntity> employeeCardList = new ArrayList<>();
-
         String query = "SELECT * FROM employee_card ORDER BY id";
+
+        List<EmployeeCardEntity> employeeCardList = new ArrayList<>();
 
         try {
             employeeCardList = jdbcTemplate.query(query, EmployeeCardMapper::mapResultSetToEmployeeRecord);
+            logger.info("Success to get employees");
         } catch (DataAccessException e) {
-            logger.error("Error get employees: {}", e.getMessage());
+            logger.error("Failed to get employees: {}", e.getMessage());
         }
         return employeeCardList;
     }
@@ -174,14 +180,23 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
         return jdbcTemplate.query(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
     }
 
+    @Override
+    public boolean employeeEmailExist(String email) {
+        String query = "SELECT EXISTS (SELECT 1 FROM employee_card WHERE user_email = :email)";
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource("email", email);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameterSource, Boolean.class));
+    }
+
     private List<EmployeeCardEntity> getRecordsWithParams(String query, Object columnValue) {
         List<EmployeeCardEntity> employeeCardList = new ArrayList<>();
 
-        SqlParameterSource params = new MapSqlParameterSource()
-            .addValue("column", columnValue);
+        SqlParameterSource params = new MapSqlParameterSource("column", columnValue);
 
         try {
             employeeCardList = jdbcTemplate.query(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
+            logger.info("Success to get employees");
         } catch (DataAccessException e) {
             logger.error("Error get employees: {}", e.getMessage());
         }

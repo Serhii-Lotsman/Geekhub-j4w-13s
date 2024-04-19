@@ -8,6 +8,7 @@ public class UserMapper {
     private UserMapper() {
     }
 
+    @SuppressWarnings("java:S1172")
     public static UserEntity mapUserEntity(ResultSet resultSet, int rowNum) throws SQLException {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(resultSet.getLong("id"));
