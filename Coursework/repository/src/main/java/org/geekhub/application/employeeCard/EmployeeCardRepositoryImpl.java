@@ -32,29 +32,29 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     @Override
     public void saveEmployeeCard(@NonNull EmployeeCardEntity employeeCardEntity) {
         String query = """
-                    INSERT INTO employee_card (
-                    first_name,
-                    last_name,
-                    birthday,
-                    user_email,
-                    position,
-                    city,
-                    is_married,
-                    gender,
-                    hire_date
-                    )
-                    VALUES (
-                    :firstName,
-                    :lastName,
-                    :birthday,
-                    :email,
-                    :position,
-                    :city,
-                    :isMarried,
-                    :gender,
-                    :hireDate
-                    )
-                """;
+                INSERT INTO employee_card (
+                first_name,
+                last_name,
+                birthday,
+                user_email,
+                position,
+                city,
+                is_married,
+                gender,
+                hire_date
+                )
+                VALUES (
+                :firstName,
+                :lastName,
+                :birthday,
+                :email,
+                :position,
+                :city,
+                :isMarried,
+                :gender,
+                :hireDate
+                )
+            """;
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValues(Map.of(
@@ -81,8 +81,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     public void deleteEmployeeCard(Long id) {
         String query = "DELETE FROM employee_card WHERE id = :id";
 
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("id", id);
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
 
         try {
             jdbcTemplate.update(query, parameterSource);
@@ -97,8 +96,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     public Optional<EmployeeCardEntity> getEmployeeCard(Long id) {
         String query = "SELECT * FROM employee_card WHERE id = :id";
 
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("id", id);
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
 
         try {
             EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(
@@ -117,8 +115,8 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     public Optional<EmployeeCardEntity> getEmployeeCard(String email) {
         String query = "SELECT * FROM employee_card WHERE user_email = :email";
 
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("email", email);
+        SqlParameterSource parameterSource = new MapSqlParameterSource("email", email);
+
         try {
             EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(
                 query,

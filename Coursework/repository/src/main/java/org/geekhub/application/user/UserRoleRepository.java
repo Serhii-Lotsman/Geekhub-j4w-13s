@@ -105,12 +105,12 @@ public class UserRoleRepository {
         return List.of(userRole);
     }
 
-    public void removeRole(Long userId, Long roleId) {
-        String query = "DELETE FROM user_roles WHERE user_id = :userId AND role_id = :roleId";
+    public void updateRole(Long userId, Long roleId) {
+        String query = "UPDATE user_roles SET role_id = :roleId WHERE user_id = :userId";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("userId", userId)
-            .addValue("roleId", roleId);
+            .addValue("roleId", roleId)
+            .addValue("userId", userId);
 
         try {
             jdbcTemplate.update(query, parameterSource);

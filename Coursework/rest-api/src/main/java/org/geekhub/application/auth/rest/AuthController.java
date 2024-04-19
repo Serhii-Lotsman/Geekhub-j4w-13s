@@ -22,14 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    public static final int SINGLE_LIST = 0;
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
@@ -82,12 +81,12 @@ public class AuthController {
         UserEntity userEntity = new UserEntity(
             registerDto.email().trim(),
             passwordEncoder.encode(registerDto.password().trim()),
-            Stream.of(userRole)
-                .map(role -> new UserRole(role.getId(), role.getRole()))
-                .toList());
+            List.of(
+                new UserRole(userRole.getId(), userRole.getRole()))
+            );
 
         int userId = customUserDetailsService.createUser(userEntity);
-        customUserDetailsService.setUserRole(userId, userEntity.getRoles().get(SINGLE_LIST).getId());
+        customUserDetailsService.setUserRole(userId, userRole.getId());
         return new ResponseEntity<>("User registered success!", HttpStatus.CREATED);
     }
 }
