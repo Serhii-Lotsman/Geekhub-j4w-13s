@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.geekhub.application.enums.EmployeeGender;
 import org.geekhub.application.enums.EmployeePosition;
-import org.hibernate.validator.internal.util.stereotypes.Immutable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -28,7 +27,6 @@ public record EmployeeCardDto(
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NonNull LocalDate birthday,
 
-    @Immutable
     @NonNull String email,
 
     @NonNull EmployeePosition employeePosition,

@@ -8,12 +8,14 @@ import org.geekhub.application.employeeCard.EmployeeCardService;
 import org.geekhub.application.employeeCard.dto.EmployeeCardDto;
 import org.geekhub.application.exception.UserException;
 import org.geekhub.application.user.CustomUserDetailsService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -46,6 +48,7 @@ public class EmployeeCardController {
 
     @GetMapping
     @Tag(name = "get-all-employee-cards")
+    @ResponseStatus(HttpStatus.OK)
     public List<EmployeeCardDto> getEmployeeCards() {
         return employeeCardService.getAllEmployees().stream()
             .map(EmployeeCardConverter::toDto)
@@ -54,12 +57,14 @@ public class EmployeeCardController {
 
     @GetMapping("/{id}")
     @Tag(name = "get-employee-card")
+    @ResponseStatus(HttpStatus.OK)
     public EmployeeCardDto getEmployeeCard(@PathVariable Long id) {
         return EmployeeCardConverter.toDto(employeeCardService.getEmployeeCardById(id));
     }
 
     @PostMapping
     @Tag(name = "create-employee-card")
+    @ResponseStatus(HttpStatus.CREATED)
     public void createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
         if (!customUserDetailsService.isEmailExist(employeeCardDto.email())) {
             throw new UserException("Email not found");
@@ -69,9 +74,8 @@ public class EmployeeCardController {
 
     @DeleteMapping("/{id}")
     @Tag(name = "delete-employee-card")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteEmployeeCard(@PathVariable Long id) {
         employeeCardService.deleteEmployeeCard(id);
     }
-
-
 }
