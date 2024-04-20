@@ -62,7 +62,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        int bcryptStrength = Integer.parseInt(System.getenv("BCRYPT_STRENGTH"));
-        return new BCryptPasswordEncoder(bcryptStrength);
+        return new BCryptPasswordEncoder(14);
     }
 }
