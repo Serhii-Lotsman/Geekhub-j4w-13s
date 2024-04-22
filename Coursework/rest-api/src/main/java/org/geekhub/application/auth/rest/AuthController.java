@@ -5,8 +5,9 @@ import jakarta.validation.Valid;
 import org.geekhub.application.auth.dto.LoginDto;
 import org.geekhub.application.auth.dto.RegisterDto;
 import org.geekhub.application.user.CustomUserDetailsService;
-import org.geekhub.application.user.UserEntity;
-import org.geekhub.application.user.UserRole;
+import org.geekhub.application.user.model.UserEntity;
+import org.geekhub.application.user.model.UserRole;
+import org.geekhub.application.validation.UserValidation;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "user-auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -44,19 +46,18 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    @Tag(name = "login-user")
     @ResponseStatus(value = HttpStatus.OK)
     public String login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginDto.email(),
-                loginDto.password()));
+                loginDto.password()
+            ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return "User signed success!";
     }
 
     @PostMapping("/signup")
-    @Tag(name = "register-new-user")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> register(
         @Valid
@@ -65,6 +66,14 @@ public class AuthController {
     ) {
         if (customUserDetailsService.isEmailExist(registerDto.email())) {
             return new ResponseEntity<>("Email is taken!", HttpStatus.CONFLICT);
+        }
+
+        if (!UserValidation.isValidEmail(registerDto.email())) {
+            return new ResponseEntity<>("Invalid email!", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!customUserDetailsService.validatePassword(registerDto.password())) {
+            return new ResponseEntity<>("Invalid password!", HttpStatus.BAD_REQUEST);
         }
 
         if (!registerDto.password().equals(registerDto.confirmPassword())) {
@@ -83,7 +92,7 @@ public class AuthController {
             passwordEncoder.encode(registerDto.password().trim()),
             List.of(
                 new UserRole(userRole.getId(), userRole.getRole()))
-            );
+        );
 
         int userId = customUserDetailsService.createUser(userEntity);
         customUserDetailsService.setUserRole(userId, userRole.getId());

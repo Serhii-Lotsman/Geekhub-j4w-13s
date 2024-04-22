@@ -1,4 +1,4 @@
-package org.geekhub.application.user;
+package org.geekhub.application.user.model;
 
 public class UserRole {
     private Integer id;

@@ -8,7 +8,8 @@ import org.springframework.lang.NonNull;
 
 public record RegisterDto(
     @NotBlank(message = "Email is required")
-    @Size(min = 6, max = 30, message = "Email must be between 3 and 30 characters long")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+    @Size(min = 6, max = 30, message = "Email must be between 6 and 30 characters long")
     @Email(message = "Invalid email format")
     @NonNull String email,
 

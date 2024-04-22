@@ -1,6 +1,7 @@
 package org.geekhub.application.user;
 
 import org.geekhub.application.exception.UserException;
+import org.geekhub.application.user.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -9,8 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,18 +18,12 @@ import java.util.Optional;
 @Repository
 public class UserRoleRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRoleRepository.class);
+    public static final String SUPER_ADMIN = "SUPER_ADMIN";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserRoleRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    private UserRole mapUserRole(ResultSet resultSet, int rowNum) throws SQLException {
-        return new UserRole(
-            resultSet.getInt("id"),
-            resultSet.getString("name")
-        );
     }
 
     public void assignRole(int userId, int roleId) {
@@ -41,17 +35,16 @@ public class UserRoleRepository {
             .addValue("roleId", roleId);
 
         try {
-            Map<String, Object> roleNameResult = jdbcTemplate.queryForMap(queryForRoleName, parameterSource);
-            String roleName = (String) roleNameResult.get("name");
-            if (roleName.equals("SUPER_ADMIN")) {
-                logger.error("Failed to assign for user SUPER_ADMIN role");
+            Map<String, Object> roleNameMap = jdbcTemplate.queryForMap(queryForRoleName, parameterSource);
+            if (roleNameMap.get("name").toString().equals(SUPER_ADMIN)) {
+                logger.error("Failed to assign SUPER_ADMIN role for user");
                 throw new UserException("Failed to assign this role for user");
             }
 
             jdbcTemplate.update(query, parameterSource);
 
             logger.info("Role '{}' assigned successfully for user with ID: {}, role ID: {}",
-                roleName, userId, roleId);
+                roleNameMap.get("name"), userId, roleId);
         } catch (DataAccessException e) {
             logger.error("Failed to assign for user with ID: {}, role ID: {}. Error: {}",
                 userId, roleId, e.getMessage());
@@ -61,48 +54,59 @@ public class UserRoleRepository {
     public Optional<UserRole> findRole(String name) {
         String query = "SELECT * FROM roles WHERE name = :name";
 
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("name", name);
+        SqlParameterSource parameterSource = new MapSqlParameterSource("name", name);
 
         try {
-            UserRole userRole = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserRole);
+            UserRole userRole = jdbcTemplate.queryForObject(query, parameterSource, UserMapper::mapUserRole);
             logger.info("Role found with name: {}", name);
             return Optional.ofNullable(userRole);
         } catch (DataAccessException e) {
-            logger.error("Failed to find role with name: {}. Error: {}", name, e.getMessage());
+            logger.error("Failed to find role with name: {}. Error: {}",
+                name, e.getMessage());
             return Optional.empty();
         }
     }
 
-    private Optional<UserRole> findRole(int id) {
+    public Optional<UserRole> findRole(long id) {
         String query = "SELECT * FROM roles WHERE id = :id";
 
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("id", id);
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
 
         try {
-            UserRole userRole = jdbcTemplate.queryForObject(query, parameterSource, this::mapUserRole);
+            UserRole userRole = jdbcTemplate.queryForObject(query, parameterSource, UserMapper::mapUserRole);
             logger.info("Role found with id: {}", id);
             return Optional.ofNullable(userRole);
         } catch (DataAccessException e) {
-            logger.error("Failed to find role with id: {}. Error: {}", id, e.getMessage());
+            logger.error("Failed to find role with id: {}. Error: {}",
+                id, e.getMessage());
             return Optional.empty();
         }
     }
 
-    public List<UserRole> getRoles(Long id) {
+    public List<UserRole> getRoles(Long userId) {
         String roleQuery = "SELECT role_id FROM user_roles WHERE user_id = :userId";
+        List<UserRole> userRoleList = new ArrayList<>();
 
-        SqlParameterSource roleParameterSource = new MapSqlParameterSource()
-            .addValue("userId", id);
+        SqlParameterSource roleParameterSource = new MapSqlParameterSource("userId", userId);
 
         Integer roleId = jdbcTemplate.queryForObject(
             roleQuery,
             roleParameterSource,
             (rs, rowNum) -> rs.getInt("role_id"));
 
-        UserRole userRole = roleId != null ? findRole(roleId).orElseThrow() : new UserRole();
-        return List.of(userRole);
+        try {
+            if (roleId != null) {
+                userRoleList = findRole(roleId).stream()
+                    .map(role -> new UserRole(role.getId(), role.getRole()))
+                    .toList();
+                logger.info("Success to get roles");
+            }
+            return userRoleList;
+        } catch (DataAccessException e) {
+            logger.error("Failed to get roles by user's id {}. Error: {}",
+                userId, e.getMessage());
+            return userRoleList;
+        }
     }
 
     public void updateRole(Long userId, Long roleId) {
@@ -113,11 +117,15 @@ public class UserRoleRepository {
             .addValue("userId", userId);
 
         try {
+            if (roleId == 3) {
+                throw new UserException("Cannot assign this role to the user");
+            }
+
             jdbcTemplate.update(query, parameterSource);
-            logger.info("Role removed successfully for user with ID: {}, role ID: {}",
+            logger.info("Role reassigned successfully for user with ID: {}, role ID: {}",
                 userId, roleId);
         } catch (DataAccessException e) {
-            logger.error("Failed to remove role for user with ID: {}, role ID: {}. Error: {}",
+            logger.error("Failed to reassigned role for user with ID: {}, role ID: {}. Error: {}",
                 userId, roleId, e.getMessage());
         }
     }

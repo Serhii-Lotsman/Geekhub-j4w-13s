@@ -82,7 +82,7 @@ public class EmployeeCardService {
     }
 
     private boolean isInvalidName(String name) {
-        return name.trim().length() >= 30 || name.trim().length() <= 3 || !UserValidation.validNames(name);
+        return name.trim().length() >= 30 || name.trim().length() <= 3 || !UserValidation.isValidNames(name);
     }
 
     private boolean isValidBirthday(LocalDate birthday) {
@@ -107,10 +107,10 @@ public class EmployeeCardService {
     private void isValidCity(EmployeeCardEntity employeeCardEntity) {
         if (employeeCardEntity.getCity() != null) {
             String city = employeeCardEntity.getCity();
-            if (city == null || city.trim().isEmpty()) {
+            if (city == null || city.isEmpty()) {
                 employeeCardEntity.setCity("Unknown");
-            } else if (city.length() >= 30) {
-                throw new ValidationException("Invalid city name. Maximum character equals 30");
+            } else if (city.length() >= 30 || city.length() <= 6) {
+                throw new ValidationException("City name must be in range 6 - 30");
             }
         } else {
             throw new ValidationException("Employee card entity is null");

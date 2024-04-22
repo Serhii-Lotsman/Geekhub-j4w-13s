@@ -2,6 +2,8 @@ package org.geekhub.application.user;
 
 import org.geekhub.application.exception.UserException;
 import org.geekhub.application.exception.ValidationException;
+import org.geekhub.application.user.model.UserEntity;
+import org.geekhub.application.user.model.UserRole;
 import org.geekhub.application.validation.UserValidation;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -27,10 +29,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public int createUser(UserEntity userEntity) {
-        if (!UserValidation.isValidEmail(userEntity.getEmail())
-            || isEmailExist(userEntity.getEmail())
-            || userEntity.getEmail().trim().length() > 30) {
-            throw new ValidationException("Invalid email! Must be at range 6 - 30");
+        if (UserValidation.isValidEmail(userEntity.getEmail())) {
+            throw new ValidationException("Invalid email!");
         }
         return userRepository.saveUser(userEntity);
     }
@@ -65,5 +65,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         return roles.stream()
             .map(role ->
                 new SimpleGrantedAuthority(role.getRole())).toList();
+    }
+
+    public boolean validatePassword(String password) {
+        return UserValidation.isValidPassword(password);
     }
 }

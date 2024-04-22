@@ -1,4 +1,4 @@
-package org.geekhub.application.auth.rest;
+package org.geekhub.application;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

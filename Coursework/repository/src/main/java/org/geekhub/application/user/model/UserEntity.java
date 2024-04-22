@@ -1,4 +1,4 @@
-package org.geekhub.application.user;
+package org.geekhub.application.user.model;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -19,11 +19,20 @@ public class UserEntity {
     public UserEntity(
         @NonNull String email,
         @NonNull String password,
-        @NonNull List<UserRole> roles) {
+        @NonNull List<UserRole> roles
+    ) {
         this.id = null;
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public UserEntity(
+        @NonNull Long id,
+        @NonNull String email
+    ) {
+        this.id = id;
+        this.email = email;
     }
 
     @Nullable
@@ -35,27 +44,30 @@ public class UserEntity {
         this.id = id;
     }
 
+    @NonNull
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NonNull String email) {
         this.email = email;
     }
 
+    @NonNull
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NonNull String password) {
         this.password = password;
     }
 
+    @NonNull
     public List<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<UserRole> roles) {
+    public void setRoles(@NonNull List<UserRole> roles) {
         this.roles = roles;
     }
 }

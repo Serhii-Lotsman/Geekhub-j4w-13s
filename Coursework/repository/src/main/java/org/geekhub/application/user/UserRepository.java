@@ -1,5 +1,8 @@
 package org.geekhub.application.user;
 
+import org.geekhub.application.exception.UserException;
+import org.geekhub.application.user.model.UserEntity;
+import org.geekhub.application.user.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -10,6 +13,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,9 +24,11 @@ public class UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
     public static final int INCORRECT_ID = -1;
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final UserRoleRepository userRoleRepository;
 
-    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate, UserRoleRepository userRoleRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.userRoleRepository = userRoleRepository;
     }
 
     public int saveUser(UserEntity userEntity) {
@@ -86,9 +93,11 @@ public class UserRepository {
         String query = "UPDATE users SET email = :email, password = :password WHERE id = :id";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("email", userEntity.getEmail())
-            .addValue("password", userEntity.getPassword())
-            .addValue("id", userEntity.getId());
+            .addValues(Map.of(
+                "email", userEntity.getEmail(),
+                "password", userEntity.getPassword(),
+                "id", userEntity.getId() == null ? INCORRECT_ID : userEntity.getId()
+            ));
 
         try {
             jdbcTemplate.update(query, parameterSource);
@@ -102,10 +111,15 @@ public class UserRepository {
     public long deleteUser(long id) {
         String query = "DELETE FROM users WHERE id = :id";
 
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("id", id);
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
 
         try {
+            if (userRoleRepository.getRoles(id).stream()
+                .map(UserRole::getRole)
+                .findFirst().orElseThrow().equals("SUPER_ADMIN")) {
+                throw new UserException("Cannot update this user");
+            }
+
             jdbcTemplate.update(query, parameterSource);
             logger.info("User deleted successfully with id: {}", id);
             return id;
@@ -113,5 +127,24 @@ public class UserRepository {
             logger.error("Failed to delete user with id: {}. Error: {}", id, e.getMessage());
             return INCORRECT_ID;
         }
+    }
+
+    public List<UserEntity> findUsers() {
+        String query = "SELECT id, email FROM users ORDER BY id";
+
+        List<UserEntity> usersList = new ArrayList<>();
+
+        try {
+            usersList = jdbcTemplate.query(
+                query,
+                (rs, rowNum) -> new UserEntity(
+                    rs.getLong("id"),
+                    rs.getString("email")
+                ));
+            logger.info("Users find successfully");
+        } catch (DataAccessException e) {
+            logger.error("Failed to find users");
+        }
+        return usersList;
     }
 }

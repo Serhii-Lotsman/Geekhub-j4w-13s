@@ -33,6 +33,7 @@ import java.util.List;
 )
 @RestController
 @RequestMapping("/api/v1/employees")
+@Tag(name = "employee-card")
 public class EmployeeCardController {
 
     private final EmployeeCardService employeeCardService;
@@ -47,7 +48,6 @@ public class EmployeeCardController {
     }
 
     @GetMapping
-    @Tag(name = "get-all-employee-cards")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeCardDto> getEmployeeCards() {
         return employeeCardService.getAllEmployees().stream()
@@ -56,14 +56,12 @@ public class EmployeeCardController {
     }
 
     @GetMapping("/{id}")
-    @Tag(name = "get-employee-card")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeCardDto getEmployeeCard(@PathVariable Long id) {
         return EmployeeCardConverter.toDto(employeeCardService.getEmployeeCardById(id));
     }
 
     @PostMapping
-    @Tag(name = "create-employee-card")
     @ResponseStatus(HttpStatus.CREATED)
     public void createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
         if (!customUserDetailsService.isEmailExist(employeeCardDto.email())) {
@@ -73,8 +71,7 @@ public class EmployeeCardController {
     }
 
     @DeleteMapping("/{id}")
-    @Tag(name = "delete-employee-card")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEmployeeCard(@PathVariable Long id) {
         employeeCardService.deleteEmployeeCard(id);
     }

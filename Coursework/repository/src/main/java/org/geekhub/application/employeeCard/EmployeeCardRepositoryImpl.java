@@ -138,9 +138,9 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
         try {
             employeeCardList = jdbcTemplate.query(query, EmployeeCardMapper::mapResultSetToEmployeeRecord);
-            logger.info("Success to get employees");
+            logger.info("Success to get employee cards");
         } catch (DataAccessException e) {
-            logger.error("Failed to get employees: {}", e.getMessage());
+            logger.error("Failed to get employee cards: {}", e.getMessage());
         }
         return employeeCardList;
     }
