@@ -37,4 +37,7 @@ public interface EmployeeCardRepository {
 
     @NonNull
     boolean employeeEmailExist(String email);
+
+    @NonNull
+    void updateEmployeeCard(EmployeeCardEntity employeeCardEntity);
 }

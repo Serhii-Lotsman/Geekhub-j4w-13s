@@ -11,10 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserRepository {
@@ -39,7 +36,7 @@ public class UserRepository {
 
         try {
             jdbcTemplate.update(query, parameterSource, keyHolder);
-            return keyHolder.getKey() != null ? keyHolder.getKey().intValue() : INCORRECT_ID;
+            return Objects.requireNonNull(keyHolder.getKey()).intValue();
         } catch (DataAccessException e) {
             logger.error("Failed to save user with email: {}. Error: {}",
                 userEntity.getEmail(), e.getMessage());

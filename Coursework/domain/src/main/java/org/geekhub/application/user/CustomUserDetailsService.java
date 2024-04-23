@@ -1,6 +1,7 @@
 package org.geekhub.application.user;
 
 import org.geekhub.application.exception.UserException;
+import org.geekhub.application.exception.UserExistException;
 import org.geekhub.application.exception.ValidationException;
 import org.geekhub.application.user.model.UserEntity;
 import org.geekhub.application.user.model.UserRole;
@@ -31,6 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     public int createUser(UserEntity userEntity) {
         if (UserValidation.isInvalidEmail(userEntity.getEmail())) {
             throw new ValidationException("Invalid email!");
+        }
+
+        if (isEmailExist(userEntity.getEmail())) {
+            throw new UserExistException("Email is taken!");
         }
         return userRepository.saveUser(userEntity);
     }

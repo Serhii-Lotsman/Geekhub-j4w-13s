@@ -42,8 +42,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
                 is_married,
                 gender,
                 hire_date
-                )
-                VALUES (
+                ) VALUES (
                 :firstName,
                 :lastName,
                 :birthday,
@@ -185,6 +184,42 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
         SqlParameterSource parameterSource = new MapSqlParameterSource("email", email);
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameterSource, Boolean.class));
+    }
+
+    @Override
+    public void updateEmployeeCard(EmployeeCardEntity employeeCardEntity) {
+        String query = """
+            UPDATE employee_card SET
+                first_name = :firstName,
+                last_name = :lastName,
+                birthday = :birthday,
+                position = :position,
+                city = :city,
+                is_married = :isMarried,
+                gender = :gender,
+                hire_date = :hireDate
+                WHERE id = :id
+                """;
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValues(Map.of(
+                "firstName", employeeCardEntity.getFirstName(),
+                "lastName", employeeCardEntity.getLastName(),
+                "birthday", employeeCardEntity.getBirthday(),
+                "position", employeeCardEntity.getEmployeePosition().name().toLowerCase(),
+                "city", employeeCardEntity.getCity() == null ? "Unknown" : employeeCardEntity.getCity(),
+                "isMarried", employeeCardEntity.isMarried(),
+                "gender", employeeCardEntity.getEmployeeGender().name().toLowerCase(),
+                "hireDate", employeeCardEntity.getHireDate(),
+                "id", employeeCardEntity.getId()
+            ));
+
+        try {
+            jdbcTemplate.update(query, parameterSource);
+            logger.info("Employee card updated");
+        } catch (DataAccessException e) {
+            logger.error("Failed updated employee card: {}", e.getMessage());
+        }
     }
 
     private List<EmployeeCardEntity> getRecordsWithParams(String query, Object columnValue) {

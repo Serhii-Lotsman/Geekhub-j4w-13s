@@ -38,6 +38,12 @@ public class EmployeeCardService {
         );
     }
 
+    public void updateEmployeeCard(EmployeeCardEntity employeeCardEntity) {
+        employeeCardRepository.updateEmployeeCard(
+            EmployeeValidation.validateFields(employeeCardEntity)
+        );
+    }
+
     public void deleteEmployeeCard(Long id) {
         getEmployeeCardById(id);
         employeeCardRepository.deleteEmployeeCard(id);

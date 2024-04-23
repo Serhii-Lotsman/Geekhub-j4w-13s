@@ -7,6 +7,7 @@ import org.geekhub.application.exception.ValidationException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class EmployeeValidation {
@@ -20,7 +21,7 @@ public class EmployeeValidation {
     private EmployeeValidation() {
     }
 
-    private static boolean isInvalidNames(String name) {
+    private static void isInvalidNames(String name) {
         if (name == null || name.length() <= 3 || name.length() >= 30) {
             throw new ValidationException("Name/Surname must be at range 3 - 30");
         }
@@ -28,7 +29,6 @@ public class EmployeeValidation {
         if (!Pattern.compile(FULL_NAME_REGEX).matcher(name).matches()) {
             throw new ValidationException("Name/Surname must contains valid symbols");
         }
-        return false;
     }
 
     private static boolean isValidBirthday(LocalDate birthday) {
@@ -50,23 +50,17 @@ public class EmployeeValidation {
                || Arrays.asList(EmployeeGender.values()).contains(employeeCardEntity.getEmployeeGender());
     }
 
-    private static boolean isValidCity(String city) {
-        if (city != null && city.length() >= 30 || city != null && city.length() <= 2) {
+    private static void isInvalidCity(String city) {
+        if (city != null && (city.length() >= 30 || city.length() <= 2)) {
             throw new ValidationException("City name must be in range 3 - 30");
         }
 
         if (city != null && !Pattern.compile(CITY_REGEX).matcher(city).matches()) {
             throw new ValidationException("City name must contains valid symbols");
         }
-        return true;
     }
 
     public static EmployeeCardEntity validateFields(EmployeeCardEntity employeeCardEntity) {
-        if (isInvalidNames(employeeCardEntity.getFirstName())
-            || isInvalidNames(employeeCardEntity.getLastName())) {
-            throw new ValidationException("Invalid format name or surname");
-        }
-
         if (!isValidBirthday(employeeCardEntity.getBirthday())) {
             throw new ValidationException("Work age range from 16 to 80 y.o.");
         }
@@ -79,16 +73,17 @@ public class EmployeeValidation {
             throw new ValidationException("Hire date can't be later than today, or not earlier than a year ago");
         }
 
-        if (employeeCardEntity.getCity() == null
-            || employeeCardEntity.getCity() != null
-               && employeeCardEntity.getCity().isEmpty()
-        ) {
-            employeeCardEntity.setCity("Unknown");
-        } else if (!isValidCity(employeeCardEntity.getCity())) {
-            throw new ValidationException("Invalid city name");
+        if (employeeCardEntity.getCity() != null) {
+            String city = employeeCardEntity.getCity();
+            if (city == null || city.isEmpty()) {
+                employeeCardEntity.setCity("Unknown");
+            }
         }
 
-        employeeCardEntity.setCity(employeeCardEntity.getCity().trim());
+        isInvalidNames(employeeCardEntity.getFirstName());
+        isInvalidNames(employeeCardEntity.getLastName());
+        isInvalidCity(employeeCardEntity.getCity());
+        employeeCardEntity.setCity(Objects.requireNonNull(employeeCardEntity.getCity()).trim());
 
         return employeeCardEntity;
     }

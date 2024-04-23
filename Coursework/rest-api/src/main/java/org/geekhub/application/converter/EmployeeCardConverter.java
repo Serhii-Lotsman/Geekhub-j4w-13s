@@ -37,4 +37,19 @@ public class EmployeeCardConverter {
             employeeCardEntity.getHireDate()
         );
     }
+
+    public static EmployeeCardEntity updateEmployeeFromDto(
+        @NonNull EmployeeCardEntity employeeCardEntity,
+        @NonNull EmployeeCardDto employeeCardDto
+    ) {
+        employeeCardEntity.setFirstName(employeeCardDto.firstName().trim());
+        employeeCardEntity.setLastName(employeeCardDto.lastName().trim());
+        employeeCardEntity.setBirthday(employeeCardDto.birthday());
+        employeeCardEntity.setEmployeePosition(employeeCardDto.employeePosition());
+        employeeCardEntity.setCity(employeeCardDto.city());
+        employeeCardEntity.setMarried(employeeCardDto.isMarried());
+        employeeCardEntity.setEmployeeGender(employeeCardDto.employeeGender());
+        employeeCardEntity.setHireDate(employeeCardDto.hireDate());
+        return employeeCardEntity;
+    }
 }

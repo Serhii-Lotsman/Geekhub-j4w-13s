@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.application.converter.EmployeeCardConverter;
 import org.geekhub.application.employeeCard.EmployeeCardService;
 import org.geekhub.application.employeeCard.dto.EmployeeCardDto;
+import org.geekhub.application.employeeCard.model.EmployeeCardEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,15 +62,20 @@ public class EmployeeCardController {
         employeeCardService.saveEmployeeCard(EmployeeCardConverter.employeeFromDto(employeeCardDto));
     }
 
-    /*@PutMapping("/{cardId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void updateEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto, @PathVariable String cardId) {
-        employeeCardService.updateEmployeeCard(EmployeeCardConverter.employeeFromDto(employeeCardDto));
-    }*/
+    @PutMapping("/{cardId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateEmployeeCard(@PathVariable long cardId, @RequestBody EmployeeCardDto employeeCardDto) {
+        EmployeeCardEntity employeeCardEntity = employeeCardService.getEmployeeCardById(cardId);
+        if (employeeCardEntity != null) {
+            employeeCardService.updateEmployeeCard(
+                EmployeeCardConverter.updateEmployeeFromDto(employeeCardEntity, employeeCardDto)
+            );
+        }
+    }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEmployeeCard(@PathVariable Long id) {
-        employeeCardService.deleteEmployeeCard(id);
+    public void deleteEmployeeCard(@PathVariable Long cardId) {
+        employeeCardService.deleteEmployeeCard(cardId);
     }
 }
