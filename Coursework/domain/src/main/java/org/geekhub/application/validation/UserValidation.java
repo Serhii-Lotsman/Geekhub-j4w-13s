@@ -14,7 +14,7 @@ public class UserValidation {
     private UserValidation() {
     }
 
-    public static boolean isValidEmail(String email) {
+    public static boolean isInvalidEmail(String email) {
         if (email == null || email.length() <= 6 || email.length() >= 30) {
             throw new ValidationException("Email must be at range 6 - 30");
         }
@@ -22,7 +22,7 @@ public class UserValidation {
         if (!Pattern.compile(EMAIL_REGEX).matcher(email).matches()) {
             throw new ValidationException("Email must contains valid symbols");
         }
-        return true;
+        return false;
     }
 
     public static boolean isValidPassword(String password) {

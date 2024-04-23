@@ -2,12 +2,11 @@ package org.geekhub.application.user.rest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.application.enums.Role;
+import org.geekhub.application.exception.ValidationException;
 import org.geekhub.application.user.dto.UserDto;
 import org.geekhub.application.user.model.UserEntity;
 import org.geekhub.application.user.UserService;
-import org.geekhub.application.validation.UserValidation;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,41 +32,36 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PutMapping("/user-role/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void editUserRole(@PathVariable Long userId, @RequestParam Role role) {
-        long roleId = userService.getRoleIdByName(role.name());
-        userService.updateRole(userId, roleId);
-    }
-
-    @PutMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> editUser(
-        @PathVariable Long userId,
-        @RequestParam String email,
-        @RequestParam String password
-    ) {
-        if (!UserValidation.isValidEmail(email)) {
-            return new ResponseEntity<>("Invalid email!", HttpStatus.BAD_REQUEST);
-        }
-        if (!userService.validatePassword(password)) {
-            return new ResponseEntity<>(
-                "Password must be in range 6 - 30 and use valid symbols",
-                HttpStatus.BAD_REQUEST);
-        }
-        UserEntity userEntity = userService.findById(userId);
-        userEntity.setEmail(email);
-        userEntity.setPassword(passwordEncoder.encode(password));
-        userService.updateUser(userEntity);
-        return new ResponseEntity<>("User successfully updated!", HttpStatus.OK);
-    }
-
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getUsers() {
         return userService.getUsers().stream()
             .map(userEntity -> new UserDto(userEntity.getId(), userEntity.getEmail()))
             .toList();
+    }
+
+    @PutMapping("/user-role/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUserRole(@PathVariable long userId, @RequestParam Role role) {
+        long roleId = userService.getRoleIdByName(role.name());
+        userService.updateRole(userId, roleId);
+    }
+
+    @PutMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUser(
+        @PathVariable long userId,
+        @RequestParam String email,
+        @RequestParam String password
+    ) {
+        if (!userService.validatePassword(password)) {
+            throw new ValidationException("Password must be in range 6 - 30 and use valid symbols");
+        }
+        
+        UserEntity userEntity = userService.findById(userId);
+        userEntity.setEmail(email.trim());
+        userEntity.setPassword(passwordEncoder.encode(password));
+        userService.updateUser(userEntity);
     }
 
     @DeleteMapping("/{userId}")

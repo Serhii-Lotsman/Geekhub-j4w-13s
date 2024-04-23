@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public int createUser(UserEntity userEntity) {
-        if (!UserValidation.isValidEmail(userEntity.getEmail())) {
+        if (UserValidation.isInvalidEmail(userEntity.getEmail())) {
             throw new ValidationException("Invalid email!");
         }
         return userRepository.saveUser(userEntity);

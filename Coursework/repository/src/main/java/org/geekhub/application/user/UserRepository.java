@@ -98,7 +98,7 @@ public class UserRepository {
         try {
             jdbcTemplate.update(query, parameterSource);
             logger.info("User updated successfully with new email: {}", userEntity.getEmail());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             logger.error("Failed to update user with email: {}. Error: {}",
                 userEntity.getEmail(), e.getMessage());
         }

@@ -67,7 +67,7 @@ public class AuthController {
             throw new UserExistException("Email is taken!");
         }
 
-        if (!UserValidation.isValidEmail(registerDto.email())) {
+        if (UserValidation.isInvalidEmail(registerDto.email())) {
             throw new ValidationException("Invalid email!");
         }
 

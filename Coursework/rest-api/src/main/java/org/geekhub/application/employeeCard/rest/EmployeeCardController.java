@@ -61,6 +61,12 @@ public class EmployeeCardController {
         employeeCardService.saveEmployeeCard(EmployeeCardConverter.employeeFromDto(employeeCardDto));
     }
 
+    /*@PutMapping("/{cardId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void updateEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto, @PathVariable String cardId) {
+        employeeCardService.updateEmployeeCard(EmployeeCardConverter.employeeFromDto(employeeCardDto));
+    }*/
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEmployeeCard(@PathVariable Long id) {

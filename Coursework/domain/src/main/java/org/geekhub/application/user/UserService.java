@@ -28,6 +28,10 @@ public class UserService {
     }
 
     public void updateRole(long userId, long roleId) {
+        if (!userRepository.existsByUserEmail(findById(userId).getEmail())) {
+            throw new UserException("Cannot find user");
+        }
+
         if (roleId == 3 || validateUser(userId)) {
             throw new UniqueUserException("Cannot assign this role to the user");
         }
@@ -35,7 +39,7 @@ public class UserService {
     }
 
     public void updateUser(UserEntity userEntity) {
-        if (!UserValidation.isValidEmail(userEntity.getEmail())) {
+        if (UserValidation.isInvalidEmail(userEntity.getEmail())) {
             throw new ValidationException("Invalid email!");
         }
 
