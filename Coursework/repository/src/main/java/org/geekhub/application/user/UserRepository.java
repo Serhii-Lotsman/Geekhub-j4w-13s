@@ -1,8 +1,6 @@
 package org.geekhub.application.user;
 
-import org.geekhub.application.exception.UserException;
 import org.geekhub.application.user.model.UserEntity;
-import org.geekhub.application.user.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -24,11 +22,9 @@ public class UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
     public static final int INCORRECT_ID = -1;
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final UserRoleRepository userRoleRepository;
 
-    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate, UserRoleRepository userRoleRepository) {
+    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userRoleRepository = userRoleRepository;
     }
 
     public int saveUser(UserEntity userEntity) {
@@ -114,12 +110,6 @@ public class UserRepository {
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
 
         try {
-            if (userRoleRepository.getRoles(id).stream()
-                .map(UserRole::getRole)
-                .findFirst().orElseThrow().equals("SUPER_ADMIN")) {
-                throw new UserException("Cannot update this user");
-            }
-
             jdbcTemplate.update(query, parameterSource);
             logger.info("User deleted successfully with id: {}", id);
             return id;

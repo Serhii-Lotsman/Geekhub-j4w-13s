@@ -23,7 +23,7 @@ public class EmployeeCardConverter {
         return employeeCardEntity;
     }
 
-    public static EmployeeCardDto toDto(@NonNull EmployeeCardEntity employeeCardEntity) {
+    public static EmployeeCardDto employeeToDto(@NonNull EmployeeCardEntity employeeCardEntity) {
         return new EmployeeCardDto(
             employeeCardEntity.getId(),
             employeeCardEntity.getFirstName(),

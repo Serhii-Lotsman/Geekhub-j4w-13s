@@ -6,17 +6,16 @@ import java.util.regex.Pattern;
 
 public class UserValidation {
 
-    private UserValidation() {
-    }
-
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     public static final String UPPERCASE_LETTER_PASSWORD = ".*[A-Z].*";
     public static final String DIGIT_PASSWORD = ".*\\d.*";
     public static final String ALPHANUMERIC_PASSWORD = "^[a-zA-Z0-9]*$";
-    private static final String FULL_NAME_REGEX = "^[A-Z][a-zA-Z]*$";
+
+    private UserValidation() {
+    }
 
     public static boolean isValidEmail(String email) {
-        if (email == null || email.length() < 6 || email.length() > 30) {
+        if (email == null || email.length() <= 6 || email.length() >= 30) {
             throw new ValidationException("Email must be at range 6 - 30");
         }
 
@@ -27,7 +26,7 @@ public class UserValidation {
     }
 
     public static boolean isValidPassword(String password) {
-        if (password == null || password.length() < 6 || password.length() > 30) {
+        if (password == null || password.length() <= 6 || password.length() >= 30) {
             throw new ValidationException("Password must be at range 6 - 30");
         }
 
@@ -43,9 +42,5 @@ public class UserValidation {
             throw new ValidationException("Password must be alphanumeric");
         }
         return true;
-    }
-
-    public static boolean isValidNames(String name) {
-        return Pattern.compile(FULL_NAME_REGEX).matcher(name).matches();
     }
 }

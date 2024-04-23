@@ -4,13 +4,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.geekhub.application.auth.dto.LoginDto;
 import org.geekhub.application.auth.dto.RegisterDto;
+import org.geekhub.application.enums.Role;
+import org.geekhub.application.exception.UserExistException;
+import org.geekhub.application.exception.ValidationException;
 import org.geekhub.application.user.CustomUserDetailsService;
 import org.geekhub.application.user.model.UserEntity;
 import org.geekhub.application.user.model.UserRole;
 import org.geekhub.application.validation.UserValidation;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -47,46 +47,43 @@ public class AuthController {
 
     @PostMapping("/signin")
     @ResponseStatus(value = HttpStatus.OK)
-    public String login(@RequestBody LoginDto loginDto) {
+    public void login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginDto.email(),
                 loginDto.password()
             ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User signed success!";
     }
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> register(
+    public void register(
         @Valid
         @RequestBody RegisterDto registerDto,
         BindingResult bindingResult
     ) {
         if (customUserDetailsService.isEmailExist(registerDto.email())) {
-            return new ResponseEntity<>("Email is taken!", HttpStatus.CONFLICT);
+            throw new UserExistException("Email is taken!");
         }
 
         if (!UserValidation.isValidEmail(registerDto.email())) {
-            return new ResponseEntity<>("Invalid email!", HttpStatus.BAD_REQUEST);
+            throw new ValidationException("Invalid email!");
         }
 
         if (!customUserDetailsService.validatePassword(registerDto.password())) {
-            return new ResponseEntity<>("Invalid password!", HttpStatus.BAD_REQUEST);
+            throw new ValidationException("Invalid password!");
         }
 
         if (!registerDto.password().equals(registerDto.confirmPassword())) {
-            return new ResponseEntity<>("Failed to confirm password", HttpStatus.BAD_REQUEST);
+            throw new ValidationException("Failed to confirm password!");
         }
 
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining(", ")), HttpStatus.BAD_REQUEST);
+            throw new ValidationException("Invalid parameter!");
         }
 
-        UserRole userRole = customUserDetailsService.getRoleByName("USER");
+        UserRole userRole = customUserDetailsService.getRoleByName(Role.USER.name());
         UserEntity userEntity = new UserEntity(
             registerDto.email().trim(),
             passwordEncoder.encode(registerDto.password().trim()),
@@ -96,6 +93,5 @@ public class AuthController {
 
         int userId = customUserDetailsService.createUser(userEntity);
         customUserDetailsService.setUserRole(userId, userRole.getId());
-        return new ResponseEntity<>("User registered success!", HttpStatus.CREATED);
     }
 }

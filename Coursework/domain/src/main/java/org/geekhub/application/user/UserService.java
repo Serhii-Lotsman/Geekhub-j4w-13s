@@ -1,6 +1,8 @@
 package org.geekhub.application.user;
 
+import org.geekhub.application.exception.UniqueUserException;
 import org.geekhub.application.exception.UserException;
+import org.geekhub.application.exception.UserExistException;
 import org.geekhub.application.exception.ValidationException;
 import org.geekhub.application.user.model.UserEntity;
 import org.geekhub.application.user.model.UserRole;
@@ -27,7 +29,7 @@ public class UserService {
 
     public void updateRole(long userId, long roleId) {
         if (roleId == 3 || validateUser(userId)) {
-            throw new UserException("Cannot assign this role to the user");
+            throw new UniqueUserException("Cannot assign this role to the user");
         }
         userRoleRepository.updateRole(userId, roleId);
     }
@@ -38,11 +40,11 @@ public class UserService {
         }
 
         if (userRepository.existsByUserEmail(userEntity.getEmail())) {
-            throw new UserException("Email is taken!");
+            throw new UserExistException("Email is taken!");
         }
 
         if (validateUser(userEntity.getId())) {
-            throw new UserException("Cannot update this user");
+            throw new UniqueUserException("Cannot update this user");
         }
         userRepository.updateUser(userEntity);
     }
@@ -57,12 +59,12 @@ public class UserService {
     }
 
     public long deleteUser(long userId) {
-        if (userRepository.existsByUserEmail(findById(userId).getEmail())) {
+        if (!userRepository.existsByUserEmail(findById(userId).getEmail())) {
             throw new UserException("Cannot find user");
         }
 
         if (validateUser(userId)) {
-            throw new UserException("Cannot delete this user");
+            throw new UniqueUserException("Cannot delete this user");
         }
         return userRepository.deleteUser(userId);
     }

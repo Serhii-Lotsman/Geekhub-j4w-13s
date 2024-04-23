@@ -1,10 +1,10 @@
 package org.geekhub.application.user;
 
-import org.geekhub.application.exception.UserException;
 import org.geekhub.application.user.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -38,7 +38,7 @@ public class UserRoleRepository {
             Map<String, Object> roleNameMap = jdbcTemplate.queryForMap(queryForRoleName, parameterSource);
             if (roleNameMap.get("name").toString().equals(SUPER_ADMIN)) {
                 logger.error("Failed to assign SUPER_ADMIN role for user");
-                throw new UserException("Failed to assign this role for user");
+                throw new DataAccessResourceFailureException("Failed to assign this role for user");
             }
 
             jdbcTemplate.update(query, parameterSource);
@@ -118,7 +118,7 @@ public class UserRoleRepository {
 
         try {
             if (roleId == 3) {
-                throw new UserException("Cannot assign this role to the user");
+                throw new DataAccessResourceFailureException("Cannot assign this role to the user");
             }
 
             jdbcTemplate.update(query, parameterSource);
