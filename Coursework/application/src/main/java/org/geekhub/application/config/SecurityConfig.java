@@ -3,7 +3,6 @@ package org.geekhub.application.config;
 import org.geekhub.application.user.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -48,7 +47,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers(HttpMethod.GET).permitAll()
+                authorizeRequests
+                    .requestMatchers("/api/auth/").permitAll()
+                    .requestMatchers("/api/manage/users/**").hasAnyAuthority("SUPER_ADMIN")
+                    .requestMatchers("/api/v1/hr-panel/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/api/v1/employees/my-card").hasAnyAuthority("USER", "ADMIN", "SUPER_ADMIN")
+                    .requestMatchers("/api/v1/employees/**").hasAnyAuthority("ADMIN")
                     .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             .formLogin(Customizer.withDefaults());

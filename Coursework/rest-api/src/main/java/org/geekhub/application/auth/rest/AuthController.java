@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(reason = "Sign In successful", value = HttpStatus.OK)
     public void login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -53,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(reason = "Sign Up succeed", value = HttpStatus.CREATED)
     public void register(@RequestBody RegisterDto registerDto) {
         if (!customUserDetailsService.validatePassword(registerDto.password())) {
             throw new ValidationException("Invalid password!");

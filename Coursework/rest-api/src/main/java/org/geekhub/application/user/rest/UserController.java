@@ -1,7 +1,6 @@
 package org.geekhub.application.user.rest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.geekhub.application.enums.Role;
 import org.geekhub.application.exception.ValidationException;
 import org.geekhub.application.user.dto.UserDto;
 import org.geekhub.application.user.model.UserEntity;
@@ -20,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/admin-panel")
-@Tag(name = "user-manage")
+@RequestMapping("/api/v1/hr-panel")
+@Tag(name = "manage-users")
 public class UserController {
 
     private final UserService userService;
@@ -40,13 +39,6 @@ public class UserController {
             .toList();
     }
 
-    @PutMapping("/user-role/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateUserRole(@PathVariable long userId, @RequestParam Role role) {
-        long roleId = userService.getRoleIdByName(role.name());
-        userService.updateRole(userId, roleId);
-    }
-
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateUser(
@@ -57,7 +49,7 @@ public class UserController {
         if (!userService.validatePassword(password)) {
             throw new ValidationException("Password must be in range 6 - 30 and use valid symbols");
         }
-        
+
         UserEntity userEntity = userService.findById(userId);
         userEntity.setEmail(email.trim());
         userEntity.setPassword(passwordEncoder.encode(password));

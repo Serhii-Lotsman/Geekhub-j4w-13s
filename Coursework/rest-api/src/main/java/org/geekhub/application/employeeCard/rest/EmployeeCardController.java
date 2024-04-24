@@ -8,6 +8,8 @@ import org.geekhub.application.employeeCard.EmployeeCardService;
 import org.geekhub.application.employeeCard.dto.EmployeeCardDto;
 import org.geekhub.application.employeeCard.model.EmployeeCardEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,7 +55,20 @@ public class EmployeeCardController {
     @GetMapping("/{cardId}")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeCardDto getEmployeeCard(@PathVariable Long cardId) {
-        return EmployeeCardConverter.employeeToDto(employeeCardService.getEmployeeCardById(cardId));
+        return EmployeeCardConverter.employeeToDto(
+            employeeCardService.getEmployeeCardById(cardId)
+        );
+    }
+
+    @GetMapping("/my-card")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeCardDto getMyCard() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        return EmployeeCardConverter.employeeToDto(
+            employeeCardService.getEmployeeCardByEmail(userEmail)
+        );
     }
 
     @PostMapping
