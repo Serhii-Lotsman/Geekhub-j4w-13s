@@ -10,6 +10,7 @@ public class EmployeeCardConverter {
     }
 
     public static EmployeeCardEntity employeeFromDto(@NonNull EmployeeCardDto employeeCardDto) {
+        EmployeeDtoValidation.validateDtoFields(employeeCardDto);
         EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity();
         employeeCardEntity.setFirstName(employeeCardDto.firstName().trim());
         employeeCardEntity.setLastName(employeeCardDto.lastName().trim());
@@ -42,6 +43,7 @@ public class EmployeeCardConverter {
         @NonNull EmployeeCardEntity employeeCardEntity,
         @NonNull EmployeeCardDto employeeCardDto
     ) {
+        EmployeeDtoValidation.validateDtoFields(employeeCardDto);
         employeeCardEntity.setFirstName(employeeCardDto.firstName().trim());
         employeeCardEntity.setLastName(employeeCardDto.lastName().trim());
         employeeCardEntity.setBirthday(employeeCardDto.birthday());

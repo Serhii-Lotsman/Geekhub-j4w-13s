@@ -34,7 +34,7 @@ public class RoleController {
     }
 
     @PutMapping("/assign/{userId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(reason = "Role assigned", value = HttpStatus.OK)
     public void updateUserRole(@PathVariable long userId, @RequestParam Role role) {
         long roleId = userService.getRoleIdByName(role.name());
         userService.updateRole(userId, roleId);

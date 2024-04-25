@@ -72,13 +72,13 @@ public class EmployeeCardController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(reason = "Employee card created", value = HttpStatus.CREATED)
     public void createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
         employeeCardService.saveEmployeeCard(EmployeeCardConverter.employeeFromDto(employeeCardDto));
     }
 
     @PutMapping("/{cardId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(reason = "Employee card updated", value = HttpStatus.OK)
     public void updateEmployeeCard(@PathVariable long cardId, @RequestBody EmployeeCardDto employeeCardDto) {
         EmployeeCardEntity employeeCardEntity = employeeCardService.getEmployeeCardById(cardId);
         if (employeeCardEntity != null) {
@@ -89,7 +89,7 @@ public class EmployeeCardController {
     }
 
     @DeleteMapping("/{cardId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(reason = "Employee card deleted", value = HttpStatus.NO_CONTENT)
     public void deleteEmployeeCard(@PathVariable Long cardId) {
         employeeCardService.deleteEmployeeCard(cardId);
     }

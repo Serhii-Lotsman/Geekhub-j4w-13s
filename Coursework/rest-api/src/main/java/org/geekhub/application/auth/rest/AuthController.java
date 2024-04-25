@@ -74,4 +74,10 @@ public class AuthController {
         int userId = customUserDetailsService.createUser(userEntity);
         customUserDetailsService.setUserRole(userId, userRole.getId());
     }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout() {
+        SecurityContextHolder.clearContext();
+    }
 }

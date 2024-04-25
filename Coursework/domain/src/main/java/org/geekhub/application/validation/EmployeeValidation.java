@@ -21,7 +21,7 @@ public class EmployeeValidation {
     private EmployeeValidation() {
     }
 
-    private static void isInvalidNames(String name) {
+    public static void isInvalidNames(String name) {
         if (name == null || name.length() <= 3 || name.length() >= 30) {
             throw new ValidationException("Name/Surname must be at range 3 - 30");
         }
@@ -31,26 +31,26 @@ public class EmployeeValidation {
         }
     }
 
-    private static boolean isValidBirthday(LocalDate birthday) {
+    public static boolean isValidBirthday(LocalDate birthday) {
         LocalDate minDate = LocalDate.now().minusYears(MAXIMUM_AGE_TO_WORK);
         LocalDate maxDate = LocalDate.now().minusYears(MINIMUM_AGE_TO_WORK);
 
         return birthday != null && !birthday.isBefore(minDate) && !birthday.isAfter(maxDate);
     }
 
-    private static boolean isValidHireDate(LocalDate hireDate) {
+    public static boolean isValidHireDate(LocalDate hireDate) {
         LocalDate minDate = LocalDate.now().minusYears(ONE_YEAR_TO_HIRE);
         LocalDate maxDate = LocalDate.now();
 
         return hireDate != null && !hireDate.isBefore(minDate) && !hireDate.isAfter(maxDate);
     }
 
-    private static boolean isValidGenderOrPosition(EmployeeCardEntity employeeCardEntity) {
-        return Arrays.asList(EmployeePosition.values()).contains(employeeCardEntity.getEmployeePosition())
-               || Arrays.asList(EmployeeGender.values()).contains(employeeCardEntity.getEmployeeGender());
+    public static boolean isValidGenderOrPosition(EmployeePosition employeePosition, EmployeeGender employeeGender) {
+        return Arrays.asList(EmployeePosition.values()).contains(employeePosition)
+               || Arrays.asList(EmployeeGender.values()).contains(employeeGender);
     }
 
-    private static void isInvalidCity(String city) {
+    public static void isInvalidCity(String city) {
         if (city != null && (city.length() >= 30 || city.length() <= 2)) {
             throw new ValidationException("City name must be in range 3 - 30");
         }
@@ -65,7 +65,7 @@ public class EmployeeValidation {
             throw new ValidationException("Work age range from 16 to 80 y.o.");
         }
 
-        if (!isValidGenderOrPosition(employeeCardEntity)) {
+        if (!isValidGenderOrPosition(employeeCardEntity.getEmployeePosition(), employeeCardEntity.getEmployeeGender())) {
             throw new ValidationException("Invalid employee position or gender");
         }
 

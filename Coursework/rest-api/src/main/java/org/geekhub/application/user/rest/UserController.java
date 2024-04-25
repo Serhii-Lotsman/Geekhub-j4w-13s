@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(reason = "User updated", value = HttpStatus.OK)
     public void updateUser(
         @PathVariable long userId,
         @RequestParam String email,
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(reason = "User deleted", value = HttpStatus.NO_CONTENT)
     public long deleteUser(@PathVariable Long userId) {
         return userService.deleteUser(userId);
     }
