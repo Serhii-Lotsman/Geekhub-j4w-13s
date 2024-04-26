@@ -101,7 +101,7 @@ public class UserRepository {
         }
     }
 
-    public long deleteUser(long id) {
+    public void deleteUser(long id) {
         String query = "DELETE FROM users WHERE id = :id";
 
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
@@ -109,10 +109,8 @@ public class UserRepository {
         try {
             jdbcTemplate.update(query, parameterSource);
             logger.info("User deleted successfully with id: {}", id);
-            return id;
         } catch (DataAccessException e) {
             logger.error("Failed to delete user with id: {}. Error: {}", id, e.getMessage());
-            return INCORRECT_ID;
         }
     }
 

@@ -13,7 +13,7 @@ public class EmployeeCardMapper {
     }
 
     @SuppressWarnings("java:S1172")
-    public static EmployeeCardEntity mapResultSetToEmployeeRecord(ResultSet rs, int rowNum) throws SQLException {
+    public static EmployeeCardEntity mapEmployeeCard(ResultSet rs, int rowNum) throws SQLException {
         EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity();
         employeeCardEntity.setId(rs.getLong("id"));
         employeeCardEntity.setFirstName(rs.getString("first_name"));

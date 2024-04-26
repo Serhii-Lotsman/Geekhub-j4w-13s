@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/manage/users")
+@RequestMapping("/api/v3/manage/users")
 @Tag(name = "assign-roles")
 public class RoleController {
     private final UserService userService;
@@ -34,9 +34,10 @@ public class RoleController {
     }
 
     @PutMapping("/assign/{userId}")
-    @ResponseStatus(reason = "Role assigned", value = HttpStatus.OK)
-    public void updateUserRole(@PathVariable long userId, @RequestParam Role role) {
+    @ResponseStatus(HttpStatus.OK)
+    public String updateUserRole(@PathVariable long userId, @RequestParam Role role) {
         long roleId = userService.getRoleIdByName(role.name());
         userService.updateRole(userId, roleId);
+        return "Role assigned";
     }
 }

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v3/auth")
 @Tag(name = "user-auth")
 public class AuthController {
 
@@ -42,19 +42,20 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    @ResponseStatus(reason = "Sign In successful", value = HttpStatus.OK)
-    public void login(@RequestBody LoginDto loginDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public String login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginDto.email(),
                 loginDto.password()
             ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        return "Sign In succeed";
     }
 
     @PostMapping("/signup")
-    @ResponseStatus(reason = "Sign Up succeed", value = HttpStatus.CREATED)
-    public void register(@RequestBody RegisterDto registerDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String register(@RequestBody RegisterDto registerDto) {
         if (!customUserDetailsService.validatePassword(registerDto.password())) {
             throw new ValidationException("Invalid password!");
         }
@@ -73,11 +74,13 @@ public class AuthController {
 
         int userId = customUserDetailsService.createUser(userEntity);
         customUserDetailsService.setUserRole(userId, userRole.getId());
+        return "Sign Up succeed";
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public void logout() {
+    public String logout() {
         SecurityContextHolder.clearContext();
+        return "Logout succeed";
     }
 }

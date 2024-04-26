@@ -2,6 +2,7 @@ package org.geekhub.application;
 
 import org.geekhub.application.exception.DatabaseException;
 import org.geekhub.application.exception.EmployeeCardException;
+import org.geekhub.application.exception.SessionException;
 import org.geekhub.application.exception.UniqueUserException;
 import org.geekhub.application.exception.UserException;
 import org.geekhub.application.exception.UserExistException;
@@ -23,7 +24,7 @@ public class ExceptionRestControllerAdvice {
         return new ErrorMessage(exception.getMessage());
     }
 
-    @ExceptionHandler({UniqueUserException.class, UserExistException.class})
+    @ExceptionHandler({UniqueUserException.class, UserExistException.class, SessionException.class})
     @ResponseStatus(value = HttpStatus.CONFLICT)
     public ErrorMessage existErrorMessage(RuntimeException exception) {
         return new ErrorMessage(exception.getMessage());

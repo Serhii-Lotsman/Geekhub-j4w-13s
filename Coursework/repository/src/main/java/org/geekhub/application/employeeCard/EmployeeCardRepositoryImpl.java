@@ -101,7 +101,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
             EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(
                 query,
                 parameterSource,
-                EmployeeCardMapper::mapResultSetToEmployeeRecord
+                EmployeeCardMapper::mapEmployeeCard
             );
             return Optional.ofNullable(employeeCardEntity);
         } catch (EmptyResultDataAccessException e) {
@@ -120,7 +120,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
             EmployeeCardEntity employeeCardEntity = jdbcTemplate.queryForObject(
                 query,
                 parameterSource,
-                EmployeeCardMapper::mapResultSetToEmployeeRecord
+                EmployeeCardMapper::mapEmployeeCard
             );
             return Optional.ofNullable(employeeCardEntity);
         } catch (EmptyResultDataAccessException e) {
@@ -136,7 +136,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
         List<EmployeeCardEntity> employeeCardList = new ArrayList<>();
 
         try {
-            employeeCardList = jdbcTemplate.query(query, EmployeeCardMapper::mapResultSetToEmployeeRecord);
+            employeeCardList = jdbcTemplate.query(query, EmployeeCardMapper::mapEmployeeCard);
             logger.info("Success to get employee cards");
         } catch (DataAccessException e) {
             logger.error("Failed to get employee cards: {}", e.getMessage());
@@ -174,7 +174,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
             .addValue("pageSize", pageSize)
             .addValue("offset", getOffset(pageNum, pageSize));
 
-        return jdbcTemplate.query(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
+        return jdbcTemplate.query(query, params, EmployeeCardMapper::mapEmployeeCard);
     }
 
     @Override
@@ -228,7 +228,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
         SqlParameterSource params = new MapSqlParameterSource("column", columnValue);
 
         try {
-            employeeCardList = jdbcTemplate.query(query, params, EmployeeCardMapper::mapResultSetToEmployeeRecord);
+            employeeCardList = jdbcTemplate.query(query, params, EmployeeCardMapper::mapEmployeeCard);
             logger.info("Success to get employees");
         } catch (DataAccessException e) {
             logger.error("Error get employees: {}", e.getMessage());

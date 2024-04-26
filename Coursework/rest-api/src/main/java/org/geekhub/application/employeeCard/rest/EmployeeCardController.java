@@ -34,7 +34,7 @@ import java.util.List;
     )
 )
 @RestController
-@RequestMapping("/api/v1/employees")
+@RequestMapping("/api/v3/employees")
 @Tag(name = "employee-card")
 public class EmployeeCardController {
 
@@ -72,25 +72,28 @@ public class EmployeeCardController {
     }
 
     @PostMapping
-    @ResponseStatus(reason = "Employee card created", value = HttpStatus.CREATED)
-    public void createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String createEmployeeCard(@RequestBody EmployeeCardDto employeeCardDto) {
         employeeCardService.saveEmployeeCard(EmployeeCardConverter.employeeFromDto(employeeCardDto));
+        return "Employee card created";
     }
 
     @PutMapping("/{cardId}")
-    @ResponseStatus(reason = "Employee card updated", value = HttpStatus.OK)
-    public void updateEmployeeCard(@PathVariable long cardId, @RequestBody EmployeeCardDto employeeCardDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public String updateEmployeeCard(@PathVariable long cardId, @RequestBody EmployeeCardDto employeeCardDto) {
         EmployeeCardEntity employeeCardEntity = employeeCardService.getEmployeeCardById(cardId);
         if (employeeCardEntity != null) {
             employeeCardService.updateEmployeeCard(
                 EmployeeCardConverter.updateEmployeeFromDto(employeeCardEntity, employeeCardDto)
             );
         }
+        return "Employee card updated";
     }
 
     @DeleteMapping("/{cardId}")
-    @ResponseStatus(reason = "Employee card deleted", value = HttpStatus.NO_CONTENT)
-    public void deleteEmployeeCard(@PathVariable Long cardId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String deleteEmployeeCard(@PathVariable Long cardId) {
         employeeCardService.deleteEmployeeCard(cardId);
+        return "Employee card deleted";
     }
 }

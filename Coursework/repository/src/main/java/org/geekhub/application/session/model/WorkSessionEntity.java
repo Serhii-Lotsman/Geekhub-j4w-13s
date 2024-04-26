@@ -1,53 +1,97 @@
 package org.geekhub.application.session.model;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class WorkSessionEntity {
+
     private Long id;
 
-    private LocalDateTime startTime;
+    private String email;
 
-    private LocalDateTime endTime;
+    private LocalDate date;
 
-    private Duration totalTime;
+    private LocalTime timeBegin;
 
-    public WorkSessionEntity(Long id, LocalDateTime startTime, LocalDateTime endTime, Duration totalTime) {
+    @Nullable
+    private LocalTime timeEnd;
+
+    @Nullable
+    private LocalTime totalTime;
+
+    public WorkSessionEntity() {
+    }
+
+    public WorkSessionEntity(
+        @NonNull Long id,
+        @NonNull String email,
+        @NonNull LocalDate date,
+        @NonNull LocalTime timeBegin,
+        @Nullable LocalTime timeEnd,
+        @Nullable LocalTime totalTime
+    ) {
         this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.email = email;
+        this.date = date;
+        this.timeBegin = timeBegin;
+        this.timeEnd = timeEnd;
         this.totalTime = totalTime;
     }
 
+    @NonNull
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@NonNull Long id) {
         this.id = id;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    @NonNull
+    public String getEmail() {
+        return email;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setEmail(@NonNull String email) {
+        this.email = email;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    @NonNull
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setDate(@NonNull LocalDate date) {
+        this.date = date;
     }
 
-    public Duration getTotalTime() {
+    @NonNull
+    public LocalTime getTimeBegin() {
+        return timeBegin;
+    }
+
+    public void setTimeBegin(@NonNull LocalTime timeBegin) {
+        this.timeBegin = timeBegin;
+    }
+
+    @Nullable
+    public LocalTime getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(@Nullable LocalTime timeEnd) {
+        this.timeEnd = timeEnd;
+    }
+
+    @Nullable
+    public LocalTime getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(Duration totalTime) {
+    public void setTotalTime(@Nullable LocalTime totalTime) {
         this.totalTime = totalTime;
     }
 }

@@ -48,11 +48,13 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/api/manage/users/**").hasAnyAuthority("SUPER_ADMIN")
-                    .requestMatchers("/api/v1/hr-panel/**").hasAnyAuthority("ADMIN")
-                    .requestMatchers("/api/v1/employees/my-card").hasAnyAuthority("USER", "ADMIN", "SUPER_ADMIN")
-                    .requestMatchers("/api/v1/employees/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/api/v3/auth/**").permitAll()
+                    .requestMatchers("/api/v3/manage/users/**").hasAnyAuthority("SUPER_ADMIN")
+                    .requestMatchers("/api/v3/hr-panel/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/api/v3/employees/my-card").hasAnyAuthority("USER", "ADMIN", "SUPER_ADMIN")
+                    .requestMatchers("/api/v3/employees/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/api/v3/work-session/employee/**").hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers("/api/v3/work-session/**").hasAnyAuthority("ADMIN")
                     .anyRequest().authenticated())
             .logout(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/hr-panel")
+@RequestMapping("/api/v3/hr-panel")
 @Tag(name = "manage-users")
 public class UserController {
 
@@ -40,8 +40,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    @ResponseStatus(reason = "User updated", value = HttpStatus.OK)
-    public void updateUser(
+    @ResponseStatus(HttpStatus.OK)
+    public String updateUser(
         @PathVariable long userId,
         @RequestParam String email,
         @RequestParam String password
@@ -54,11 +54,13 @@ public class UserController {
         userEntity.setEmail(email.trim());
         userEntity.setPassword(passwordEncoder.encode(password));
         userService.updateUser(userEntity);
+        return "User updated";
     }
 
     @DeleteMapping("/{userId}")
-    @ResponseStatus(reason = "User deleted", value = HttpStatus.NO_CONTENT)
-    public long deleteUser(@PathVariable Long userId) {
-        return userService.deleteUser(userId);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return "User deleted";
     }
 }

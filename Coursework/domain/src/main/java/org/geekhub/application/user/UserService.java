@@ -62,7 +62,7 @@ public class UserService {
             .orElseThrow(() -> new UserException("Cannot find user"));
     }
 
-    public long deleteUser(long userId) {
+    public void deleteUser(long userId) {
         if (!userRepository.existsByUserEmail(findById(userId).getEmail())) {
             throw new UserException("Cannot find user");
         }
@@ -70,7 +70,7 @@ public class UserService {
         if (validateUser(userId)) {
             throw new UniqueUserException("Cannot delete this user");
         }
-        return userRepository.deleteUser(userId);
+        userRepository.deleteUser(userId);
     }
 
     public int getRoleIdByName(String roleName) {
