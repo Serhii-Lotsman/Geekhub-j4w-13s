@@ -1,6 +1,5 @@
-package org.geekhub.application.converter;
+package org.geekhub.application.employeeCard.dto;
 
-import org.geekhub.application.employeeCard.dto.EmployeeCardDto;
 import org.geekhub.application.exception.ValidationException;
 
 import static org.geekhub.application.validation.EmployeeValidation.isInvalidCity;

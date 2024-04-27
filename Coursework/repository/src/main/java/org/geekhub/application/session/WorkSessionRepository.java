@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -149,5 +150,68 @@ public class WorkSessionRepository {
             .addValue("today", LocalDate.now());
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameterSource, Boolean.class));
+    }
+
+    public List<WorkSessionEntity> findAllOpenWorkSessions() {
+        String query = """
+            SELECT * FROM work_session
+            WHERE end_time IS NULL
+            AND DATE(date) != CURRENT_DATE
+            ORDER BY date DESC;
+            """;
+        List<WorkSessionEntity> workSessionEntityList = new ArrayList<>();
+
+        try {
+            workSessionEntityList = jdbcTemplate.query(query, WorkSessionMapper::mapToUpdateWorkSession);
+            logger.info("Open work sessions found");
+        } catch (DataAccessException e) {
+            logger.error("Failed to find open work sessions. Error: {}", e.getMessage());
+        }
+        return workSessionEntityList;
+    }
+
+    public Optional<WorkSessionEntity> findOpenWorkSessionBySessionId(long sessionId) {
+        String query = """
+            SELECT * FROM work_session
+            WHERE id = :sessionId
+            AND DATE(date) != CURRENT_DATE
+            """;
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource("sessionId", sessionId);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                query,
+                parameterSource,
+                WorkSessionMapper::mapWorkSession
+            ));
+        } catch (DataAccessException e) {
+            logger.error("Failed to find work session by id: {}. Error: {}", sessionId, e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    public void editOpenWorkSession(long sessionId, WorkSessionEntity workSessionEntity) {
+        String sql = """
+            UPDATE work_session SET
+            end_time = :endTime,
+            total_time = :totalTime
+            WHERE id = :sessionId
+            """;
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValues(Map.of(
+                "endTime", Objects.requireNonNull(workSessionEntity.getTimeEnd()),
+                "totalTime", Objects.requireNonNull(workSessionEntity.getTotalTime()),
+                "sessionId", sessionId
+            ));
+
+        try {
+            jdbcTemplate.update(sql, parameterSource);
+            logger.info("Success to update end time for employee with session id {}", sessionId);
+        } catch (DataAccessException e) {
+            logger.error("Failed to update end time for employee with session id {}. Error: {}",
+                sessionId, e.getMessage());
+        }
     }
 }

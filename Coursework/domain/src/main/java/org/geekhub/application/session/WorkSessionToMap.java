@@ -5,9 +5,9 @@ import org.geekhub.application.session.model.WorkSessionEntity;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class WorkSessionConverter {
+public class WorkSessionToMap {
 
-    private WorkSessionConverter() {
+    private WorkSessionToMap() {
     }
 
     public static Map<String, Object> getSessionDetailsGroupByEmail(WorkSessionEntity employeeSession) {

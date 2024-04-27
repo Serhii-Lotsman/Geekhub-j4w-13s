@@ -1,6 +1,7 @@
 package org.geekhub.application.converter;
 
 import org.geekhub.application.employeeCard.dto.EmployeeCardDto;
+import org.geekhub.application.employeeCard.dto.EmployeeDtoValidation;
 import org.geekhub.application.employeeCard.model.EmployeeCardEntity;
 import org.springframework.lang.NonNull;
 

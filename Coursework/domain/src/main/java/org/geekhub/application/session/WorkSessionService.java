@@ -33,27 +33,18 @@ public class WorkSessionService {
         if (workSessionEntity.getTimeEnd() != null) {
             throw new SessionException("The working day doesn't started");
         }
-        LocalTime totalTime = calculateTotalTime(workSessionEntity.getTimeBegin());
+        LocalTime totalTime = calculateTotalTime(workSessionEntity.getTimeBegin(), LocalTime.now());
         workSessionRepository.closeWorkSession(workSessionEntity.getId(),
             LocalTime.now(),
             totalTime
         );
     }
 
-    private LocalTime calculateTotalTime(LocalTime timeBegin) {
-        LocalTime timeEnd = LocalTime.now();
-        Duration duration = Duration.between(timeBegin, timeEnd);
-        long totalMinutes = duration.toMinutes();
-        long hours = totalMinutes / 60;
-        long minutes = totalMinutes % 60;
-        return LocalTime.of((int) hours, (int) minutes);
-    }
-
     public Map<String, List<Map<String, Object>>> getAllSessions() {
         return workSessionRepository.findAllWorkSessions().stream()
             .collect(Collectors.groupingBy(
                 WorkSessionEntity::getEmail,
-                Collectors.mapping(WorkSessionConverter::getSessionDetailsGroupByEmail, Collectors.toList())
+                Collectors.mapping(WorkSessionToMap::getSessionDetailsGroupByEmail, Collectors.toList())
             ));
     }
 
@@ -65,8 +56,35 @@ public class WorkSessionService {
     public Map<LocalDate, List<Map<String, Object>>> getAllWorkSessionByEmail(String email) {
         return workSessionRepository.findAllWorkSessionByEmail(email).stream()
             .collect(Collectors.groupingBy(
-                    WorkSessionEntity::getDate,
-                Collectors.mapping(WorkSessionConverter::getSessionDetailsGroupByDate, Collectors.toList())
+                WorkSessionEntity::getDate,
+                Collectors.mapping(WorkSessionToMap::getSessionDetailsGroupByDate, Collectors.toList())
             ));
+    }
+
+    public void editWorkSession(long sessionId, WorkSessionEntity workSessionEntity) {
+        LocalTime totalTime = calculateTotalTime(
+            workSessionEntity.getTimeBegin(),
+            workSessionEntity.getTimeEnd()
+        );
+        workSessionEntity.setTotalTime(totalTime);
+        workSessionRepository.editOpenWorkSession(sessionId, workSessionEntity);
+    }
+
+    public WorkSessionEntity getOpenWorkSession(long sessionId) {
+        return workSessionRepository.findOpenWorkSessionBySessionId(sessionId)
+            .orElseThrow(() -> new SessionException("Failed to find work session by id " + sessionId));
+    }
+
+    public List<WorkSessionEntity> getAllOpenWorkSessions() {
+        return workSessionRepository.findAllOpenWorkSessions();
+    }
+
+    private LocalTime calculateTotalTime(LocalTime timeBegin, LocalTime timeEnd) {
+        WorkSessionValidation.sequenceOfTimeValidation(timeBegin, timeEnd);
+        Duration duration = Duration.between(timeBegin, timeEnd);
+        long totalMinutes = duration.toMinutes();
+        long hours = totalMinutes / 60;
+        long minutes = totalMinutes % 60;
+        return LocalTime.of((int) hours, (int) minutes);
     }
 }

@@ -13,5 +13,5 @@ public record WorkSessionDto(
     @NonNull LocalTime timeBegin,
     @Nullable LocalTime timeEnd,
     @Nullable LocalTime totalTime
-    ) {
+) {
 }
