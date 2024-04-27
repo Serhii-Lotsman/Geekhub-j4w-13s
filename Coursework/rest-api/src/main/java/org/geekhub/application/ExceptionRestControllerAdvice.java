@@ -1,6 +1,5 @@
 package org.geekhub.application;
 
-import org.geekhub.application.exception.DatabaseException;
 import org.geekhub.application.exception.EmployeeCardException;
 import org.geekhub.application.exception.SessionException;
 import org.geekhub.application.exception.UniqueUserException;
@@ -36,9 +35,9 @@ public class ExceptionRestControllerAdvice {
         return new ErrorMessage(exception.getMessage());
     }
 
-    @ExceptionHandler({DatabaseException.class, NestedRuntimeException.class})
+    @ExceptionHandler(NestedRuntimeException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorMessage dbErrorMessage(RuntimeException exception) {
+    public ErrorMessage serverErrorMessage(RuntimeException exception) {
         return new ErrorMessage(exception.getMessage());
     }
 }

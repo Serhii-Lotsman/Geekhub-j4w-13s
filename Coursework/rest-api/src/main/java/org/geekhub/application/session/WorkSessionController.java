@@ -37,14 +37,20 @@ public class WorkSessionController {
 
     @GetMapping("/hr/all")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, List<Map<String, Object>>> getAllSessions() {
-        return workSessionService.getAllSessions();
+    public Map<String, List<Map<String, Object>>> getAllSessions(
+        @RequestParam(defaultValue = "1") int pageNum,
+        @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        return workSessionService.getAllSessions(pageNum, pageSize);
     }
 
     @GetMapping("/hr/all-open")
     @ResponseStatus(HttpStatus.OK)
-    public List<WorkSessionDto> getAllOpenSessions() {
-        return workSessionService.getAllOpenWorkSessions().stream()
+    public List<WorkSessionDto> getAllOpenSessions(
+        @RequestParam(defaultValue = "1") int pageNum,
+        @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        return workSessionService.getAllOpenWorkSessions(pageNum, pageSize).stream()
             .map(WorkSessionConverter::workSessionToDto)
             .toList();
     }

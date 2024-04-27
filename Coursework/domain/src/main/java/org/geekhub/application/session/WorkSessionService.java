@@ -42,8 +42,8 @@ public class WorkSessionService {
         );
     }
 
-    public Map<String, List<Map<String, Object>>> getAllSessions() {
-        return workSessionRepository.findAllWorkSessions().stream()
+    public Map<String, List<Map<String, Object>>> getAllSessions(int pageNum, int pageSize) {
+        return workSessionRepository.findAllWorkSessions(pageNum, pageSize).stream()
             .collect(Collectors.groupingBy(
                 WorkSessionEntity::getEmail,
                 Collectors.mapping(WorkSessionToMap::getSessionDetailsGroupByEmail, Collectors.toList())
@@ -77,8 +77,8 @@ public class WorkSessionService {
             .orElseThrow(() -> new SessionException("Failed to find work session by id " + sessionId));
     }
 
-    public List<WorkSessionEntity> getAllOpenWorkSessions() {
-        return workSessionRepository.findAllOpenWorkSessions();
+    public List<WorkSessionEntity> getAllOpenWorkSessions(int pageNum, int pageSize) {
+        return workSessionRepository.findAllOpenWorkSessions(pageNum, pageSize);
     }
 
     private LocalTime calculateTotalTime(LocalTime timeBegin, LocalTime timeEnd) {

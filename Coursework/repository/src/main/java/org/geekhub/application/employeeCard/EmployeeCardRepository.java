@@ -21,9 +21,6 @@ public interface EmployeeCardRepository {
     Optional<EmployeeCardEntity> getEmployeeCard(String email);
 
     @NonNull
-    List<EmployeeCardEntity> getEmployeeCards();
-
-    @NonNull
     List<EmployeeCardEntity> getEmployeeCards(String city);
 
     @NonNull
@@ -35,9 +32,7 @@ public interface EmployeeCardRepository {
     @NonNull
     List<EmployeeCardEntity> getEmployeeCards(int pageNum, int pageSize);
 
-    @NonNull
     boolean employeeEmailExist(String email);
 
-    @NonNull
     void updateEmployeeCard(EmployeeCardEntity employeeCardEntity);
 }

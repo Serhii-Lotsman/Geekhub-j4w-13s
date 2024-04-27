@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 public class EmployeeCardService {
 
-
     private final EmployeeCardRepository employeeCardRepository;
     private final UserRepository userRepository;
 
@@ -59,8 +58,8 @@ public class EmployeeCardService {
             .orElseThrow(() -> new EmployeeCardException("Employee card with email " + email + " not found"));
     }
 
-    public List<EmployeeCardEntity> getAllEmployees() {
-        return employeeCardRepository.getEmployeeCards();
+    public List<EmployeeCardEntity> getAllEmployees(int pageNum, int pageSize) {
+        return employeeCardRepository.getEmployeeCards(pageNum, pageSize);
     }
 
     public List<EmployeeCardEntity> getEmployeeCardsByCity(String city) {

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,8 +47,11 @@ public class EmployeeCardController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeCardDto> getEmployeeCards() {
-        return employeeCardService.getAllEmployees().stream()
+    public List<EmployeeCardDto> getEmployeeCards(
+        @RequestParam(defaultValue = "1") int pageNum,
+        @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        return employeeCardService.getAllEmployees(pageNum, pageSize).stream()
             .map(EmployeeCardConverter::employeeToDto)
             .toList();
     }

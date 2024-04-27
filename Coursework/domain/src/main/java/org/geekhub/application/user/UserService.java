@@ -53,8 +53,8 @@ public class UserService {
         userRepository.updateUser(userEntity);
     }
 
-    public List<UserEntity> getUsers() {
-        return userRepository.findUsers();
+    public List<UserEntity> getUsers(int pageNum, int pageSize) {
+        return userRepository.findUsers(pageNum, pageSize);
     }
 
     public UserEntity findById(long userId) {

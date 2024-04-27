@@ -1,5 +1,6 @@
 package org.geekhub.application.user;
 
+import org.geekhub.application.pagination.Pagination;
 import org.geekhub.application.user.model.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,13 +121,18 @@ public class UserRepository {
         }
     }
 
-    public List<UserEntity> findUsers() {
-        String query = "SELECT id, email FROM users ORDER BY id";
+    public List<UserEntity> findUsers(int pageNum, int pageSize) {
+        String query = "SELECT id, email FROM users ORDER BY id LIMIT :pageSize OFFSET :offset";
         List<UserEntity> usersList = new ArrayList<>();
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("pageSize", pageSize)
+            .addValue("offset", Pagination.getOffset(pageNum, pageSize));
 
         try {
             usersList = jdbcTemplate.query(
                 query,
+                parameterSource,
                 (rs, rowNum) -> new UserEntity(
                     rs.getLong("id"),
                     rs.getString("email")

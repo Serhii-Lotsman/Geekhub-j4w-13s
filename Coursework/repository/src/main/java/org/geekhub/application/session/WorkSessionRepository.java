@@ -1,5 +1,6 @@
 package org.geekhub.application.session;
 
+import org.geekhub.application.pagination.Pagination;
 import org.geekhub.application.session.model.WorkSessionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,12 +125,25 @@ public class WorkSessionRepository {
         }
     }
 
-    public List<WorkSessionEntity> findAllWorkSessions() {
-        String query = "SELECT * FROM work_session ORDER BY date DESC";
+    public List<WorkSessionEntity> findAllWorkSessions(int pageNum, int pageSize) {
+        String query = """
+        SELECT * FROM work_session
+        ORDER BY date DESC
+        LIMIT :pageSize OFFSET :offset
+        """;
+
         List<WorkSessionEntity> workSessionEntityList = new ArrayList<>();
 
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("pageSize", pageSize)
+            .addValue("offset", Pagination.getOffset(pageNum, pageSize));
+
         try {
-            workSessionEntityList = jdbcTemplate.query(query, WorkSessionMapper::mapWorkSession);
+            workSessionEntityList = jdbcTemplate.query(
+                query,
+                parameterSource,
+                WorkSessionMapper::mapWorkSession
+            );
             logger.info("Success to get work sessions");
         } catch (DataAccessException e) {
             logger.error("Failed to get work sessions. Error: {}", e.getMessage());
@@ -153,17 +167,27 @@ public class WorkSessionRepository {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameterSource, Boolean.class));
     }
 
-    public List<WorkSessionEntity> findAllOpenWorkSessions() {
+    public List<WorkSessionEntity> findAllOpenWorkSessions(int pageNum, int pageSize) {
         String query = """
             SELECT * FROM work_session
             WHERE end_time IS NULL
             AND DATE(date) != CURRENT_DATE
-            ORDER BY date DESC;
+            ORDER BY date DESC
+            LIMIT :pageSize OFFSET :offset;
             """;
+
         List<WorkSessionEntity> workSessionEntityList = new ArrayList<>();
 
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("pageSize", pageSize)
+            .addValue("offset", Pagination.getOffset(pageNum, pageSize));
+
         try {
-            workSessionEntityList = jdbcTemplate.query(query, WorkSessionMapper::mapToUpdateWorkSession);
+            workSessionEntityList = jdbcTemplate.query(
+                query,
+                parameterSource,
+                WorkSessionMapper::mapToUpdateWorkSession
+            );
             logger.info("Open work sessions found");
         } catch (DataAccessException e) {
             logger.error("Failed to find open work sessions. Error: {}", e.getMessage());

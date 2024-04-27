@@ -3,6 +3,7 @@ package org.geekhub.application.employeeCard;
 import org.geekhub.application.enums.EmployeeGender;
 import org.geekhub.application.enums.EmployeePosition;
 import org.geekhub.application.employeeCard.model.EmployeeCardEntity;
+import org.geekhub.application.pagination.Pagination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -130,13 +131,20 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
 
     @NonNull
     @Override
-    public List<EmployeeCardEntity> getEmployeeCards() {
-        String query = "SELECT * FROM employee_card ORDER BY id";
-
+    public List<EmployeeCardEntity> getEmployeeCards(int pageNum, int pageSize) {
+        String query = "SELECT * FROM employee_card ORDER BY id LIMIT :pageSize OFFSET :offset";
         List<EmployeeCardEntity> employeeCardList = new ArrayList<>();
 
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("pageSize", pageSize)
+            .addValue("offset", Pagination.getOffset(pageNum, pageSize));
+
         try {
-            employeeCardList = jdbcTemplate.query(query, EmployeeCardMapper::mapEmployeeCard);
+            employeeCardList = jdbcTemplate.query(
+                query,
+                parameterSource,
+                EmployeeCardMapper::mapEmployeeCard
+            );
             logger.info("Success to get employee cards");
         } catch (DataAccessException e) {
             logger.error("Failed to get employee cards: {}", e.getMessage());
@@ -148,33 +156,21 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
     @Override
     public List<EmployeeCardEntity> getEmployeeCards(String city) {
         String query = "SELECT * FROM employee_card WHERE city = :column ORDER BY id";
-        return getRecordsWithParams(query, city);
+        return getEmployeeCardsWithParams(query, city);
     }
 
     @NonNull
     @Override
     public List<EmployeeCardEntity> getEmployeeCards(EmployeePosition employeePosition) {
         String query = "SELECT * FROM employee_card WHERE position = :column ORDER BY id";
-        return getRecordsWithParams(query, employeePosition.name().toLowerCase());
+        return getEmployeeCardsWithParams(query, employeePosition.name().toLowerCase());
     }
 
     @NonNull
     @Override
     public List<EmployeeCardEntity> getEmployeeCards(EmployeeGender employeeGender) {
         String query = "SELECT * FROM employee_card WHERE gender = :column ORDER BY id";
-        return getRecordsWithParams(query, employeeGender.name().toLowerCase());
-    }
-
-    @NonNull
-    @Override
-    public List<EmployeeCardEntity> getEmployeeCards(int pageNum, int pageSize) {
-        String query = "SELECT * FROM employee_card ORDER BY id LIMIT :pageSize OFFSET :offset";
-
-        SqlParameterSource params = new MapSqlParameterSource()
-            .addValue("pageSize", pageSize)
-            .addValue("offset", getOffset(pageNum, pageSize));
-
-        return jdbcTemplate.query(query, params, EmployeeCardMapper::mapEmployeeCard);
+        return getEmployeeCardsWithParams(query, employeeGender.name().toLowerCase());
     }
 
     @Override
@@ -222,7 +218,7 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
         }
     }
 
-    private List<EmployeeCardEntity> getRecordsWithParams(String query, Object columnValue) {
+    private List<EmployeeCardEntity> getEmployeeCardsWithParams(String query, Object columnValue) {
         List<EmployeeCardEntity> employeeCardList = new ArrayList<>();
 
         SqlParameterSource params = new MapSqlParameterSource("column", columnValue);
@@ -234,9 +230,5 @@ public class EmployeeCardRepositoryImpl implements EmployeeCardRepository {
             logger.error("Error get employees: {}", e.getMessage());
         }
         return employeeCardList;
-    }
-
-    private int getOffset(int pageNum, int pageSize) {
-        return pageNum * pageSize - 1;
     }
 }

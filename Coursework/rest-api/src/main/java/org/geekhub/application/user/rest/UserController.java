@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,13 +33,16 @@ public class UserController {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDto> getUsers() {
-        return userService.getUsers().stream()
+    public List<UserDto> getUsers(
+        @RequestParam(defaultValue = "1") int pageNum,
+        @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        return userService.getUsers(pageNum, pageSize).stream()
             .map(userEntity -> new UserDto(userEntity.getId(), userEntity.getEmail()))
             .toList();
     }
 
-    @PutMapping("/{userId}")
+    @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public String updateUser(
         @PathVariable long userId,
