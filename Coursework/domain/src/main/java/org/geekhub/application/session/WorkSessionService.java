@@ -2,6 +2,7 @@ package org.geekhub.application.session;
 
 import org.geekhub.application.exception.SessionException;
 import org.geekhub.application.session.model.WorkSessionEntity;
+import org.geekhub.application.validation.WorkSessionValidation;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;

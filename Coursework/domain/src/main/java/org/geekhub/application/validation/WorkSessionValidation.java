@@ -1,4 +1,4 @@
-package org.geekhub.application.session;
+package org.geekhub.application.validation;
 
 import org.geekhub.application.exception.ValidationException;
 

@@ -18,10 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v3/manage/users")
 @Tag(name = "assign-roles")
-public class RoleController {
+public class UserRoleController {
     private final UserService userService;
 
-    public RoleController(UserService userService) {
+    public UserRoleController(UserService userService) {
         this.userService = userService;
     }
 
@@ -29,8 +29,11 @@ public class RoleController {
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getUsers() {
         return userService.getUsers().stream()
-            .map(userEntity -> new UserDto(userEntity.getId(), userEntity.getEmail()))
-            .toList();
+            .map(userEntity -> new UserDto(
+                userEntity.getId(),
+                userEntity.getEmail(),
+                userEntity.getRoles()
+            )).toList();
     }
 
     @PutMapping("/assign/{userId}")

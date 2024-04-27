@@ -22,9 +22,11 @@ public class UserRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
     public static final int INCORRECT_ID = -1;
+    private final UserRoleRepository userRoleRepository;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+    public UserRepository(UserRoleRepository userRoleRepository, NamedParameterJdbcTemplate jdbcTemplate) {
+        this.userRoleRepository = userRoleRepository;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -120,7 +122,6 @@ public class UserRepository {
 
     public List<UserEntity> findUsers() {
         String query = "SELECT id, email FROM users ORDER BY id";
-
         List<UserEntity> usersList = new ArrayList<>();
 
         try {
@@ -129,11 +130,17 @@ public class UserRepository {
                 (rs, rowNum) -> new UserEntity(
                     rs.getLong("id"),
                     rs.getString("email")
-                ));
+                )
+            ).stream().map(user -> {
+                user.setRoles(userRoleRepository.getRoles(user.getId()));
+                return user;
+            }).toList();
+
             logger.info("Users find successfully");
         } catch (DataAccessException e) {
             logger.error("Failed to find users");
         }
+
         return usersList;
     }
 }

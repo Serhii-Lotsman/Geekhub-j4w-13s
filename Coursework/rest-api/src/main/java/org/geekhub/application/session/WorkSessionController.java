@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.geekhub.application.converter.WorkSessionConverter;
 import org.geekhub.application.session.dto.WorkSessionDto;
 import org.geekhub.application.session.model.WorkSessionEntity;
+import org.geekhub.application.validation.WorkSessionValidation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

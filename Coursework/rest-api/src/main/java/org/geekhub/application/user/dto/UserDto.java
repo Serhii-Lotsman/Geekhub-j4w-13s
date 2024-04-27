@@ -12,21 +12,18 @@ public class UserDto {
     private String password;
     private List<UserRole> roles;
 
-    public UserDto() {
-    }
-
     public UserDto(Long id, String email) {
         this.id = id;
         this.email = email;
     }
 
     public UserDto(
+        Long id,
         String email,
-        String password,
         List<UserRole> roles
     ) {
+        this.id = id;
         this.email = email;
-        this.password = password;
         this.roles = roles;
     }
 
