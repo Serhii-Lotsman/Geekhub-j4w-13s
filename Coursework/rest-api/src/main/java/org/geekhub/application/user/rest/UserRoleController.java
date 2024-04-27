@@ -6,8 +6,8 @@ import org.geekhub.application.user.UserService;
 import org.geekhub.application.user.dto.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,7 +36,7 @@ public class UserRoleController {
             )).toList();
     }
 
-    @PutMapping("/assign/{userId}")
+    @PatchMapping("/assign/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public String updateUserRole(@PathVariable long userId, @RequestParam Role role) {
         long roleId = userService.getRoleIdByName(role.name());

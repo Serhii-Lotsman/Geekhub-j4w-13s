@@ -1,6 +1,5 @@
 package org.geekhub.application.user;
 
-import org.geekhub.application.exception.DatabaseException;
 import org.geekhub.application.user.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,6 @@ public class UserRoleRepository {
             Map<String, Object> roleNameMap = jdbcTemplate.queryForMap(queryForRoleName, parameterSource);
             if (roleNameMap.get("name").toString().equals(SUPER_ADMIN)) {
                 logger.error("Failed to assign SUPER_ADMIN role for user");
-                throw new DatabaseException("Failed to assign this role for user");
             }
 
             jdbcTemplate.update(query, parameterSource);
@@ -117,10 +115,6 @@ public class UserRoleRepository {
             .addValue("userId", userId);
 
         try {
-            if (roleId == 3) {
-                throw new DatabaseException("Cannot assign this role to the user");
-            }
-
             jdbcTemplate.update(query, parameterSource);
             logger.info("Role reassigned successfully for user with ID: {}, role ID: {}",
                 userId, roleId);

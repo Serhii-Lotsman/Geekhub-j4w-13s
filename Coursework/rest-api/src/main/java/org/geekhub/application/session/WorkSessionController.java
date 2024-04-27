@@ -10,9 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -75,7 +75,7 @@ public class WorkSessionController {
         return "Work time started";
     }
 
-    @PutMapping("/employee/end-time")
+    @PatchMapping("/employee/end-time")
     @ResponseStatus(HttpStatus.OK)
     public String endWorkDay() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -87,7 +87,7 @@ public class WorkSessionController {
         return "Work time stopped";
     }
 
-    @PutMapping("/hr/time-edit/{sessionId}")
+    @PatchMapping("/hr/time-edit/{sessionId}")
     @ResponseStatus(HttpStatus.OK)
     public String editWorkSession(
         @PathVariable long sessionId,

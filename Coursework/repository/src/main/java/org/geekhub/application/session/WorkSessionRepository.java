@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +44,8 @@ public class WorkSessionRepository {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValues(Map.of(
                 "userEmail", email,
-                "date", LocalDate.now(),
-                "timeBegin", LocalTime.now())
+                "date", LocalDate.now(ZoneId.of("UTC")),
+                "timeBegin", LocalTime.now(ZoneId.of("UTC")))
             );
 
         try {
@@ -69,7 +70,7 @@ public class WorkSessionRepository {
                 "endTime", endTime,
                 "totalTime", totalTime,
                 "sessionId", sessionId,
-                "today", LocalDate.now()
+                "today", LocalDate.now(ZoneId.of("UTC"))
             ));
 
         try {
@@ -109,7 +110,7 @@ public class WorkSessionRepository {
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("userEmail", userEmail)
-            .addValue("today", LocalDate.now());
+            .addValue("today", LocalDate.now(ZoneId.of("UTC")));
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(
@@ -147,7 +148,7 @@ public class WorkSessionRepository {
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
             .addValue("email", email)
-            .addValue("today", LocalDate.now());
+            .addValue("today", LocalDate.now(ZoneId.of("UTC")));
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameterSource, Boolean.class));
     }

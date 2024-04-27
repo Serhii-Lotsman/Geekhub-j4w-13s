@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,9 +35,9 @@ public class WorkSessionService {
         if (workSessionEntity.getTimeEnd() != null) {
             throw new SessionException("The working day doesn't started");
         }
-        LocalTime totalTime = calculateTotalTime(workSessionEntity.getTimeBegin(), LocalTime.now());
+        LocalTime totalTime = calculateTotalTime(workSessionEntity.getTimeBegin(), LocalTime.now(ZoneId.of("UTC")));
         workSessionRepository.closeWorkSession(workSessionEntity.getId(),
-            LocalTime.now(),
+            LocalTime.now(ZoneId.of("UTC")),
             totalTime
         );
     }
