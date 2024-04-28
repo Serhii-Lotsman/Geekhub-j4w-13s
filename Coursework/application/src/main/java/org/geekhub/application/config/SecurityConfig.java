@@ -49,12 +49,14 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
                     .requestMatchers("/api/v3/auth/**").permitAll()
-                    .requestMatchers("/api/v3/manage/users/**").hasAnyAuthority("SUPER_ADMIN")
-                    .requestMatchers("/api/v3/hr-panel/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/api/v3/manage/users/**").hasAuthority("SUPER_ADMIN")
+                    .requestMatchers("/api/v3/hr-panel/**").hasAuthority("ADMIN")
                     .requestMatchers("/api/v3/employees/my-card").hasAnyAuthority("USER", "ADMIN", "SUPER_ADMIN")
-                    .requestMatchers("/api/v3/employees/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/api/v3/employees/**").hasAuthority("ADMIN")
                     .requestMatchers("/api/v3/work-session/employee/**").hasAnyAuthority("USER", "ADMIN")
-                    .requestMatchers("/api/v3/work-session/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/api/v3/work-session/**").hasAuthority("ADMIN")
+                    .requestMatchers("/api/v3/statistic/employees/**").hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers("/api/v3/statistic/hr-panel/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated())
             .logout(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())

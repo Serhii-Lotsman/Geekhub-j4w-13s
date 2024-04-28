@@ -1,16 +1,17 @@
 package org.geekhub.application.session;
 
 import org.geekhub.application.session.model.WorkSessionEntity;
+import org.geekhub.application.session.model.WorkStatisticEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@SuppressWarnings("java:S1172")
 public class WorkSessionMapper {
 
     private WorkSessionMapper() {
     }
 
-    @SuppressWarnings("java:S1172")
     public static WorkSessionEntity mapWorkSession(ResultSet rs, int rowNum) throws SQLException {
         return new WorkSessionEntity(
             rs.getLong("id"),
@@ -26,7 +27,6 @@ public class WorkSessionMapper {
         );
     }
 
-    @SuppressWarnings("java:S1172")
     public static WorkSessionEntity mapToUpdateWorkSession(ResultSet rs, int rowNum) throws SQLException {
         WorkSessionEntity workSessionEntity = new WorkSessionEntity();
         workSessionEntity.setId(rs.getLong("id"));
@@ -40,5 +40,13 @@ public class WorkSessionMapper {
         );
 
         return workSessionEntity;
+    }
+
+    public static WorkStatisticEntity mapWorkStatisticEntity(ResultSet rs, int rowNum) throws SQLException {
+        WorkStatisticEntity workStatisticEntity = new WorkStatisticEntity();
+        workStatisticEntity.setDate(rs.getDate("month").toLocalDate());
+        workStatisticEntity.setUserEmail(rs.getString("email"));
+        workStatisticEntity.setMonthlyTotalTime(rs.getString("total_time_per_month"));
+        return workStatisticEntity;
     }
 }

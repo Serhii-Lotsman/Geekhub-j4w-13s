@@ -6,12 +6,9 @@ import org.geekhub.application.validation.WorkSessionValidation;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class WorkSessionService {
@@ -42,12 +39,8 @@ public class WorkSessionService {
         );
     }
 
-    public Map<String, List<Map<String, Object>>> getAllSessions(int pageNum, int pageSize) {
-        return workSessionRepository.findAllWorkSessions(pageNum, pageSize).stream()
-            .collect(Collectors.groupingBy(
-                WorkSessionEntity::getEmail,
-                Collectors.mapping(WorkSessionToMap::getSessionDetailsGroupByEmail, Collectors.toList())
-            ));
+    public List<WorkSessionEntity> getAllSessions(int pageNum, int pageSize) {
+        return workSessionRepository.findAllWorkSessions(pageNum, pageSize);
     }
 
     public WorkSessionEntity getTodayWorkSessionByEmail(String email) {
@@ -55,12 +48,8 @@ public class WorkSessionService {
             .orElseThrow(() -> new SessionException("Failed to find session for today"));
     }
 
-    public Map<LocalDate, List<Map<String, Object>>> getAllWorkSessionByEmail(String email) {
-        return workSessionRepository.findAllWorkSessionByEmail(email).stream()
-            .collect(Collectors.groupingBy(
-                WorkSessionEntity::getDate,
-                Collectors.mapping(WorkSessionToMap::getSessionDetailsGroupByDate, Collectors.toList())
-            ));
+    public List<WorkSessionEntity> getAllWorkSessionByEmail(String email) {
+        return workSessionRepository.findAllWorkSessionByEmail(email);
     }
 
     public void editWorkSession(long sessionId, WorkSessionEntity workSessionEntity) {

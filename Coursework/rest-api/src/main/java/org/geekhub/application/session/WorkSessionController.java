@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v3/work-session")
@@ -35,16 +36,21 @@ public class WorkSessionController {
         this.workSessionService = workSessionService;
     }
 
-    @GetMapping("/hr/all")
+    @GetMapping("/hr-panel/all-sessions")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, List<Map<String, Object>>> getAllSessions(
         @RequestParam(defaultValue = "1") int pageNum,
         @RequestParam(defaultValue = "10") int pageSize
     ) {
-        return workSessionService.getAllSessions(pageNum, pageSize);
+        return workSessionService.getAllSessions(pageNum, pageSize).stream()
+            .map(WorkSessionConverter::workSessionToDto)
+            .collect(Collectors.groupingBy(
+                WorkSessionDto::email,
+                Collectors.mapping(WorkSessionToMap::getSessionDetailsGroupByEmail, Collectors.toList())
+            ));
     }
 
-    @GetMapping("/hr/all-open")
+    @GetMapping("/hr-panel/open-sessions")
     @ResponseStatus(HttpStatus.OK)
     public List<WorkSessionDto> getAllOpenSessions(
         @RequestParam(defaultValue = "1") int pageNum,
@@ -62,7 +68,13 @@ public class WorkSessionController {
         Map<LocalDate, List<Map<String, Object>>> workSessionEntityMap = new LinkedHashMap<>();
 
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            workSessionEntityMap = workSessionService.getAllWorkSessionByEmail(getEmail(authentication));
+            workSessionEntityMap =
+                workSessionService.getAllWorkSessionByEmail(getEmail(authentication)).stream()
+                    .map(WorkSessionConverter::workSessionToDto)
+                    .collect(Collectors.groupingBy(
+                        WorkSessionDto::date,
+                        Collectors.mapping(WorkSessionToMap::getSessionDetailsGroupByDate, Collectors.toList())
+                    ));
         }
 
         return workSessionEntityMap;
@@ -93,7 +105,7 @@ public class WorkSessionController {
         return "Work time stopped";
     }
 
-    @PatchMapping("/hr/time-edit/{sessionId}")
+    @PatchMapping("/hr-panel/time-edit/{sessionId}")
     @ResponseStatus(HttpStatus.OK)
     public String editWorkSession(
         @PathVariable long sessionId,
@@ -109,8 +121,6 @@ public class WorkSessionController {
 
         return "Session time updated succeed";
     }
-
-
 
     private String getEmail(Authentication authentication) {
         return ((UserDetails) authentication.getPrincipal()).getUsername();
