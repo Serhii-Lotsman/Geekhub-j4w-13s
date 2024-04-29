@@ -12,6 +12,7 @@ public record WorkSessionDto(
     @NonNull LocalDate date,
     @NonNull LocalTime timeBegin,
     @Nullable LocalTime timeEnd,
-    @Nullable LocalTime totalTime
+    @Nullable LocalTime totalTime,
+    @Nullable String salary
 ) {
 }

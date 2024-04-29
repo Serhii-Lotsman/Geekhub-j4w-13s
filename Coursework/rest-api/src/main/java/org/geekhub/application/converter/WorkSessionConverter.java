@@ -6,6 +6,7 @@ import org.geekhub.application.session.model.WorkSessionEntity;
 import org.geekhub.application.session.model.WorkStatisticEntity;
 import org.springframework.lang.NonNull;
 
+import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -21,7 +22,8 @@ public class WorkSessionConverter {
             workSessionEntity.getDate(),
             workSessionEntity.getTimeBegin(),
             workSessionEntity.getTimeEnd(),
-            workSessionEntity.getTotalTime()
+            workSessionEntity.getTotalTime(),
+            getFormattedSalary(workSessionEntity.getSalary())
         );
     }
 
@@ -32,7 +34,14 @@ public class WorkSessionConverter {
         return new WorkStatisticDto(
             formattedDate,
             workStatisticEntity.getUserEmail(),
-            workStatisticEntity.getMonthlyTotalTime()
+            workStatisticEntity.getMonthlyTotalTime(),
+            getFormattedSalary(workStatisticEntity.getSalary())
         );
+    }
+
+    @NonNull
+    private static String getFormattedSalary(Double workStatisticEntity) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.###");
+        return decimalFormat.format(workStatisticEntity);
     }
 }

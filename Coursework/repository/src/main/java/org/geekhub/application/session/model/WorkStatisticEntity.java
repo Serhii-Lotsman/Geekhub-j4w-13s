@@ -10,13 +10,21 @@ public class WorkStatisticEntity {
 
     private String monthlyTotalTime;
 
+    private Double salary;
+
     public WorkStatisticEntity() {
     }
 
-    public WorkStatisticEntity(LocalDate date, String userEmail, String monthlyTotalTime) {
+    public WorkStatisticEntity(
+        LocalDate date,
+        String userEmail,
+        String monthlyTotalTime,
+        Double salary
+    ) {
         this.date = date;
         this.userEmail = userEmail;
         this.monthlyTotalTime = monthlyTotalTime;
+        this.salary = salary;
     }
 
     public String getUserEmail() {
@@ -41,5 +49,13 @@ public class WorkStatisticEntity {
 
     public void setMonthlyTotalTime(String monthlyTotalTime) {
         this.monthlyTotalTime = monthlyTotalTime;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
     }
 }

@@ -28,8 +28,8 @@ public class UserRoleController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getUsers(
-        @RequestParam(defaultValue = "1") int pageNum,
-        @RequestParam(defaultValue = "10") int pageSize
+        @RequestParam(required = false) int pageNum,
+        @RequestParam(required = false) int pageSize
     ) {
         return userService.getUsers(pageNum, pageSize).stream()
             .map(userEntity -> new UserDto(

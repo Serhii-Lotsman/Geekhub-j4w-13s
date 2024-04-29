@@ -1,27 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{/fragments/fragments.html :: title}">
     <title></title>
 </head>
 <body>
 <header th:replace="~{/fragments/fragments.html :: header}"></header>
 <div class="main-body">
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
-<h1>First message live and more message</h1>
-<h2>Added new tag</h2>
+    <p>Logged user: <span sec:authentication="name">Bob</span></p>
+    <p>Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span></p>
 </div>
 <footer th:replace="~{/fragments/fragments.html :: footer}"></footer>
 </body>

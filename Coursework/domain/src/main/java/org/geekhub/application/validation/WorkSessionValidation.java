@@ -6,11 +6,15 @@ import java.time.LocalTime;
 
 public class WorkSessionValidation {
 
+    public static final int HOURS = 24;
+    public static final int MINUTES = 60;
+    public static final int ZERO = 0;
+
     private WorkSessionValidation() {
     }
 
     public static void timeValidation(byte hours, byte minutes) {
-        if (hours >= 24 || minutes >= 60 || hours < 0 || minutes < 0) {
+        if (hours >= HOURS || minutes >= MINUTES || hours < ZERO || minutes < ZERO) {
             throw new ValidationException(
                 "Hours and minutes cannot be negative or exceed 23 and 59, respectively"
             );

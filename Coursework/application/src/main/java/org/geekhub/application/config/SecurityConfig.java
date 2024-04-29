@@ -1,6 +1,7 @@
 package org.geekhub.application.config;
 
 import org.geekhub.application.user.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,8 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${bcrypt.strength}")
+    private int bcryptStrength;
     private final CustomUserDetailsService customUserDetailsService;
 
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
@@ -71,6 +74,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(14);
+        return new BCryptPasswordEncoder(bcryptStrength);
     }
 }

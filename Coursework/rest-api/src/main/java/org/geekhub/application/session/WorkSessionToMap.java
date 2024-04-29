@@ -18,6 +18,7 @@ public class WorkSessionToMap {
         sessionDetails.put("start time", workSessionDto.timeBegin());
         sessionDetails.put("end time", workSessionDto.timeEnd());
         sessionDetails.put("total time", workSessionDto.totalTime());
+        sessionDetails.put("salary", workSessionDto.salary());
         return sessionDetails;
     }
 
@@ -27,18 +28,23 @@ public class WorkSessionToMap {
         sessionDetails.put("start time", workSessionDto.timeBegin());
         sessionDetails.put("end time", workSessionDto.timeEnd());
         sessionDetails.put("total time", workSessionDto.totalTime());
+        sessionDetails.put("salary", workSessionDto.salary());
         return sessionDetails;
     }
 
     public static Map<String, String> getAllSessionStatisticGroupByDate(WorkStatisticDto workStatisticDto) {
         Map<String, String> sessionDetails = new LinkedHashMap<>();
-        sessionDetails.put(workStatisticDto.userEmail(), workStatisticDto.monthlyTotalTime());
+        sessionDetails.put("email", workStatisticDto.userEmail());
+        sessionDetails.put("monthly total time", workStatisticDto.monthlyTotalTime());
+        sessionDetails.put("salary", workStatisticDto.salary());
         return sessionDetails;
     }
 
     public static Map<String, String> getUserSessionStatisticGroupByEmail(WorkStatisticDto workStatisticDto) {
         Map<String, String> sessionDetails = new LinkedHashMap<>();
-        sessionDetails.put(workStatisticDto.date(), workStatisticDto.monthlyTotalTime());
+        sessionDetails.put("date", workStatisticDto.date());
+        sessionDetails.put("monthly total time", workStatisticDto.monthlyTotalTime());
+        sessionDetails.put("salary", workStatisticDto.salary() == null ? null : workStatisticDto.salary());
         return sessionDetails;
     }
 }

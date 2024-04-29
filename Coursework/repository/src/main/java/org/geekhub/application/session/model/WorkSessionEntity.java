@@ -22,6 +22,9 @@ public class WorkSessionEntity {
     @Nullable
     private LocalTime totalTime;
 
+    @Nullable
+    private Double salary;
+
     public WorkSessionEntity() {
     }
 
@@ -31,7 +34,8 @@ public class WorkSessionEntity {
         @NonNull LocalDate date,
         @NonNull LocalTime timeBegin,
         @Nullable LocalTime timeEnd,
-        @Nullable LocalTime totalTime
+        @Nullable LocalTime totalTime,
+        @Nullable Double salary
     ) {
         this.id = id;
         this.email = email;
@@ -39,6 +43,7 @@ public class WorkSessionEntity {
         this.timeBegin = timeBegin;
         this.timeEnd = timeEnd;
         this.totalTime = totalTime;
+        this.salary = salary;
     }
 
     @NonNull
@@ -93,5 +98,14 @@ public class WorkSessionEntity {
 
     public void setTotalTime(@Nullable LocalTime totalTime) {
         this.totalTime = totalTime;
+    }
+
+    @Nullable
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(@Nullable Double salary) {
+        this.salary = salary;
     }
 }

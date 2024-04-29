@@ -6,6 +6,7 @@ CREATE TABLE work_session
     begin_time TIME         NOT NULL,
     end_time   TIME,
     total_time INTERVAL,
+    salary     DECIMAL,
     FOREIGN KEY (user_email)
         REFERENCES users (email)
         ON DELETE CASCADE ON UPDATE CASCADE

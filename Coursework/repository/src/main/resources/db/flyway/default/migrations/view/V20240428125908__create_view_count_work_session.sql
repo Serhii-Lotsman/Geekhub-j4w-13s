@@ -1,9 +1,10 @@
 CREATE VIEW monthly_time_session AS
-SELECT to_char(date_trunc('month', s.date AT TIME ZONE 'UTC'),
+SELECT to_char(date_trunc('month', ws.date AT TIME ZONE 'UTC'),
                'YYYY-MM-dd') AS month,
-       s.user_email       AS email,
-       SUM(s.total_time)  AS total_time_per_month
-FROM work_session s
+       ws.user_email          AS email,
+       SUM(ws.total_time)     AS total_time_per_month,
+       SUM(ws.salary)         AS salary_per_month
+FROM work_session ws
 GROUP BY month,
-         s.user_email
+         ws.user_email
 ORDER BY month DESC

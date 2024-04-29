@@ -10,12 +10,14 @@ public class UserValidation {
     public static final String UPPERCASE_LETTER_PASSWORD = ".*[A-Z].*";
     public static final String DIGIT_PASSWORD = ".*\\d.*";
     public static final String ALPHANUMERIC_PASSWORD = "^[a-zA-Z0-9]*$";
+    public static final int MINIMUM_SYMBOL = 6;
+    public static final int MAXIMUM_SYMBOL = 30;
 
     private UserValidation() {
     }
 
     public static boolean isInvalidEmail(String email) {
-        if (email == null || email.length() <= 6 || email.length() >= 30) {
+        if (email == null || email.length() < MINIMUM_SYMBOL || email.length() > MAXIMUM_SYMBOL) {
             throw new ValidationException("Email must be at range 6 - 30");
         }
 
@@ -26,7 +28,7 @@ public class UserValidation {
     }
 
     public static boolean isValidPassword(String password) {
-        if (password == null || password.length() <= 6 || password.length() >= 30) {
+        if (password == null || password.length() < MINIMUM_SYMBOL || password.length() > MAXIMUM_SYMBOL) {
             throw new ValidationException("Password must be at range 6 - 30");
         }
 

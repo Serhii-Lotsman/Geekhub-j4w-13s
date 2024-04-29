@@ -17,12 +17,14 @@ public class EmployeeValidation {
     public static final int MAXIMUM_AGE_TO_WORK = 80;
     public static final int MINIMUM_AGE_TO_WORK = 16;
     public static final int ONE_YEAR_TO_HIRE = 1;
+    public static final int MINIMUM_SYMBOL = 3;
+    public static final int MAXIMUM_SYMBOL = 30;
 
     private EmployeeValidation() {
     }
 
     public static void isInvalidNames(String name) {
-        if (name == null || name.length() <= 3 || name.length() >= 30) {
+        if (name == null || name.length() < MINIMUM_SYMBOL || name.length() > MAXIMUM_SYMBOL) {
             throw new ValidationException("Name/Surname must be at range 3 - 30");
         }
 
@@ -51,7 +53,7 @@ public class EmployeeValidation {
     }
 
     public static void isInvalidCity(String city) {
-        if (city != null && (city.length() >= 30 || city.length() <= 2)) {
+        if (city != null && (city.length() < MINIMUM_SYMBOL || city.length() > MAXIMUM_SYMBOL)) {
             throw new ValidationException("City name must be in range 3 - 30");
         }
 

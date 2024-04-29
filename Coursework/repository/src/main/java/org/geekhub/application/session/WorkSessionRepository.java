@@ -57,11 +57,12 @@ public class WorkSessionRepository {
         }
     }
 
-    public void closeWorkSession(long sessionId, LocalTime endTime, LocalTime totalTime) {
+    public void closeWorkSession(long sessionId, LocalTime endTime, LocalTime totalTime, double salary) {
         String sql = """
             UPDATE work_session SET
             end_time = :endTime,
-            total_time = :totalTime
+            total_time = :totalTime,
+            salary = :salary
             WHERE id = :sessionId
             AND date = :today
             """;
@@ -70,6 +71,7 @@ public class WorkSessionRepository {
             .addValues(Map.of(
                 "endTime", endTime,
                 "totalTime", totalTime,
+                "salary", salary,
                 "sessionId", sessionId,
                 "today", LocalDate.now(ZoneId.of("UTC"))
             ));
@@ -127,10 +129,10 @@ public class WorkSessionRepository {
 
     public List<WorkSessionEntity> findAllWorkSessions(int pageNum, int pageSize) {
         String query = """
-        SELECT * FROM work_session
-        ORDER BY date DESC
-        LIMIT :pageSize OFFSET :offset
-        """;
+            SELECT * FROM work_session
+            ORDER BY date DESC
+            LIMIT :pageSize OFFSET :offset
+            """;
 
         List<WorkSessionEntity> workSessionEntityList = new ArrayList<>();
 
@@ -147,6 +149,37 @@ public class WorkSessionRepository {
             logger.info("Success to get work sessions");
         } catch (DataAccessException e) {
             logger.error("Failed to get work sessions. Error: {}", e.getMessage());
+        }
+        return workSessionEntityList;
+    }
+
+    public List<WorkSessionEntity> findAllTodaySessions(int pageNum, int pageSize) {
+        String query = """
+            SELECT * FROM work_session
+            WHERE date = :today
+            AND end_time IS NULL
+            ORDER BY date DESC
+            LIMIT :pageSize OFFSET :offset
+            """;
+
+        List<WorkSessionEntity> workSessionEntityList = new ArrayList<>();
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValues(Map.of(
+                "today", LocalDate.now(ZoneId.of("UTC")),
+                "pageSize", pageSize,
+                "offset", Pagination.getOffset(pageNum, pageSize)
+            ));
+
+        try {
+            workSessionEntityList = jdbcTemplate.query(
+                query,
+                parameterSource,
+                WorkSessionMapper::mapWorkSession
+            );
+            logger.info("Success to get today sessions");
+        } catch (DataAccessException e) {
+            logger.error("Failed to get today sessions. Error: {}", e.getMessage());
         }
         return workSessionEntityList;
     }
@@ -171,7 +204,7 @@ public class WorkSessionRepository {
         String query = """
             SELECT * FROM work_session
             WHERE end_time IS NULL
-            AND DATE(date) != CURRENT_DATE
+            AND date != :today
             ORDER BY date DESC
             LIMIT :pageSize OFFSET :offset;
             """;
@@ -179,8 +212,11 @@ public class WorkSessionRepository {
         List<WorkSessionEntity> workSessionEntityList = new ArrayList<>();
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-            .addValue("pageSize", pageSize)
-            .addValue("offset", Pagination.getOffset(pageNum, pageSize));
+            .addValues(Map.of(
+                "today", LocalDate.now(ZoneId.of("UTC")),
+                "pageSize", pageSize,
+                "offset", Pagination.getOffset(pageNum, pageSize)
+            ));
 
         try {
             workSessionEntityList = jdbcTemplate.query(
@@ -199,10 +235,12 @@ public class WorkSessionRepository {
         String query = """
             SELECT * FROM work_session
             WHERE id = :sessionId
-            AND DATE(date) != CURRENT_DATE
+            AND date != :today
             """;
 
-        SqlParameterSource parameterSource = new MapSqlParameterSource("sessionId", sessionId);
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("today", LocalDate.now(ZoneId.of("UTC")))
+            .addValue("sessionId", sessionId);
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(
@@ -216,11 +254,12 @@ public class WorkSessionRepository {
         }
     }
 
-    public void editOpenWorkSession(long sessionId, WorkSessionEntity workSessionEntity) {
+    public void editOpenWorkSession(long sessionId, WorkSessionEntity workSessionEntity, double salary) {
         String sql = """
             UPDATE work_session SET
             end_time = :endTime,
-            total_time = :totalTime
+            total_time = :totalTime,
+            salary = :salary
             WHERE id = :sessionId
             """;
 
@@ -228,6 +267,7 @@ public class WorkSessionRepository {
             .addValues(Map.of(
                 "endTime", Objects.requireNonNull(workSessionEntity.getTimeEnd()),
                 "totalTime", Objects.requireNonNull(workSessionEntity.getTotalTime()),
+                "salary", salary,
                 "sessionId", sessionId
             ));
 

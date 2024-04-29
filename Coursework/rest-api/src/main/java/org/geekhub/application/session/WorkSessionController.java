@@ -61,6 +61,17 @@ public class WorkSessionController {
             .toList();
     }
 
+    @GetMapping("/hr-panel/today-sessions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<WorkSessionDto> getAllTodaySessions(
+        @RequestParam(defaultValue = "1") int pageNum,
+        @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        return workSessionService.getAllTodaySessions(pageNum, pageSize).stream()
+            .map(WorkSessionConverter::workSessionToDto)
+            .toList();
+    }
+
     @GetMapping("/employee/my-time")
     @ResponseStatus(HttpStatus.OK)
     public Map<LocalDate, List<Map<String, Object>>> getAllSessionsByEmail() {

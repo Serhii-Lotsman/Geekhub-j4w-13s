@@ -39,7 +39,7 @@ public class WorkStatisticController {
             ));
     }
 
-    @GetMapping("/employees")
+    @GetMapping("/employee/my-work-session")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, List<Map<String, String>>> getMonthlyStatisticByEmail() {
         Map<String, List<Map<String, String>>> workStatisticDtoList = new LinkedHashMap<>();

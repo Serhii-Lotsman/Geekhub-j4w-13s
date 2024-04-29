@@ -6,6 +6,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
 }
 
 tasks.bootJar {

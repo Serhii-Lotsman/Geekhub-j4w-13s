@@ -23,7 +23,10 @@ public class WorkSessionMapper {
                 : rs.getTime("end_time").toLocalTime(),
             rs.getTime("total_time") == null
                 ? null
-                : rs.getTime("total_time").toLocalTime()
+                : rs.getTime("total_time").toLocalTime(),
+            rs.getBigDecimal("salary") == null
+                ? 0
+                : rs.getBigDecimal("salary").doubleValue()
         );
     }
 
@@ -47,6 +50,11 @@ public class WorkSessionMapper {
         workStatisticEntity.setDate(rs.getDate("month").toLocalDate());
         workStatisticEntity.setUserEmail(rs.getString("email"));
         workStatisticEntity.setMonthlyTotalTime(rs.getString("total_time_per_month"));
+        workStatisticEntity.setSalary(
+            rs.getBigDecimal("salary_per_month") == null
+                ? 0
+                : rs.getBigDecimal("salary_per_month").doubleValue()
+        );
         return workStatisticEntity;
     }
 }
