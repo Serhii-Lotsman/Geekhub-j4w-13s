@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class EmployeeCardServiceTest {
 
-    public static final long EMPLOYEE_ID = 1L;
+    private static final long EMPLOYEE_ID = 1L;
     @Mock
     private EmployeeCardRepository employeeCardRepository;
 
@@ -42,22 +42,22 @@ class EmployeeCardServiceTest {
     private final EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity(
         "Firstname",
         "Lastname",
-        LocalDate.of(2001,1, 1),
+        LocalDate.of(2001, 1, 1),
         "test@gmail.com",
         EmployeePosition.ACCOUNTANT,
         "City",
         false,
         EmployeeGender.FEMALE,
-        LocalDate.of(2024,1, 1)
+        LocalDate.of(2024, 1, 1)
     );
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         employeeCardService = new EmployeeCardService(employeeCardRepository, userRepository);
     }
 
     @Test
-    public void testSaveEmployeeCard_shouldSaveCard_whenValidEmployee() {
+    void testSaveEmployeeCard_shouldSaveCard_whenValidEmployee() {
         when(employeeCardRepository.employeeEmailExist("test@gmail.com")).thenReturn(false);
         when(userRepository.existsByUserEmail("test@gmail.com")).thenReturn(true);
 
@@ -67,7 +67,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testSaveEmployeeCard_shouldThrowUserExistException_whenEmailExists() {
+    void testSaveEmployeeCard_shouldThrowUserExistException_whenEmailExists() {
         when(employeeCardRepository.employeeEmailExist("test@gmail.com")).thenReturn(true);
 
         assertThrows(UserExistException.class, () -> employeeCardService.saveEmployeeCard(employeeCardEntity));
@@ -75,7 +75,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testSaveEmployeeCard_shouldThrowUserException_whenEmailNotFoundInUserRepository() {
+    void testSaveEmployeeCard_shouldThrowUserException_whenEmailNotFoundInUserRepository() {
         employeeCardEntity.setEmail("nonExistent@gmail.com");
         when(employeeCardRepository.employeeEmailExist("nonExistent@gmail.com")).thenReturn(false);
         when(userRepository.existsByUserEmail("nonExistent@gmail.com")).thenReturn(false);
@@ -85,7 +85,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testUpdateEmployeeCard_shouldUpdateEmployeeCard_whenValidEmployee() {
+    void testUpdateEmployeeCard_shouldUpdateEmployeeCard_whenValidEmployee() {
         EmployeeCardEntity updatedEmployeeCardEntity = this.employeeCardEntity;
         updatedEmployeeCardEntity.setFirstName("Updated");
         updatedEmployeeCardEntity.setLastName("Updated");
@@ -95,7 +95,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testDeleteEmployeeCard_shouldDeleteCard_whenValidId() {
+    void testDeleteEmployeeCard_shouldDeleteCard_whenValidId() {
         when(employeeCardRepository.getEmployeeCard(EMPLOYEE_ID))
             .thenReturn(Optional.of(new EmployeeCardEntity()));
 
@@ -104,7 +104,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testDeleteEmployeeCard_shouldThrowEmployeeCardException_whenInvalidId() {
+    void testDeleteEmployeeCard_shouldThrowEmployeeCardException_whenInvalidId() {
         Long employeeId = -EMPLOYEE_ID;
         when(employeeCardRepository.getEmployeeCard(employeeId)).thenReturn(Optional.empty());
 
@@ -114,7 +114,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testGetEmployeeCardById_shouldReturnEmployeeCard_whenValidId() {
+    void testGetEmployeeCardById_shouldReturnEmployeeCard_whenValidId() {
         EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity();
         when(employeeCardRepository.getEmployeeCard(EMPLOYEE_ID))
             .thenReturn(Optional.of(employeeCardEntity));
@@ -124,7 +124,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testGetEmployeeCardById_shouldThrowEmployeeCardException_whenInvalidId() {
+    void testGetEmployeeCardById_shouldThrowEmployeeCardException_whenInvalidId() {
         Long employeeId = -EMPLOYEE_ID;
         when(employeeCardRepository.getEmployeeCard(employeeId)).thenReturn(Optional.empty());
 
@@ -133,7 +133,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testGetEmployeeCardByEmail_shouldReturnEmployeeCardByEmail_whenValidEmail() {
+    void testGetEmployeeCardByEmail_shouldReturnEmployeeCardByEmail_whenValidEmail() {
         String email = "test@gmail.com";
         EmployeeCardEntity employeeCardEntity = new EmployeeCardEntity();
         when(employeeCardRepository.getEmployeeCard(email)).thenReturn(Optional.of(employeeCardEntity));
@@ -143,7 +143,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testGetEmployeeCardByEmail_shouldThrowEmployeeCardException_whenInvalidEmail() {
+    void testGetEmployeeCardByEmail_shouldThrowEmployeeCardException_whenInvalidEmail() {
         String email = "nonExistent@gmail.com";
         when(employeeCardRepository.getEmployeeCard(email)).thenReturn(Optional.empty());
 
@@ -152,7 +152,7 @@ class EmployeeCardServiceTest {
     }
 
     @Test
-    public void testGetAllEmployees_shouldReturnListOfEmployeeCard_always() {
+    void testGetAllEmployees_shouldReturnListOfEmployeeCard_always() {
         int pageNum = 1;
         int pageSize = 10;
         List<EmployeeCardEntity> employeeList = Collections.emptyList();

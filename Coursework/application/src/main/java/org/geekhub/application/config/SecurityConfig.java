@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -27,9 +29,11 @@ public class SecurityConfig {
     @Value("${bcrypt.strength}")
     private int bcryptStrength;
     private final CustomUserDetailsService customUserDetailsService;
+    private final DataSource dataSource;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, DataSource dataSource) {
         this.customUserDetailsService = customUserDetailsService;
+        this.dataSource = dataSource;
     }
 
     @Bean
@@ -61,9 +65,14 @@ public class SecurityConfig {
                     .requestMatchers("/api/v3/statistic/employees/**").hasAnyAuthority("USER", "ADMIN")
                     .requestMatchers("/api/v3/statistic/hr-panel/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated())
-            .logout(Customizer.withDefaults())
+            .logout(logoutConfigurer ->
+                logoutConfigurer.deleteCookies("JSESSIONID"))
             .httpBasic(Customizer.withDefaults())
-            .formLogin(Customizer.withDefaults());
+            .formLogin(Customizer.withDefaults())
+            .rememberMe(rememberMeConfigurer -> rememberMeConfigurer
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(86400)
+                .userDetailsService(customUserDetailsService));
         return http.build();
     }
 
@@ -75,5 +84,12 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(bcryptStrength);
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
     }
 }

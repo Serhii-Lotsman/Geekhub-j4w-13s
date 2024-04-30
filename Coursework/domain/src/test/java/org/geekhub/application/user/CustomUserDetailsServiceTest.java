@@ -36,12 +36,12 @@ class CustomUserDetailsServiceTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         customUserDetailsService = new CustomUserDetailsService(userRepository, userRoleRepository);
     }
 
     @Test
-    public void testCreateUser_shouldReturnId_whenValidUser() {
+    void testCreateUser_shouldReturnId_whenValidUser() {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail("test@gmail.com");
         userEntity.setPassword("password");
@@ -54,7 +54,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    public void testCreateUser_shouldThrowValidationException_whenInvalidEmail() {
+    void testCreateUser_shouldThrowValidationException_whenInvalidEmail() {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail("invalid_email");
         userEntity.setPassword("password");
@@ -64,7 +64,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    public void testCreateUser_shouldThrowUserExistException_whenEmailExists() {
+    void testCreateUser_shouldThrowUserExistException_whenEmailExists() {
         UserEntity existingUser = new UserEntity();
         existingUser.setEmail("existing@gmail.com");
         existingUser.setPassword("password");
@@ -75,19 +75,19 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    public void testIsEmailExist_shouldReturnTrue_whenEmailExists() {
+    void testIsEmailExist_shouldReturnTrue_whenEmailExists() {
         when(userRepository.existsByUserEmail("existing@gmail.com")).thenReturn(true);
         assertTrue(customUserDetailsService.isEmailExist("existing@gmail.com"));
     }
 
     @Test
-    public void testIsEmailExist_shouldReturnFalse_whenEmailDoesNotExist() {
+    void testIsEmailExist_shouldReturnFalse_whenEmailDoesNotExist() {
         when(userRepository.existsByUserEmail("nonExistent@gmail.com")).thenReturn(false);
         assertFalse(customUserDetailsService.isEmailExist("nonExistent@gmail.com"));
     }
 
     @Test
-    public void testSetUserRole_shouldSetRole_always() {
+    void testSetUserRole_shouldSetRole_always() {
         doNothing().when(userRoleRepository).assignRole(anyInt(), anyInt());
 
         customUserDetailsService.setUserRole(USER_ID, 3);
@@ -95,7 +95,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    public void testGetRoleByName_shouldReturnAssignedRole_whenRoleExists() {
+    void testGetRoleByName_shouldReturnAssignedRole_whenRoleExists() {
         String roleName = "USER";
         UserRole userRole = new UserRole(USER_ID, roleName);
 
@@ -105,7 +105,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    public void testGetRoleByName_shouldThrowUserException_whenRoleNotFound() {
+    void testGetRoleByName_shouldThrowUserException_whenRoleNotFound() {
         String roleName = "NON_EXISTING_ROLE";
 
         when(userRoleRepository.findRole(roleName)).thenReturn(Optional.empty());
@@ -113,7 +113,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    public void testLoadUserByUsername_shouldThrowUsernameNotFoundException_whenUserNotFound() {
+    void testLoadUserByUsername_shouldThrowUsernameNotFoundException_whenUserNotFound() {
         when(userRepository.findUserByEmail("nonExistent@gmail.com")).thenReturn(Optional.empty());
         assertThrows(UsernameNotFoundException.class,
             () -> customUserDetailsService.loadUserByUsername("nonExistent@gmail.com"));

@@ -41,6 +41,9 @@ public class WorkSessionConverter {
 
     @NonNull
     private static String getFormattedSalary(Double workStatisticEntity) {
+        if (workStatisticEntity == null) {
+            return "";
+        }
         DecimalFormat decimalFormat = new DecimalFormat("#.###");
         return decimalFormat.format(workStatisticEntity);
     }
